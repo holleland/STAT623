@@ -264,19 +264,38 @@ div.csl-indent {
 <h1><span class="header-section-number"> 4</span> Classification methods</h1>
 <p>Sometimes we are not interested in predicting a continuous output, but rather a factor or a class. We use classes or categories for many things and often we want a model to make a prediction into discrete categories. Is this an image of a cat or a dog? Given information of each passenger, is it likely that a certain individual would survive the shipwrecking of Titanic? Based on the score of certain hand-ins in a predictive modelling course, what final grade (A-F) is the student likely to get on the final exam?</p>
 <p>In this chapter we will learn about the classification methods k-nearest neighbor (knn), naive bayes and logistic regression. We will briefly consider all three methods here, and refer to the data camp course for further details (see data camp section below).</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="lecture4.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(class)</span>
-<span id="cb52-2"><a href="lecture4.html#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;titanic.raw&quot;</span>, <span class="at">package =</span> <span class="st">&quot;datarium&quot;</span>)</span>
-<span id="cb52-3"><a href="lecture4.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># test = titanic.raw[1,-4]</span></span>
-<span id="cb52-4"><a href="lecture4.html#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># knn(train = titanic.raw[,-4],test =test, cl = titanic.raw[,4])</span></span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="lecture4.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(class)</span>
+<span id="cb60-2"><a href="lecture4.html#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;titanic.raw&quot;</span>, <span class="at">package =</span> <span class="st">&quot;datarium&quot;</span>)</span>
+<span id="cb60-3"><a href="lecture4.html#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co"># test = titanic.raw[1,-4]</span></span>
+<span id="cb60-4"><a href="lecture4.html#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="co"># knn(train = titanic.raw[,-4],test =test, cl = titanic.raw[,4])</span></span></code></pre></div>
 <div id="k-nearest-neighbor" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> k-nearest neighbor</h2>
 <p>The method k-nearest neighbor (knn) is a very simple classificiation method, where for predicting a class of observations in the test set one find the <span class="math inline">\(k\)</span> observations in the training set that has covariates nearest to the covariates of the test case in terms of Euclidean distance.</p>
 <p>There are many different implementations of knn, for instance in the class package (see <em>?class::knn</em>). But since we will be using the package bundle <em>tidymodels</em> in the next lecture we will also use it here. Tidymodels is, similar to the tidyverse, a combination of many packages using a kind of pipe notation to build models. It is very well integrated with tidyverse and provides a general framework for many different models. We will use knn as an example of how we set up a model in the tidymodels setup.</p>
 <p>As an example for classification we will use the famous Iris dataset of Edgar Anderson (see <em>?iris</em>). We start by loaded the packages and the data containing inforation of sepal- and petal- lengths and widths of three different iris flower species (Iris setosa, Iris versicolor and Iris virginica). The goal will be to make a model that can tell us which Iris flower species we are dealing with, based on the given lengths and widths.</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="lecture4.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb53-2"><a href="lecture4.html#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb53-3"><a href="lecture4.html#cb53-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris)</span>
-<span id="cb53-4"><a href="lecture4.html#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="lecture4.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb61-2"><a href="lecture4.html#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;tune&#39;:
+##   method                   from   
+##   required_pkgs.model_spec parsnip</code></pre>
+<pre><code>## -- Attaching packages ------------------------------------------------------------------------------------------------------------ tidymodels 0.1.4 --</code></pre>
+<pre><code>## v broom        0.7.12     v rsample      0.1.1 
+## v dials        0.1.0      v tune         0.1.6 
+## v infer        1.0.0      v workflows    0.2.4 
+## v modeldata    0.1.1      v workflowsets 0.1.0 
+## v parsnip      0.1.7      v yardstick    0.0.9 
+## v recipes      0.1.17</code></pre>
+<pre><code>## -- Conflicts --------------------------------------------------------------------------------------------------------------- tidymodels_conflicts() --
+## x nlme::collapse()  masks dplyr::collapse()
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()
+## * Search for functions across packages at https://www.tidymodels.org/find/</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="lecture4.html#cb66-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris)</span>
+<span id="cb66-2"><a href="lecture4.html#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
@@ -287,18 +306,18 @@ div.csl-indent {
 ## 5          5           3.6          1.4         0.2 setosa 
 ## 6          5.4         3.9          1.7         0.4 setosa</code></pre>
 <p>We make our train-test split using the <em>tidymodels::initial_split</em> function to create the split and respecitvely the training and testing functions to extract the train and test sets. Note that we use <em>strata = Specices</em>. This means we are doing stratified subsampling so that we have the (roughly) the same proportion of the different species in the test and train sets.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="lecture4.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">999</span>)</span>
-<span id="cb55-2"><a href="lecture4.html#cb55-2" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">strata =</span> Species) </span>
-<span id="cb55-3"><a href="lecture4.html#cb55-3" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
-<span id="cb55-4"><a href="lecture4.html#cb55-4" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="lecture4.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">999</span>)</span>
+<span id="cb68-2"><a href="lecture4.html#cb68-2" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">strata =</span> Species) </span>
+<span id="cb68-3"><a href="lecture4.html#cb68-3" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
+<span id="cb68-4"><a href="lecture4.html#cb68-4" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span></code></pre></div>
 <p>To fit a model in tidymodels we must first specify which type of model (nearest neighbor) we want to create and set an engine and a mode. The engine is the package used to fit the model and the mode is usually “classification” or “regression,” depending on what type of y variable you are considering.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="lecture4.html#cb56-1" aria-hidden="true" tabindex="-1"></a>knn_spec <span class="ot">&lt;-</span> <span class="fu">nearest_neighbor</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb56-2"><a href="lecture4.html#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;kknn&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># requires &quot;kknn&quot; package installed</span></span>
-<span id="cb56-3"><a href="lecture4.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="lecture4.html#cb69-1" aria-hidden="true" tabindex="-1"></a>knn_spec <span class="ot">&lt;-</span> <span class="fu">nearest_neighbor</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb69-2"><a href="lecture4.html#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;kknn&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># requires &quot;kknn&quot; package installed</span></span>
+<span id="cb69-3"><a href="lecture4.html#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>)</span></code></pre></div>
 <p>Then we are ready to fit the model using the fit function, where we specify a formula and which data to use. We will here use all covariates in the train set to predict <em>Species</em>.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="lecture4.html#cb57-1" aria-hidden="true" tabindex="-1"></a>knn_fit <span class="ot">&lt;-</span> knn_spec <span class="sc">%&gt;%</span> </span>
-<span id="cb57-2"><a href="lecture4.html#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Species <span class="sc">~</span>., <span class="at">data =</span> df_train)</span>
-<span id="cb57-3"><a href="lecture4.html#cb57-3" aria-hidden="true" tabindex="-1"></a>knn_fit</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="lecture4.html#cb70-1" aria-hidden="true" tabindex="-1"></a>knn_fit <span class="ot">&lt;-</span> knn_spec <span class="sc">%&gt;%</span> </span>
+<span id="cb70-2"><a href="lecture4.html#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Species <span class="sc">~</span>., <span class="at">data =</span> df_train)</span>
+<span id="cb70-3"><a href="lecture4.html#cb70-3" aria-hidden="true" tabindex="-1"></a>knn_fit</span></code></pre></div>
 <pre><code>## parsnip model object
 ## 
 ## Fit time:  0ms 
@@ -312,10 +331,10 @@ div.csl-indent {
 ## Best k: 5</code></pre>
 <p>As you can see fromt he output, the best number of neighbors to be used was 5. The knn model will thus look for the 5 flowers that has the nearest covariates and then predict based on the majority vote of the five. For example if three of them are Iris Virginica and two are Iris versicolor, the prediction will be Iris Virginica.</p>
 <p>Let us predict on the test set and chech the accuracy and <span class="math inline">\(\kappa\)</span> using the metrics function.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="lecture4.html#cb59-1" aria-hidden="true" tabindex="-1"></a>knn_fit <span class="sc">%&gt;%</span> </span>
-<span id="cb59-2"><a href="lecture4.html#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">predict</span>(df_test) <span class="sc">%&gt;%</span>      <span class="co"># predict on the test set</span></span>
-<span id="cb59-3"><a href="lecture4.html#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span>    <span class="co"># bind columns (adding the truth and covariates) </span></span>
-<span id="cb59-4"><a href="lecture4.html#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metrics</span>(<span class="at">truth =</span> Species, <span class="at">estimate =</span> .pred_class) <span class="co"># calculate metrics</span></span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="lecture4.html#cb72-1" aria-hidden="true" tabindex="-1"></a>knn_fit <span class="sc">%&gt;%</span> </span>
+<span id="cb72-2"><a href="lecture4.html#cb72-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">predict</span>(df_test) <span class="sc">%&gt;%</span>      <span class="co"># predict on the test set</span></span>
+<span id="cb72-3"><a href="lecture4.html#cb72-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span>    <span class="co"># bind columns (adding the truth and covariates) </span></span>
+<span id="cb72-4"><a href="lecture4.html#cb72-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metrics</span>(<span class="at">truth =</span> Species, <span class="at">estimate =</span> .pred_class) <span class="co"># calculate metrics</span></span></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
