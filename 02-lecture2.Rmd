@@ -1,0 +1,210 @@
+# Over-fitting and model tuning, selection and evaluation and multiple regression {#lecture2}
+
+In this lecture we will cover the terms *overfitting*, *training-*, *validation-* and *test* sets, *model selection* and *-evaluation*. These terms are part of the chargong of predictive modelling and is something we need to get familiar with before learning about specific models. Towards the end of this lecture, we will learn about multiple regression.
+
+## Overfitting
+
+**Overfitting** is the phenomenon when you build a model that fits (almost) "perfectly" to the training set, but when applied to new data the performance is low. For the modeller there is a balance between choosing a model that has a good fit to the training data, but also generalize well to new data. The goal for the model should be to discover the underlying signal and not fit to all the noise. 
+
+We will illustrate overfitting by an example with simulated data and GAM models (topic for the lecture [Lecture 3](#lecture3))
+
+<!-- Could make this into a movie from here and out -->
+
+```{r overfitting}
+set.seed(3)
+x <- seq(0,2*pi,0.1)
+z <- sin(x)
+y <- z + rnorm(mean=0, sd=0.5*sd(z), n=length(x))
+df <- cbind.data.frame(x,y,z)
+p <- ggplot(df, aes(x = x, y = y)) + geom_point() + geom_line(aes(y=z), lwd = .8, col = 2) 
+p
+```
+
+In the figure above, the "true" underlying signal is the red curve while the black dots are the observations. If we fit a model with a high level of flexibility, we can make it fit well to the observations.
+
+```{r overfitting2}
+p + geom_smooth(method = "gam", formula = y  ~ s(x,k = 50, sp = 0))
+```
+
+We will come back to the details of the model setup when discussing GAM models in the next lecture, but the point here is that we have "turned off" the likelihood penalization by setting *sp=0* in the smoother function *s* and set the order of the smoother to a high number (*k = 50*). If we set the order to *k = 4* and let the GAM procedure set the penalization itself, we get a much smoother curve that lies closer to the true signal.
+
+```{r overfitting3}
+p + geom_smooth(method = "gam", formula = y  ~ s(x,k = 4))
+```
+
+The first model explains 96.3\% of the deviance, while the second explains 81.7\%.
+
+In a normal situation, we would of course not know the true underlying signal, but overfitting can be suspected when you get such a wiggly prediction curve that seems to follow every little move in the observations. Judging by the fit to the points, the first GAM model is much closer to the observations, but we can check how well it would perform on a new set of data with the same structure.
+```{r overfitting_newdata}
+library(mgcv) # package for fitting gam models
+# Fit model with high level of complexity: 
+fit1 <- gam(y ~ s(x, k= 50, sp = 0), data = df)
+summary(fit1)
+# Fit simpler model: 
+fit2 <- gam(y ~ s(x, k= 4), data = df)
+summary(fit2)
+
+# simulate new set of data: 
+set.seed(4)
+newdata <- data.frame(x, z, 
+                      y = z+rnorm(mean=0, sd=0.5*sd(z), n=length(x)))
+
+# Make predictions from the two models: 
+newdata$pred1 <- predict(fit1, newdata=newdata)
+newdata$pred2 <- predict(fit2, newdata=newdata)
+
+# Calculate sum of squared residuals:
+with(newdata, 
+     c("SS1" = sum((y-pred1)^2),
+       "SS2" = sum((y-pred2)^2)))
+```
+
+As you can see, the sum of squared residuals is almost twice as high for the complex model when applied to new observations, compared to the simpler model. In a preditive modelling situation, it is the prediction performance that is important and not as much the *deviance explained* on training data. Below is a figure with the two predicition curves on the new data. Since $x$ is the only input to the models, the two lines are equal to the curves above, but the data is new. 
+
+```{r plotoverfit}
+# Plot the new data: 
+ggplot(data= newdata, aes(x=x,y=y)) + geom_point() + 
+  geom_line(aes(y=pred1, col = "fit1"))+
+  geom_line(aes(y=pred2, col = "fit2"))
+
+```
+
+## Training, validation and test split
+
+In order to evaluate a predictive model's performance, we should test its predictive abilities on data the model has never seen before (during model fitting). Usually, you only have one dataset to start with, so it is common to split the original data into three subsets; a training set, a validation set and a test set. 
+
+**The training set** is the data used to "train" the model, meaning estimating its parameters. If your original data is split, this will typically be the biggest portion of the data. One should measure the model performance on the training data, but this should not be used solely for model selection. If your model has a very good fit to the training data, this can often lead to overfitting issues when applying the model to new data. This is one of the reasons for using a validation set. 
+
+**The validation set** is used for tackling overfitting and doing model selection. This is a smaller portion of the data not seen during training, which is key.  We can therefore measure the models performance on these unseen data and if the model performs similarly as on the traning data, this means it generalizes well to new situations and overfitting is likely not a big issue. If the performance is high in training and low for validation, this is a sign of overfitting. If you are in a scenario where you have many different candidate models, either from different model families or the same model but with different setups, you can use the validation set to select "the best" model according to the performance criteria you have chosen. 
+
+Once you have found a model that does not overfit to training data and performs well on the validation set, you can apply it to **the test set**. This should only be used to measure the models performance. In some cases, one sees modellers only splitting the data in two, a training and testing set. If you use the validation set to measure the models performance, this will give a biased estimate of model performance, since you have selected the model based on the validation set. Basically, you will not know whether your model performs better because of changes you made or because it just happened to fit the validation set better. Therefore, we need a separate test set. The performance on the test set should ideally be similar to the performance on the validation set. If it is significantly lower, this can indicate overfitting to the validation set. 
+
+```{r "trainvalidatetest", fig.cap = "Summary of the three-way data split.", echo = FALSE}
+knitr::include_graphics("ppt/trainvalidatetestfig.png")
+```
+
+We will illustrate how this threeway split can be used on an example, after we have learned about multiple regression.
+
+## Multiple regression
+
+Multiple regression is an extension of simple linear regression, where more than one covariate is used to predict the value of the dependent variable (the *Y*). The form of the predictor is a linear combination of the set of explanatory variables, i.e.
+$$\widehat Y_i = \beta_0 + \beta_1X_{i1}  + \ldots + \beta_p X_{ip},\quad i=1,\ldots,n,$$
+where $\widehat Y_i$ is the predictor of observation $i$, $\beta_0, \ldots, \beta_p$ are the parameters and $X_{\cdot 1}, \ldots, X_{\cdot p}$ are the vectors of explanatory variables. It is quite common to write the equation above on vector form. Define the vectors $\widehat{\mathbf{Y}}=(\widehat Y_1, \ldots, \widehat Y_n)'$ and $\boldsymbol{\beta} = (\beta_0, \ldots, \beta_p)'$, and the *design matrix* $\mathbb X = (\mathbf{1}, \mathbf X_{\cdot 1},\ldots, \mathbf X_{\cdot p})$. Then the equation above can be written as
+
+$$\widehat{\mathbf{Y}} = \mathbb X\,\boldsymbol\beta.$$
+
+The assumptions are that the residuals, $Z_i = Y_i - \widehat Y_i$, $i=1,\ldots, n$ are independent and normally distributed. The explanatory variables should not be correlated. Parameters are estimated using maximum likelihood estimation. Note that we are using capital letters here. This is a statistical convention when we are talking about variables. Once we introduce observations, we switch to small letters for the same quantities. 
+
+To learn more about multiple regression, take the datacamp course [*Multiple and Logistic Regression in R*](https://app.datacamp.com/learn/courses/multiple-and-logistic-regression-in-r). For now you can focus on the multiple regression part. We will simply go on to illustrate usage by an example.
+
+### Example
+
+
+
+In this example, we consider a dataset containing the impact of three advertising medias (youtube, facebook and newspaper) on sales for different companies. The advertising budgets and sales are in thousands of dollars and the advertising experiment has been repeated 200 times. We will use multiple regression to model the relationship between sales and the advertising budgets from the different medias. In the video below we walk you through the example, but you can also read it below.
+
+```{r, echo = FALSE}
+knitr::include_url("http://www.youtube.com/embed/_In2EOI2RWo?rel=0")
+```
+
+We start by looking at the data:
+
+```{r load_data_marketing}
+# load data: 
+data("marketing", package = "datarium")
+head(marketing)
+plot(marketing)
+```
+From looking at the plot above, it does not seem to be a very strong correlation between the three covariates: youtube, facebook and newspaper. This is based on that the first 3x3 scatters plots seem to be randomly distributed without any clear patterns. Looking at the last row of panels we see the marginal relationships between the covariates and the response; sales. Here it looks like the marginal relationship between youtube and facebook variables is close to linear, while for newspaper it does not look like a linear relationship is well suited. We will therefore use facebook and youtube to predict sales. We will also check if including newspaper can improve the fit. 
+
+We create a train and a test set, by doing a 80-20 random split (80\% for training set - 20\% test set):
+
+```{r marketingsplit}
+set.seed(123)
+train.ind <- sample(1:nrow(marketing), nrow(marketing)*.8, replace = FALSE)
+trainset <- marketing[train.ind, ]
+testset <- marketing[-train.ind, ]
+```
+
+We start by fitting the following model:
+
+$$\mathrm{sales} = \beta_0 + \beta_1\cdot \mathrm{youtube} + \beta_2\cdot \mathrm{facebook}+\beta_3\cdot \mathrm{youtube}\cdot\mathrm{facebook}$$
+This model can be set up by different *formula* arguments in R. The different model calls below are equivalent. 
+```{r modelling_marketing}
+mod1 <- lm(sales ~ youtube + facebook + youtube:facebook, data = trainset)
+summary(mod1)
+mod1 <- lm(sales ~ 1 + youtube + facebook + youtube:facebook, data = trainset)
+summary(mod1)
+mod1 <- lm(sales ~ youtube * facebook, data = trainset)
+summary(mod1)
+```
+
+As you can see from the outputs, all models are equivalent. If you want to learn more about setting the formula argument, check out the helpsite for the formula function:
+
+```{r formula, eval = FALSE}
+?stats::formula
+```
+
+We will choose the model that has the highest predictive ability. We will therefore suggest several models and choose the one that has the lowest value of Akaike's information criteria (AIC). We will also evaluate the different models on the test set. 
+
+```{r alternative_models}
+mod2 <- lm(sales ~ youtube * facebook * newspaper, data = trainset)
+mod3 <- lm(sales ~ youtube * facebook + newspaper, data = trainset)
+mod4 <- lm(sales ~ youtube,   data = trainset)
+mod5 <- lm(sales ~ facebook,  data = trainset)
+mod6 <- lm(sales ~ newspaper, data = trainset)
+AIC(mod1, mod2, mod3, mod4, mod5, mod6)
+```
+
+We choose the model with **lowest AIC value**. As you can see from the output above, this is the model we named *mod1*. Adding *newspaper* as covariate will provide the model with more information, but the cost of adding more parameters to be estimated is deemed higher than the benefit of including this information in the model according to AIC.
+
+We can also use the predictive abilities of the models on the test set to choose model. We will restrict ourselves to the top three model based on AIC and use root mean square error (RMSE) to assess the quality of the predictions. First we evaluate the in-sample prediction. That is, we calculate predictions on the training set and summarize by RMSE.
+
+```{r marketing_insampleprediction}
+trainset %>% 
+  bind_cols(
+    mod1 = predict(mod1, newdata = trainset),
+    mod2 = predict(mod2, newdata = trainset),
+    mod3 = predict(mod3, newdata = trainset)
+    ) %>% 
+  pivot_longer(cols = 5:7, names_to = "models", values_to = "pred")  %>%
+  group_by(models) %>%
+  summarize(RMSE = sqrt(mean((sales-pred)^2)))
+```
+
+Perhaps not very surpising, the most complex model has the lowest in-sample, but the differences seem small. Let's evaluate the models on the test set as well. 
+
+```{r marketing_prediction}
+predictions =  testset %>% 
+  bind_cols(
+    mod1 = predict(mod1, newdata = testset),
+    mod2 = predict(mod2, newdata = testset),
+    mod3 = predict(mod3, newdata = testset)
+    ) %>% 
+  pivot_longer(cols = 5:7, names_to = "models", values_to = "pred") 
+head(predictions)
+predictions %>%
+  group_by(models) %>%
+  summarize(RMSE = sqrt(mean((sales-pred)^2)))
+```
+
+We see that the RMSE is a bit lower for the test set. This indicates that we are not overfitting our models at least, since the models perform better on the test set. 
+
+Solely based on the prediction on the test set, we would choose *mod2*, which is the full model, including *youtube*, *facebook* and *newspaper* with all interaction terms included. Depending on what one will use the model for, one may choose mod1 or mod2. We can look at the summary output of mod2. 
+
+```{r}
+summary(mod2)
+```
+
+Based on classical statistics, you would fix the non-significant estimates to zero (p-values below 5\%) and choose a more parsimoneous model, like *mod1*. This example shows the difference between modelling for prediction (choose *mod2*) and modelling for interpretation (choose *mod1*). We can also look at the observations vs predictions plots for the three models we compared in terms of RMSE. It seems to be very small differences between the predictions from the different models.   
+
+
+```{r fitted_plots_marketing}
+ggplot(predictions, aes(x = pred, y = sales)) + 
+  geom_point() + 
+  geom_abline(intercept = 0, slope = 1, col = 2, lty = 2) +
+  facet_wrap(~models, ncol= 3) + 
+  xlab("Predicted") + 
+  ylab("Observed")
+
+```

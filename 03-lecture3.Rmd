@@ -1,0 +1,189 @@
+# Non-linear regression {#lecture3}
+
+As we saw in the previous lecture in the example illustrating the overfitting concept, we do not always have a linear relationship between the response and the covariates. In that example, the relationship was a periodic sine function. Other examples of non-linear relations can be polynomial-, exponential- and logistical functions. There are many non-linear regression models designed for solving different problems, but we will mainly focus on the generalized additive models (GAMs). These are quite closely related to generalized linear models (GLMs). There are a few options for R packages for GAMs, but we will focus on the *mgcv* package [@mgcv2017].
+
+```{r "examples of nonlinear relations", echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Examples of relationsships between x and y."}
+library(tidyverse)
+x <-  seq(0,20,0.2)
+df <- data.frame(x = x, 
+                 linear = .25*x -2.5,
+                 exponential = exp((x-1)/15),
+                 logarithmic = log(x+1),
+                 logistic = 4*exp(.8*(x-10))/(1+exp(.8*(x-10)))-2,
+                 polynomial = 1-0.4*x - .02*(x-2)^2+0.0025*(x-3)^3,
+                 sine = .5*sin(x),
+                 combination = -.3*x+.5*sin(x)+ log(x+1)/2 -.02*x^2 + exp((x+1)/10))
+
+df <- pivot_longer(df, -x)
+ggplot(df, aes(x=x, y = value, col = name)) + geom_line() + theme_bw() +
+  theme(legend.title = element_blank()) +
+  xlab("x")+ylab("y")
+```
+
+In the figure above, we illustrate different types of relationships between x and y. The green one is a linear one, while the others are non-linear. The red curve is even an additive combination of some of the other types of curves, i.e. 
+
+$$ y(x) = -0.3 x + 0.5 \sin(x)+ 0.5 \log(x+1) - 0.02 x^2 + \exp((x+1)/10).$$
+This is actually not so different from the principal idea behind GAMs. A GAM uses a set of basis functions, often called smoothers, to map the dependent variables and use the transformed variables as covariates in an additive manner. We will explain this further.
+
+For a simple linear model, we have that the expected value of the $i$th variable is $\mathrm{E} Y_i = \mu_i = \beta_0+\beta_1 X_i$. For a generalized linear model, the relationship is mapped using a link function $g$, such that $g(\mu_i) = \beta_0+\beta_1X_i$. For a generalized additive model we take it one step further, by also mapping the dependent variable: 
+
+$$g(\mu_i) = \beta_0 + \sum_{j=0}^k \beta_j f_j(X_i),$$
+
+where $\{f_j:\, j = 1,\ldots, k\}$ is a set of basis functions. The standard in the *mgcv* package is to use thin plate splines.
+
+## GAM example
+
+In the video below, Sondre goes through this section's example in a bit more detail and with more in-depth explanations of the code. You can also read the example below the video. 
+
+```{r, echo = FALSE}
+knitr::include_url("http://www.youtube.com/embed/OAjA1m3pGP8?rel=0")
+```
+
+
+We will simulate a dataset where the "true" relationship between X and Y is given by (for observation $i$),
+$$Y_i = 0.5X_i + \sin(X_i)+Z_i, \quad \text{where } Z_i\sim N(0,0.29^2).$$
+
+We start by generating the data in a tibble data frame: 
+```{r basisfunctions}
+set.seed(123) # seed for reproducibility
+dat <- tibble(
+  x = seq(0, pi * 2, 0.1),  
+  sin_x = .5*x+sin(x), # expected value
+  y =   sin_x +  rnorm(n = length(x), mean = 0,
+                       sd = sd(sin_x / 2))) # add noise
+head(dat) # print first 6 observations
+```
+
+We can plot the true underlying signal (black line) and the observations (black dots) adding a linear regression line (blue) ontop. Clearly a linear model would fit poorly to these data.
+```{r plotbasisfunctions}
+ggplot(dat, aes(x = x, y = y)) + geom_point() + 
+  geom_smooth(method = "lm") +  geom_line(aes(y = sin_x))
+```
+
+Instead, we will use a GAM model. As you will see below the syntax is very similar to the glm or even lm function in base R. 
+
+```{r gam1}
+library(mgcv) # gam package
+mod <- gam(y ~ s(x), data = dat, method = "REML")
+```
+
+The mgcv package uses the syntax *y ~ s(x)* to specify the model. This means that y is modelled as a smooth function of x. If nothing else is specified, the procedure will use a thin plate spline and determine the number of basis functions to use itself.  You can also fix this by setting the $k$ argument of the $s()$ function. When problems with overfitting occur, you can tackle this by setting a lower value for $k$ or setting the *smoothing parameter*. This argument is $sp$ in the $s()$ function. We will not go into details about this here, but in general it is recommended to use *method = "REML"*. This means the model is using restricted maxmimum likelihood for the estimation and use this algorithm to set of the smoothing parameter for you.  
+
+Let's look at the model summary. 
+
+```{r gam1b}
+summary(mod)
+```
+
+Here you can see we have a significant intercept term and a approximate significance of the smooth term. The procedure uses an approximation here because the smooth term not really just one covariate. It is important to check that the estimated degree of freedom (edf) is not very close to the reference degree of freedom (Ref.df). This indicates that model has not been given enough flexibility and you could consider setting a higher $k$ value for the smoother. 
+
+Let's have a closer look at the smoothing terms being used in this model. In the code below we extract the model matrix and plot the basis function. To have a slightly deeper understanding of what the GAM model does is that it creates a weighted sum of these basis functions to, as optimally as possible, fit the underlying curve of the data. 
+
+```{r gam2}
+# Extract model matrix: 
+MM <- model.matrix(mod)
+MM <- as_tibble(MM)
+MM$x <- dat$x
+MM <- pivot_longer(MM, -x)
+
+
+
+# Plot basis functions
+ggplot(MM, aes(x = x, y = value, group = name, col = name)) +
+  geom_line() +
+  theme_bw(12)+
+  theme(legend.position = "none") +
+  labs(y = "Basis functions")
+```
+If we multiply these basis functions with the weights for the fitted model, we get the additive terms that constitutes the full model prediction. 
+```{r gam3}
+# Extract coefficient from the model and merge model matrix: 
+coefs <- tibble(coef = coef(mod))
+coefs$name <- names(coef(mod))
+MM <- left_join(MM,coefs, by = "name")
+# Plot model weigthed basis functions
+ggplot(MM, aes(x = x, y = value*coef, group = name, col = name)) +
+  geom_line() +
+  theme_bw(12)+
+  theme(legend.position = "none") +
+  labs(y = "Model weigthed basis functions")
+```
+
+Here you can see how the different curves contribute the full signal. Lets have a look at the final prediction and plot that along with a 95\% confidence interval, the observations and the true signal. 
+
+```{r gam4}
+pred.mod <- predict(mod, se.fit = TRUE) # predict values with standard error
+dat <- dat %>% 
+  mutate(pred = pred.mod$fit,
+         lwr = pred - 1.96 * pred.mod$se.fit,
+         upr = pred + 1.96 * pred.mod$se.fit)
+ggplot(data = dat, aes(x = x)) + 
+  geom_point(aes(y=y)) +
+  geom_line(aes(y = pred), col = "magenta")+
+  geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = .3, fill = "magenta") +
+  theme_bw(12) +
+  labs(
+    x = "x",
+    y = "y"
+  )
+```
+
+Normally, we would do the train-test split, but in this example we know the truth and the point of the exercise is to reproduce the underlying signal. 
+
+As a last element of this example, we will see how well the model extrapolates as we try to predict the signal for values the model has not "seen". For the training we used values of $x$ between 0 and $2\pi$. Let's see how it performs for values of x between $2\pi$ and $3\pi$. 
+
+```{r gam5}
+# Setting up new data:
+dat.ext <- tibble( 
+  x = seq(2*pi, 3*pi, 0.1),
+  sin_x = 0.5*x+sin(x) # underlying signal
+  )
+
+# Predicting
+pred.ext <- predict(mod, newdata = dat.ext, se.fit = TRUE, type =)
+
+# adding predictions to data frame:
+dat.ext <- dat.ext %>% 
+  mutate(pred = pred.ext$fit, 
+         lwr = pred - 1.96 * pred.ext$se.fit,
+         upr = pred + 1.96 * pred.ext$se.fit)
+
+# Plotting results: 
+ggplot(dat.ext, aes(x = x))+
+  geom_line(aes(y = pred), col = "magenta")+
+  geom_ribbon(aes(ymin = lwr, ymax = upr), fill = "magenta", alpha = 0.3)+
+  geom_line(aes(y = sin_x), col = "red")+
+  theme_bw(12)
+```
+
+First of all, note the width of the prediction intervals. As the model has not been trained on these values of $x$, it is expected that these are quite wide. It is comforting that the underlying signal (in red) is inside the intervals, but as you can see the shape of the curve is not very near the true signal. Hence, such a prediction will not be very informative. 
+
+
+Finally, let's make a plot, combining the prediction with the training data. Note that we add the *y=NA* since this column is not included in the dat.ext data frame. We also add the *type* column to separate the two data sources and split the coloring based on this column.
+```{r gam6}
+dat.combined <- rbind(
+  dat %>% mutate(type = "training"),           # adding colum type to split 
+  dat.ext %>% mutate(y=NA, type = "extrapolation")# the two data sources by
+  )
+ggplot(dat.combined, aes(x=x, col = type, fill = type))+
+  geom_point(aes(y=y), color = "black") +
+  geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = .4)+
+  geom_line(aes(y=pred))+
+  geom_line(aes(y=sin_x), col = "yellow", lwd = 1.2, lty =2)+
+  theme_bw(12)
+  
+
+```
+
+The warning about the 32 missing values are because we added *y=NA* to the dat.ext data frame.
+
+
+
+### Data camp {-}
+
+There is a very informative and useful GAM module on data camp that we can highly recommend called [Nonlinear modeling in R with GAMs](https://app.datacamp.com/learn/courses/nonlinear-modeling-in-r-with-gams) - especially chapter 1 and 2. 
+
+
+
+
+

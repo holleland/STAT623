@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title> 3 Non-linear regression | Data science with R: Applied Predictive Modelling</title>
+  <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content=" 3 Non-linear regression | Data science with R: Applied Predictive Modelling" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content=" 3 Non-linear regression | Data science with R: Applied Predictive Modelling" />
+  
+  <meta name="twitter:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
+  
+
+<meta name="author" content="Sondre Hølleland" />
+
+
+<meta name="date" content="2022-03-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="lecture2.html"/>
+<link rel="next" href="lecture4.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">STAT632 Applied predictive modelling</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course overview</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#learning-outcomes"><i class="fa fa-check"></i>Learning outcomes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#lecture-overview"><i class="fa fa-check"></i>Lecture overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#litterature"><i class="fa fa-check"></i>Litterature</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="lecture1.html"><a href="lecture1.html"><i class="fa fa-check"></i><b>1</b> Introduction and short recap of R</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="lecture1.html"><a href="lecture1.html#introduction"><i class="fa fa-check"></i><b>1.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="lecture1.html"><a href="lecture1.html#prediction-or-interpretation"><i class="fa fa-check"></i><b>1.1.1</b> Prediction or interpretation?</a></li>
+<li class="chapter" data-level="1.1.2" data-path="lecture1.html"><a href="lecture1.html#terminology"><i class="fa fa-check"></i><b>1.1.2</b> Terminology</a></li>
+<li class="chapter" data-level="1.1.3" data-path="lecture1.html"><a href="lecture1.html#overview"><i class="fa fa-check"></i><b>1.1.3</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="lecture1.html"><a href="lecture1.html#recap-of-r"><i class="fa fa-check"></i><b>1.2</b> Recap of R</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="lecture1.html"><a href="lecture1.html#installing-r-and-rstudio"><i class="fa fa-check"></i><b>1.2.1</b> Installing R and Rstudio</a></li>
+<li class="chapter" data-level="1.2.2" data-path="lecture1.html"><a href="lecture1.html#r-community-and-packages"><i class="fa fa-check"></i><b>1.2.2</b> R community and packages</a></li>
+<li class="chapter" data-level="1.2.3" data-path="lecture1.html"><a href="lecture1.html#datacamp"><i class="fa fa-check"></i><b>1.2.3</b> Datacamp</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="lecture1.html"><a href="lecture1.html#data-preprocessing"><i class="fa fa-check"></i><b>1.3</b> Data preprocessing</a></li>
+<li class="chapter" data-level="1.4" data-path="lecture1.html"><a href="lecture1.html#case-study"><i class="fa fa-check"></i><b>1.4</b> Case study</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="lecture1.html"><a href="lecture1.html#data-transformations-for-individual-predictors"><i class="fa fa-check"></i><b>1.4.1</b> Data transformations for individual predictors</a></li>
+<li class="chapter" data-level="1.4.2" data-path="lecture1.html"><a href="lecture1.html#centering-and-scaling"><i class="fa fa-check"></i><b>1.4.2</b> Centering and scaling</a></li>
+<li class="chapter" data-level="1.4.3" data-path="lecture1.html"><a href="lecture1.html#tranformations-to-resolve-skewness"><i class="fa fa-check"></i><b>1.4.3</b> Tranformations to resolve skewness</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="lecture2.html"><a href="lecture2.html"><i class="fa fa-check"></i><b>2</b> Over-fitting and model tuning, selection and evaluation and multiple regression</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="lecture2.html"><a href="lecture2.html#overfitting"><i class="fa fa-check"></i><b>2.1</b> Overfitting</a></li>
+<li class="chapter" data-level="2.2" data-path="lecture2.html"><a href="lecture2.html#training-validation-and-test-split"><i class="fa fa-check"></i><b>2.2</b> Training, validation and test split</a></li>
+<li class="chapter" data-level="2.3" data-path="lecture2.html"><a href="lecture2.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="lecture2.html"><a href="lecture2.html#example"><i class="fa fa-check"></i><b>2.3.1</b> Example</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lecture3.html"><a href="lecture3.html"><i class="fa fa-check"></i><b>3</b> Non-linear regression</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="lecture3.html"><a href="lecture3.html#gam-example"><i class="fa fa-check"></i><b>3.1</b> GAM example</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture3.html"><a href="lecture3.html#data-camp"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="lecture4.html"><a href="lecture4.html"><i class="fa fa-check"></i><b>4</b> Classification methods</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="lecture4.html"><a href="lecture4.html#k-nearest-neighbor"><i class="fa fa-check"></i><b>4.1</b> k-nearest neighbor</a></li>
+<li class="chapter" data-level="4.2" data-path="lecture4.html"><a href="lecture4.html#naive-bayes"><i class="fa fa-check"></i><b>4.2</b> Naive bayes</a></li>
+<li class="chapter" data-level="4.3" data-path="lecture4.html"><a href="lecture4.html#logistic-regression"><i class="fa fa-check"></i><b>4.3</b> Logistic regression</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture4.html"><a href="lecture4.html#data-camp-1"><i class="fa fa-check"></i>Data camp</a></li>
+<li class="chapter" data-level="4.3.1" data-path="lecture4.html"><a href="lecture4.html#sources"><i class="fa fa-check"></i><b>4.3.1</b> Sources</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lecture5.html"><a href="lecture5.html"><i class="fa fa-check"></i><b>5</b> Trees</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lecture5.html"><a href="lecture5.html#decision-trees"><i class="fa fa-check"></i><b>5.1</b> Decision trees</a></li>
+<li class="chapter" data-level="5.2" data-path="lecture5.html"><a href="lecture5.html#random-forrest"><i class="fa fa-check"></i><b>5.2</b> Random forrest</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture5.html"><a href="lecture5.html#data-camp-2"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="lecture6.html"><a href="lecture6.html"><i class="fa fa-check"></i><b>6</b> Support Vector Machines</a></li>
+<li class="chapter" data-level="7" data-path="lecture7.html"><a href="lecture7.html"><i class="fa fa-check"></i><b>7</b> Artificial Neural networks</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="lecture7.html"><a href="lecture7.html#mlp"><i class="fa fa-check"></i><b>7.1</b> MLP</a></li>
+<li class="chapter" data-level="7.2" data-path="lecture7.html"><a href="lecture7.html#objective-functions-and-training"><i class="fa fa-check"></i><b>7.2</b> Objective functions and training</a></li>
+<li class="chapter" data-level="7.3" data-path="lecture7.html"><a href="lecture7.html#validation-of-trained-models"><i class="fa fa-check"></i><b>7.3</b> Validation of trained models</a></li>
+<li class="chapter" data-level="7.4" data-path="lecture7.html"><a href="lecture7.html#implementation-of-mlp-in-keras"><i class="fa fa-check"></i><b>7.4</b> Implementation of MLP in Keras</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="lecture7.html"><a href="lecture7.html#installing-keras-and-tensorflow"><i class="fa fa-check"></i><b>7.4.1</b> Installing Keras and Tensorflow</a></li>
+<li class="chapter" data-level="7.4.2" data-path="lecture7.html"><a href="lecture7.html#importing-mnist"><i class="fa fa-check"></i><b>7.4.2</b> Importing MNIST</a></li>
+<li class="chapter" data-level="7.4.3" data-path="lecture7.html"><a href="lecture7.html#preprocessing"><i class="fa fa-check"></i><b>7.4.3</b> Preprocessing</a></li>
+<li class="chapter" data-level="7.4.4" data-path="lecture7.html"><a href="lecture7.html#mlp-model"><i class="fa fa-check"></i><b>7.4.4</b> MLP model</a></li>
+<li class="chapter" data-level="7.4.5" data-path="lecture7.html"><a href="lecture7.html#compiling-and-training-the-model"><i class="fa fa-check"></i><b>7.4.5</b> Compiling and training the model</a></li>
+<li class="chapter" data-level="7.4.6" data-path="lecture7.html"><a href="lecture7.html#evaluating-the-model"><i class="fa fa-check"></i><b>7.4.6</b> Evaluating the model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="lecture8.html"><a href="lecture8.html"><i class="fa fa-check"></i><b>8</b> Unsupervised Learning</a></li>
+<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data science with R: Applied Predictive Modelling</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="lecture3" class="section level1" number="3">
+<h1><span class="header-section-number"> 3</span> Non-linear regression</h1>
+<p>As we saw in the previous lecture in the example illustrating the overfitting concept, we do not always have a linear relationship between the response and the covariates. In that example, the relationship was a periodic sine function. Other examples of non-linear relations can be polynomial-, exponential- and logistical functions. There are many non-linear regression models designed for solving different problems, but we will mainly focus on the generalized additive models (GAMs). These are quite closely related to generalized linear models (GLMs). There are a few options for R packages for GAMs, but we will focus on the <em>mgcv</em> package <span class="citation">(<a href="#ref-mgcv2017" role="doc-biblioref">Wood 2017</a>)</span>.</p>
+<div class="figure">
+<img src="STAT623-compendium_files/figure-html/examples%20of%20nonlinear%20relations-1.png" alt="Examples of relationsships between x and y." width="672" />
+<p class="caption">
+(#fig:examples of nonlinear relations)Examples of relationsships between x and y.
+</p>
+</div>
+<p>In the figure above, we illustrate different types of relationships between x and y. The green one is a linear one, while the others are non-linear. The red curve is even an additive combination of some of the other types of curves, i.e. </p>
+<p><span class="math display">\[ y(x) = -0.3 x + 0.5 \sin(x)+ 0.5 \log(x+1) - 0.02 x^2 + \exp((x+1)/10).\]</span>
+This is actually not so different from the principal idea behind GAMs. A GAM uses a set of basis functions, often called smoothers, to map the dependent variables and use the transformed variables as covariates in an additive manner. We will explain this further.</p>
+<p>For a simple linear model, we have that the expected value of the <span class="math inline">\(i\)</span>th variable is <span class="math inline">\(\mathrm{E} Y_i = \mu_i = \beta_0+\beta_1 X_i\)</span>. For a generalized linear model, the relationship is mapped using a link function <span class="math inline">\(g\)</span>, such that <span class="math inline">\(g(\mu_i) = \beta_0+\beta_1X_i\)</span>. For a generalized additive model we take it one step further, by also mapping the dependent variable:</p>
+<p><span class="math display">\[g(\mu_i) = \beta_0 + \sum_{j=0}^k \beta_j f_j(X_i),\]</span></p>
+<p>where <span class="math inline">\(\{f_j:\, j = 1,\ldots, k\}\)</span> is a set of basis functions. The standard in the <em>mgcv</em> package is to use thin plate splines.</p>
+<div id="gam-example" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> GAM example</h2>
+<p>In the video below, Sondre goes through this section’s example in a bit more detail and with more in-depth explanations of the code. You can also read the example below the video.</p>
+<iframe src="http://www.youtube.com/embed/OAjA1m3pGP8?rel=0" width="672" height="400px" data-external="1">
+</iframe>
+<p>We will simulate a dataset where the “true” relationship between X and Y is given by (for observation <span class="math inline">\(i\)</span>),
+<span class="math display">\[Y_i = 0.5X_i + \sin(X_i)+Z_i, \quad \text{where } Z_i\sim N(0,0.29^2).\]</span></p>
+<p>We start by generating the data in a tibble data frame:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="lecture3.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># seed for reproducibility</span></span>
+<span id="cb39-2"><a href="lecture3.html#cb39-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb39-3"><a href="lecture3.html#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, pi <span class="sc">*</span> <span class="dv">2</span>, <span class="fl">0.1</span>),  </span>
+<span id="cb39-4"><a href="lecture3.html#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sin_x =</span> .<span class="dv">5</span><span class="sc">*</span>x<span class="sc">+</span><span class="fu">sin</span>(x), <span class="co"># expected value</span></span>
+<span id="cb39-5"><a href="lecture3.html#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span>   sin_x <span class="sc">+</span>  <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="fu">length</span>(x), <span class="at">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb39-6"><a href="lecture3.html#cb39-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sd =</span> <span class="fu">sd</span>(sin_x <span class="sc">/</span> <span class="dv">2</span>))) <span class="co"># add noise</span></span>
+<span id="cb39-7"><a href="lecture3.html#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat) <span class="co"># print first 6 observations</span></span></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##       x sin_x       y
+##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1   0   0     -0.162 
+## 2   0.1 0.150  0.0833
+## 3   0.2 0.299  0.749 
+## 4   0.3 0.446  0.466 
+## 5   0.4 0.589  0.627 
+## 6   0.5 0.729  1.22</code></pre>
+<p>We can plot the true underlying signal (black line) and the observations (black dots) adding a linear regression line (blue) ontop. Clearly a linear model would fit poorly to these data.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="lecture3.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb41-2"><a href="lecture3.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="sc">+</span>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> sin_x))</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="STAT623-compendium_files/figure-html/plotbasisfunctions-1.png" width="672" /></p>
+<p>Instead, we will use a GAM model. As you will see below the syntax is very similar to the glm or even lm function in base R.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="lecture3.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv) <span class="co"># gam package</span></span>
+<span id="cb43-2"><a href="lecture3.html#cb43-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">gam</span>(y <span class="sc">~</span> <span class="fu">s</span>(x), <span class="at">data =</span> dat, <span class="at">method =</span> <span class="st">&quot;REML&quot;</span>)</span></code></pre></div>
+<p>The mgcv package uses the syntax <em>y ~ s(x)</em> to specify the model. This means that y is modelled as a smooth function of x. If nothing else is specified, the procedure will use a thin plate spline and determine the number of basis functions to use itself. You can also fix this by setting the <span class="math inline">\(k\)</span> argument of the <span class="math inline">\(s()\)</span> function. When problems with overfitting occur, you can tackle this by setting a lower value for <span class="math inline">\(k\)</span> or setting the <em>smoothing parameter</em>. This argument is <span class="math inline">\(sp\)</span> in the <span class="math inline">\(s()\)</span> function. We will not go into details about this here, but in general it is recommended to use <em>method = “REML”</em>. This means the model is using restricted maxmimum likelihood for the estimation and use this algorithm to set of the smoothing parameter for you.</p>
+<p>Let’s look at the model summary.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="lecture3.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code></pre></div>
+<pre><code>## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## y ~ s(x)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  1.56585    0.03236   48.39   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Approximate significance of smooth terms:
+##        edf Ref.df     F p-value    
+## s(x) 6.367  7.517 37.88  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## R-sq.(adj) =  0.821   Deviance explained = 83.9%
+## -REML = 15.726  Scale est. = 0.065972  n = 63</code></pre>
+<p>Here you can see we have a significant intercept term and a approximate significance of the smooth term. The procedure uses an approximation here because the smooth term not really just one covariate. It is important to check that the estimated degree of freedom (edf) is not very close to the reference degree of freedom (Ref.df). This indicates that model has not been given enough flexibility and you could consider setting a higher <span class="math inline">\(k\)</span> value for the smoother.</p>
+<p>Let’s have a closer look at the smoothing terms being used in this model. In the code below we extract the model matrix and plot the basis function. To have a slightly deeper understanding of what the GAM model does is that it creates a weighted sum of these basis functions to, as optimally as possible, fit the underlying curve of the data.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="lecture3.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract model matrix: </span></span>
+<span id="cb46-2"><a href="lecture3.html#cb46-2" aria-hidden="true" tabindex="-1"></a>MM <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mod)</span>
+<span id="cb46-3"><a href="lecture3.html#cb46-3" aria-hidden="true" tabindex="-1"></a>MM <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(MM)</span>
+<span id="cb46-4"><a href="lecture3.html#cb46-4" aria-hidden="true" tabindex="-1"></a>MM<span class="sc">$</span>x <span class="ot">&lt;-</span> dat<span class="sc">$</span>x</span>
+<span id="cb46-5"><a href="lecture3.html#cb46-5" aria-hidden="true" tabindex="-1"></a>MM <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(MM, <span class="sc">-</span>x)</span>
+<span id="cb46-6"><a href="lecture3.html#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="lecture3.html#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="lecture3.html#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="lecture3.html#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot basis functions</span></span>
+<span id="cb46-10"><a href="lecture3.html#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(MM, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value, <span class="at">group =</span> name, <span class="at">col =</span> name)) <span class="sc">+</span></span>
+<span id="cb46-11"><a href="lecture3.html#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb46-12"><a href="lecture3.html#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">12</span>)<span class="sc">+</span></span>
+<span id="cb46-13"><a href="lecture3.html#cb46-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb46-14"><a href="lecture3.html#cb46-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Basis functions&quot;</span>)</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/gam2-1.png" width="672" />
+If we multiply these basis functions with the weights for the fitted model, we get the additive terms that constitutes the full model prediction.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="lecture3.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract coefficient from the model and merge model matrix: </span></span>
+<span id="cb47-2"><a href="lecture3.html#cb47-2" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">coef =</span> <span class="fu">coef</span>(mod))</span>
+<span id="cb47-3"><a href="lecture3.html#cb47-3" aria-hidden="true" tabindex="-1"></a>coefs<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">coef</span>(mod))</span>
+<span id="cb47-4"><a href="lecture3.html#cb47-4" aria-hidden="true" tabindex="-1"></a>MM <span class="ot">&lt;-</span> <span class="fu">left_join</span>(MM,coefs, <span class="at">by =</span> <span class="st">&quot;name&quot;</span>)</span>
+<span id="cb47-5"><a href="lecture3.html#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot model weigthed basis functions</span></span>
+<span id="cb47-6"><a href="lecture3.html#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(MM, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> value<span class="sc">*</span>coef, <span class="at">group =</span> name, <span class="at">col =</span> name)) <span class="sc">+</span></span>
+<span id="cb47-7"><a href="lecture3.html#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb47-8"><a href="lecture3.html#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">12</span>)<span class="sc">+</span></span>
+<span id="cb47-9"><a href="lecture3.html#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb47-10"><a href="lecture3.html#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Model weigthed basis functions&quot;</span>)</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/gam3-1.png" width="672" /></p>
+<p>Here you can see how the different curves contribute the full signal. Lets have a look at the final prediction and plot that along with a 95% confidence interval, the observations and the true signal.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="lecture3.html#cb48-1" aria-hidden="true" tabindex="-1"></a>pred.mod <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">se.fit =</span> <span class="cn">TRUE</span>) <span class="co"># predict values with standard error</span></span>
+<span id="cb48-2"><a href="lecture3.html#cb48-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
+<span id="cb48-3"><a href="lecture3.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pred =</span> pred.mod<span class="sc">$</span>fit,</span>
+<span id="cb48-4"><a href="lecture3.html#cb48-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">lwr =</span> pred <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> pred.mod<span class="sc">$</span>se.fit,</span>
+<span id="cb48-5"><a href="lecture3.html#cb48-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">upr =</span> pred <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> pred.mod<span class="sc">$</span>se.fit)</span>
+<span id="cb48-6"><a href="lecture3.html#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> dat, <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span> </span>
+<span id="cb48-7"><a href="lecture3.html#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb48-8"><a href="lecture3.html#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> pred), <span class="at">col =</span> <span class="st">&quot;magenta&quot;</span>)<span class="sc">+</span></span>
+<span id="cb48-9"><a href="lecture3.html#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">alpha =</span> .<span class="dv">3</span>, <span class="at">fill =</span> <span class="st">&quot;magenta&quot;</span>) <span class="sc">+</span></span>
+<span id="cb48-10"><a href="lecture3.html#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb48-11"><a href="lecture3.html#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb48-12"><a href="lecture3.html#cb48-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;x&quot;</span>,</span>
+<span id="cb48-13"><a href="lecture3.html#cb48-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;y&quot;</span></span>
+<span id="cb48-14"><a href="lecture3.html#cb48-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/gam4-1.png" width="672" /></p>
+<p>Normally, we would do the train-test split, but in this example we know the truth and the point of the exercise is to reproduce the underlying signal.</p>
+<p>As a last element of this example, we will see how well the model extrapolates as we try to predict the signal for values the model has not “seen.” For the training we used values of <span class="math inline">\(x\)</span> between 0 and <span class="math inline">\(2\pi\)</span>. Let’s see how it performs for values of x between <span class="math inline">\(2\pi\)</span> and <span class="math inline">\(3\pi\)</span>.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="lecture3.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting up new data:</span></span>
+<span id="cb49-2"><a href="lecture3.html#cb49-2" aria-hidden="true" tabindex="-1"></a>dat.ext <span class="ot">&lt;-</span> <span class="fu">tibble</span>( </span>
+<span id="cb49-3"><a href="lecture3.html#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">2</span><span class="sc">*</span>pi, <span class="dv">3</span><span class="sc">*</span>pi, <span class="fl">0.1</span>),</span>
+<span id="cb49-4"><a href="lecture3.html#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sin_x =</span> <span class="fl">0.5</span><span class="sc">*</span>x<span class="sc">+</span><span class="fu">sin</span>(x) <span class="co"># underlying signal</span></span>
+<span id="cb49-5"><a href="lecture3.html#cb49-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-6"><a href="lecture3.html#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="lecture3.html#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicting</span></span>
+<span id="cb49-8"><a href="lecture3.html#cb49-8" aria-hidden="true" tabindex="-1"></a>pred.ext <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">newdata =</span> dat.ext, <span class="at">se.fit =</span> <span class="cn">TRUE</span>, <span class="at">type =</span>)</span>
+<span id="cb49-9"><a href="lecture3.html#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="lecture3.html#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="co"># adding predictions to data frame:</span></span>
+<span id="cb49-11"><a href="lecture3.html#cb49-11" aria-hidden="true" tabindex="-1"></a>dat.ext <span class="ot">&lt;-</span> dat.ext <span class="sc">%&gt;%</span> </span>
+<span id="cb49-12"><a href="lecture3.html#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pred =</span> pred.ext<span class="sc">$</span>fit, </span>
+<span id="cb49-13"><a href="lecture3.html#cb49-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">lwr =</span> pred <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> pred.ext<span class="sc">$</span>se.fit,</span>
+<span id="cb49-14"><a href="lecture3.html#cb49-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">upr =</span> pred <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> pred.ext<span class="sc">$</span>se.fit)</span>
+<span id="cb49-15"><a href="lecture3.html#cb49-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-16"><a href="lecture3.html#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting results: </span></span>
+<span id="cb49-17"><a href="lecture3.html#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat.ext, <span class="fu">aes</span>(<span class="at">x =</span> x))<span class="sc">+</span></span>
+<span id="cb49-18"><a href="lecture3.html#cb49-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> pred), <span class="at">col =</span> <span class="st">&quot;magenta&quot;</span>)<span class="sc">+</span></span>
+<span id="cb49-19"><a href="lecture3.html#cb49-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;magenta&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)<span class="sc">+</span></span>
+<span id="cb49-20"><a href="lecture3.html#cb49-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> sin_x), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)<span class="sc">+</span></span>
+<span id="cb49-21"><a href="lecture3.html#cb49-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">12</span>)</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/gam5-1.png" width="672" /></p>
+<p>First of all, note the width of the prediction intervals. As the model has not been trained on these values of <span class="math inline">\(x\)</span>, it is expected that these are quite wide. It is comforting that the underlying signal (in red) is inside the intervals, but as you can see the shape of the curve is not very near the true signal. Hence, such a prediction will not be very informative.</p>
+<p>Finally, let’s make a plot, combining the prediction with the training data. Note that we add the <em>y=NA</em> since this column is not included in the dat.ext data frame. We also add the <em>type</em> column to separate the two data sources and split the coloring based on this column.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="lecture3.html#cb50-1" aria-hidden="true" tabindex="-1"></a>dat.combined <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb50-2"><a href="lecture3.html#cb50-2" aria-hidden="true" tabindex="-1"></a>  dat <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">&quot;training&quot;</span>),           <span class="co"># adding colum type to split </span></span>
+<span id="cb50-3"><a href="lecture3.html#cb50-3" aria-hidden="true" tabindex="-1"></a>  dat.ext <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">y=</span><span class="cn">NA</span>, <span class="at">type =</span> <span class="st">&quot;extrapolation&quot;</span>)<span class="co"># the two data sources by</span></span>
+<span id="cb50-4"><a href="lecture3.html#cb50-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb50-5"><a href="lecture3.html#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat.combined, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">col =</span> type, <span class="at">fill =</span> type))<span class="sc">+</span></span>
+<span id="cb50-6"><a href="lecture3.html#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y=</span>y), <span class="at">color =</span> <span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="lecture3.html#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">alpha =</span> .<span class="dv">4</span>)<span class="sc">+</span></span>
+<span id="cb50-8"><a href="lecture3.html#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred))<span class="sc">+</span></span>
+<span id="cb50-9"><a href="lecture3.html#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>sin_x), <span class="at">col =</span> <span class="st">&quot;yellow&quot;</span>, <span class="at">lwd =</span> <span class="fl">1.2</span>, <span class="at">lty =</span><span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb50-10"><a href="lecture3.html#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">12</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 32 rows containing missing values (geom_point).</code></pre>
+<p><img src="STAT623-compendium_files/figure-html/gam6-1.png" width="672" /></p>
+<p>The warning about the 32 missing values are because we added <em>y=NA</em> to the dat.ext data frame.</p>
+<div id="data-camp" class="section level3 unnumbered">
+<h3>Data camp</h3>
+<p>There is a very informative and useful GAM module on data camp that we can highly recommend called <a href="https://app.datacamp.com/learn/courses/nonlinear-modeling-in-r-with-gams">Nonlinear modeling in R with GAMs</a> - especially chapter 1 and 2.</p>
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-mgcv2017" class="csl-entry">
+Wood, S. N. 2017. <em>Generalized Additive Models: An Introduction with r</em>. 2nd ed. Chapman; Hall/CRC.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="lecture2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="lecture4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["STAT623 compendium.pdf", "STAT623 compendium.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

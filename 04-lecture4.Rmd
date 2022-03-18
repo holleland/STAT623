@@ -1,0 +1,86 @@
+# Classification methods {#lecture4}
+
+Sometimes we are not interested in predicting a continuous output, but rather a factor or a class. We use classes or categories for many things and often we want a model to make a prediction into discrete categories. Is this an image of a cat or a dog? Given information of each passenger, is it likely that a certain individual would survive the shipwrecking of Titanic? Based on the score of certain hand-ins in a predictive modelling course, what final grade (A-F) is the student likely to get on the final exam? 
+
+In this chapter we will learn about the classification methods k-nearest neighbor (knn), naive bayes and logistic regression. We will briefly consider all three methods here, and refer to the data camp course for further details (see data camp section below).
+
+
+```{r loadTitcanic4}
+library(class)
+data("titanic.raw", package = "datarium")
+# test = titanic.raw[1,-4]
+# knn(train = titanic.raw[,-4],test =test, cl = titanic.raw[,4])
+
+```
+
+## k-nearest neighbor
+The method k-nearest neighbor (knn) is a very simple classificiation method, where for predicting a class of observations in the test set one find the $k$ observations in the training set that has covariates nearest to the covariates of the test case in terms of Euclidean distance. 
+
+There are many different implementations of knn, for instance in the class package (see *?class::knn*). But since we will be using the package bundle *tidymodels* in the next lecture we will also use it here. Tidymodels is, similar to the tidyverse, a combination of many packages using a kind of pipe notation to build models. It is very well integrated with tidyverse and provides a general framework for many different models. We will use knn as an example of how we set up a model in the tidymodels setup. 
+
+As an example for classification we will use the famous Iris dataset of Edgar Anderson (see *?iris*). We start by loaded the packages and the data containing inforation of sepal- and petal- lengths and widths of three different iris flower species (Iris setosa, Iris versicolor and Iris virginica). The goal will be to make a model that can tell us which Iris flower species we are dealing with, based on the given lengths and widths. 
+
+```{r, setupknn}
+library(tidyverse)
+library(tidymodels)
+df <- as_tibble(iris)
+head(df)
+```
+
+We make our train-test split using the *tidymodels::initial_split* function to create the split and respecitvely the training and testing functions to extract the train and test sets. Note that we use *strata = Specices*. This means we are doing stratified subsampling so that we have the (roughly) the same proportion of the different species in the test and train sets.
+```{r knntraintestsplit}
+set.seed(999)
+split <- initial_split(df, strata = Species) 
+df_train <- training(split)
+df_test <- testing(split)
+```
+
+To fit a model in tidymodels we must first specify which type of model (nearest neighbor) we want to create and set an engine and a mode. The engine is the package used to fit the model and the mode is usually "classification" or "regression", depending on what type of y variable you are considering. 
+
+```{r knnsetengine}
+knn_spec <- nearest_neighbor() %>% 
+  set_engine("kknn") %>%  # requires "kknn" package installed
+  set_mode("classification")
+```
+
+Then we are ready to fit the model using the fit function, where we specify a formula and which data to use. We will here use all covariates in the train set to predict *Species*.
+```{r knnfit}
+knn_fit <- knn_spec %>% 
+  fit(Species ~., data = df_train)
+knn_fit
+```
+
+As you can see fromt he output, the best number of neighbors to be used was 5. The knn model will thus look for the 5 flowers that has the nearest covariates and then predict based on the majority vote of the five. For example if three of them are Iris Virginica and two are Iris versicolor, the prediction will be Iris Virginica. 
+
+Let us predict on the test set and chech the accuracy and $\kappa$ using the metrics function. 
+```{r knnpredict}
+knn_fit %>% 
+    predict(df_test) %>%      # predict on the test set
+    bind_cols(df_test) %>%    # bind columns (adding the truth and covariates) 
+    metrics(truth = Species, estimate = .pred_class) # calculate metrics
+```
+The accurcay metric is simply the number of correct classifcation divided by the total number of predictions made. We get (roughly) 95\% correct, which seems very acceptable. The [Cohen's kappa](https://en.wikipedia.org/wiki/Cohen%27s_kappa) metric is useful when the data is imbalanced, e.g. you have many more Iris versicolor than Iris setosa in the data, such that predicting all flowers as Iris versicolor would also give a high accuracy. 
+
+
+## Naive bayes
+
+
+## Logistic regression
+Logistic regression is a classical method for estimating the conditional probability of certain discrete outcomes given the value of covariates. In the Iris example, we can get estimates of the probability of the flower species being setosa, vercicolor or viriginca given the length and width of sepal and petal. For logistic regression the prediction is thus a value between 0 and 1, and this is achieved by mapping the linear prediction using the inverse logit link function, defined by
+
+$$\rm{logit}^{-1}(x) = \frac{e^x}{1+e^x}, \quad x\in\mathbb R.$$ 
+
+We can also define the logit function directly, mapping probabilites $p\in (0,1)$ to $\mathbb R$, by
+
+$$\rm{logit}(p) = \ln \bigg(\frac{p}{1-p}\bigg)$$
+Thus, if $x$ is the vector of covariate for a certain flower and $\beta$ the parameter vector, we will model the probability of an Iris flower belonging to either of the three species given the set of lengths and widhts, by
+$$P(Y=y|x) = \rm{logit}^{-1}(x^\prime \beta)=\frac{\exp(x^\prime \beta)}{1+\exp(x^\prime \beta)}.$$
+
+
+### Data camp {-}
+
+We highly recommend the data camp course [Supervised Learning in R: Classification](https://app.datacamp.com/learn/courses/supervised-learning-in-r-classification) - chapters 1-3. The subject of chapter 4 is covered separately in the next lecture \@ref(lecture5).
+
+### Sources
+
+[rpubs](https://rpubs.com/Nilafhiosagam/574373)

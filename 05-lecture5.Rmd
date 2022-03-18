@@ -1,0 +1,33 @@
+# Trees {#lecture5}
+
+In this lecture we will learn about tree based models. We start out with simple decision trees and end up with a random forrest. 
+
+For this chapter we will use the *tidymodels* package [@tidymodels]. This can be installed by running
+```{r installtidymodels, eval =FALSE}
+install.packages("tidymodels")
+```
+
+
+## Decision trees
+
+
+```{r dtrees}
+library(tidymodels)
+data("PimaIndiansDiabetes", package = "mlbench")
+diabetes <- PimaIndiansDiabetes
+diabetes_split <- initial_split(diabetes, prop = 0.9, strata = diabetes)
+
+diabetes_train <- training(diabetes_split)
+diabetes_test <- testing(diabetes_split)
+counts_train <- table(diabetes_train$diabetes)
+counts_test <- table(diabetes_test$diabetes)
+```
+
+
+
+## Random forrest
+
+
+### Data camp {-}
+
+We highly recommend the data camp course [Machine Learning with Tree-Based Models in R](https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r) chapters 1-4.

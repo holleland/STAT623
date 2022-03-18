@@ -1,0 +1,62 @@
+--- 
+title: "Data science with R: Applied Predictive Modelling"
+subtitle: "Compendium for STAT623"
+author: "Sondre Hølleland"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "Course in applied predictive modelling made for teaching STAT623 at University of Bergen"
+---
+
+# Course overview {-}
+
+## Learning outcomes {-}
+After completing this course, students should 
+
+- Be able to make their own models for different situations using methods such as: linear regression, multiple regression, generalized additive models, splines, support vector machines, decision trees, etc. 
+- Become native speakers of the R language. 
+- ....
+- ....
+
+
+## Lecture overview {-}
+
+```{r, echo = FALSE}
+Lectures <- data.frame(
+  Lecture = paste0("\\@ref(lecture",1:9,")"),
+  Subject = c("Introduction and short recap of R and Data preprocessing",
+              "Over-fitting and model tuning, selection and evaluation and multiple regression",
+              "Non-linear regression",
+              "Classification methods",
+              "Trees",
+              "Support vector machines",
+              "Neural Networks",
+              "Unsupervised learning",
+              "Feature selection/Explainable AI"),
+  Exercises = c("Recap of R",
+                "Multiple regression",
+                "GAMs",
+                "",
+                "xgboost", 
+                rep("",4)),
+  "Datacamp" = c("Introduction to Regression in R (ch 1-2)",
+                 "Supervised Learning in R: Regression (ch 1-2)",
+                 "Nonlinear modeling in R with GAMs (ch 1-2)",
+                 "Supervised Learning in R: Classification (ch 1-3)",
+                 "Machine Learning with Tree-Based Models in R (ch 1-4)",
+                 "Support Vector Machines in R (ch 1-2)",
+                 "Introduction to TensorFlow in R (ch 1-3)",
+                 "Unsupervised Learning in R (ch 1-4)",
+                 "Supervised Learning in R: Classification (ch 3, video on automatic feature selection")
+)
+knitr::kable(Lectures)
+```
+
+## Litterature {-}
+
+We will use many different sources for teaching you applied predictive modelling. @kuhn2016 and @james2013 are the main references. 
+
+

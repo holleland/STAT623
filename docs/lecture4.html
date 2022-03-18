@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title> 4 Classification methods | Data science with R: Applied Predictive Modelling</title>
+  <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content=" 4 Classification methods | Data science with R: Applied Predictive Modelling" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content=" 4 Classification methods | Data science with R: Applied Predictive Modelling" />
+  
+  <meta name="twitter:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
+  
+
+<meta name="author" content="Sondre Hølleland" />
+
+
+<meta name="date" content="2022-03-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="lecture3.html"/>
+<link rel="next" href="lecture5.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">STAT632 Applied predictive modelling</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course overview</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#learning-outcomes"><i class="fa fa-check"></i>Learning outcomes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#lecture-overview"><i class="fa fa-check"></i>Lecture overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#litterature"><i class="fa fa-check"></i>Litterature</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="lecture1.html"><a href="lecture1.html"><i class="fa fa-check"></i><b>1</b> Introduction and short recap of R</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="lecture1.html"><a href="lecture1.html#introduction"><i class="fa fa-check"></i><b>1.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="lecture1.html"><a href="lecture1.html#prediction-or-interpretation"><i class="fa fa-check"></i><b>1.1.1</b> Prediction or interpretation?</a></li>
+<li class="chapter" data-level="1.1.2" data-path="lecture1.html"><a href="lecture1.html#terminology"><i class="fa fa-check"></i><b>1.1.2</b> Terminology</a></li>
+<li class="chapter" data-level="1.1.3" data-path="lecture1.html"><a href="lecture1.html#overview"><i class="fa fa-check"></i><b>1.1.3</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="lecture1.html"><a href="lecture1.html#recap-of-r"><i class="fa fa-check"></i><b>1.2</b> Recap of R</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="lecture1.html"><a href="lecture1.html#installing-r-and-rstudio"><i class="fa fa-check"></i><b>1.2.1</b> Installing R and Rstudio</a></li>
+<li class="chapter" data-level="1.2.2" data-path="lecture1.html"><a href="lecture1.html#r-community-and-packages"><i class="fa fa-check"></i><b>1.2.2</b> R community and packages</a></li>
+<li class="chapter" data-level="1.2.3" data-path="lecture1.html"><a href="lecture1.html#datacamp"><i class="fa fa-check"></i><b>1.2.3</b> Datacamp</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="lecture1.html"><a href="lecture1.html#data-preprocessing"><i class="fa fa-check"></i><b>1.3</b> Data preprocessing</a></li>
+<li class="chapter" data-level="1.4" data-path="lecture1.html"><a href="lecture1.html#case-study"><i class="fa fa-check"></i><b>1.4</b> Case study</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="lecture1.html"><a href="lecture1.html#data-transformations-for-individual-predictors"><i class="fa fa-check"></i><b>1.4.1</b> Data transformations for individual predictors</a></li>
+<li class="chapter" data-level="1.4.2" data-path="lecture1.html"><a href="lecture1.html#centering-and-scaling"><i class="fa fa-check"></i><b>1.4.2</b> Centering and scaling</a></li>
+<li class="chapter" data-level="1.4.3" data-path="lecture1.html"><a href="lecture1.html#tranformations-to-resolve-skewness"><i class="fa fa-check"></i><b>1.4.3</b> Tranformations to resolve skewness</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="lecture2.html"><a href="lecture2.html"><i class="fa fa-check"></i><b>2</b> Over-fitting and model tuning, selection and evaluation and multiple regression</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="lecture2.html"><a href="lecture2.html#overfitting"><i class="fa fa-check"></i><b>2.1</b> Overfitting</a></li>
+<li class="chapter" data-level="2.2" data-path="lecture2.html"><a href="lecture2.html#training-validation-and-test-split"><i class="fa fa-check"></i><b>2.2</b> Training, validation and test split</a></li>
+<li class="chapter" data-level="2.3" data-path="lecture2.html"><a href="lecture2.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="lecture2.html"><a href="lecture2.html#example"><i class="fa fa-check"></i><b>2.3.1</b> Example</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="lecture3.html"><a href="lecture3.html"><i class="fa fa-check"></i><b>3</b> Non-linear regression</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="lecture3.html"><a href="lecture3.html#gam-example"><i class="fa fa-check"></i><b>3.1</b> GAM example</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture3.html"><a href="lecture3.html#data-camp"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="lecture4.html"><a href="lecture4.html"><i class="fa fa-check"></i><b>4</b> Classification methods</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="lecture4.html"><a href="lecture4.html#k-nearest-neighbor"><i class="fa fa-check"></i><b>4.1</b> k-nearest neighbor</a></li>
+<li class="chapter" data-level="4.2" data-path="lecture4.html"><a href="lecture4.html#naive-bayes"><i class="fa fa-check"></i><b>4.2</b> Naive bayes</a></li>
+<li class="chapter" data-level="4.3" data-path="lecture4.html"><a href="lecture4.html#logistic-regression"><i class="fa fa-check"></i><b>4.3</b> Logistic regression</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture4.html"><a href="lecture4.html#data-camp-1"><i class="fa fa-check"></i>Data camp</a></li>
+<li class="chapter" data-level="4.3.1" data-path="lecture4.html"><a href="lecture4.html#sources"><i class="fa fa-check"></i><b>4.3.1</b> Sources</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="lecture5.html"><a href="lecture5.html"><i class="fa fa-check"></i><b>5</b> Trees</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="lecture5.html"><a href="lecture5.html#decision-trees"><i class="fa fa-check"></i><b>5.1</b> Decision trees</a></li>
+<li class="chapter" data-level="5.2" data-path="lecture5.html"><a href="lecture5.html#random-forrest"><i class="fa fa-check"></i><b>5.2</b> Random forrest</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture5.html"><a href="lecture5.html#data-camp-2"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="lecture6.html"><a href="lecture6.html"><i class="fa fa-check"></i><b>6</b> Support Vector Machines</a></li>
+<li class="chapter" data-level="7" data-path="lecture7.html"><a href="lecture7.html"><i class="fa fa-check"></i><b>7</b> Artificial Neural networks</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="lecture7.html"><a href="lecture7.html#mlp"><i class="fa fa-check"></i><b>7.1</b> MLP</a></li>
+<li class="chapter" data-level="7.2" data-path="lecture7.html"><a href="lecture7.html#objective-functions-and-training"><i class="fa fa-check"></i><b>7.2</b> Objective functions and training</a></li>
+<li class="chapter" data-level="7.3" data-path="lecture7.html"><a href="lecture7.html#validation-of-trained-models"><i class="fa fa-check"></i><b>7.3</b> Validation of trained models</a></li>
+<li class="chapter" data-level="7.4" data-path="lecture7.html"><a href="lecture7.html#implementation-of-mlp-in-keras"><i class="fa fa-check"></i><b>7.4</b> Implementation of MLP in Keras</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="lecture7.html"><a href="lecture7.html#installing-keras-and-tensorflow"><i class="fa fa-check"></i><b>7.4.1</b> Installing Keras and Tensorflow</a></li>
+<li class="chapter" data-level="7.4.2" data-path="lecture7.html"><a href="lecture7.html#importing-mnist"><i class="fa fa-check"></i><b>7.4.2</b> Importing MNIST</a></li>
+<li class="chapter" data-level="7.4.3" data-path="lecture7.html"><a href="lecture7.html#preprocessing"><i class="fa fa-check"></i><b>7.4.3</b> Preprocessing</a></li>
+<li class="chapter" data-level="7.4.4" data-path="lecture7.html"><a href="lecture7.html#mlp-model"><i class="fa fa-check"></i><b>7.4.4</b> MLP model</a></li>
+<li class="chapter" data-level="7.4.5" data-path="lecture7.html"><a href="lecture7.html#compiling-and-training-the-model"><i class="fa fa-check"></i><b>7.4.5</b> Compiling and training the model</a></li>
+<li class="chapter" data-level="7.4.6" data-path="lecture7.html"><a href="lecture7.html#evaluating-the-model"><i class="fa fa-check"></i><b>7.4.6</b> Evaluating the model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="lecture8.html"><a href="lecture8.html"><i class="fa fa-check"></i><b>8</b> Unsupervised Learning</a></li>
+<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data science with R: Applied Predictive Modelling</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="lecture4" class="section level1" number="4">
+<h1><span class="header-section-number"> 4</span> Classification methods</h1>
+<p>Sometimes we are not interested in predicting a continuous output, but rather a factor or a class. We use classes or categories for many things and often we want a model to make a prediction into discrete categories. Is this an image of a cat or a dog? Given information of each passenger, is it likely that a certain individual would survive the shipwrecking of Titanic? Based on the score of certain hand-ins in a predictive modelling course, what final grade (A-F) is the student likely to get on the final exam?</p>
+<p>In this chapter we will learn about the classification methods k-nearest neighbor (knn), naive bayes and logistic regression. We will briefly consider all three methods here, and refer to the data camp course for further details (see data camp section below).</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="lecture4.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(class)</span>
+<span id="cb52-2"><a href="lecture4.html#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;titanic.raw&quot;</span>, <span class="at">package =</span> <span class="st">&quot;datarium&quot;</span>)</span>
+<span id="cb52-3"><a href="lecture4.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># test = titanic.raw[1,-4]</span></span>
+<span id="cb52-4"><a href="lecture4.html#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># knn(train = titanic.raw[,-4],test =test, cl = titanic.raw[,4])</span></span></code></pre></div>
+<div id="k-nearest-neighbor" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> k-nearest neighbor</h2>
+<p>The method k-nearest neighbor (knn) is a very simple classificiation method, where for predicting a class of observations in the test set one find the <span class="math inline">\(k\)</span> observations in the training set that has covariates nearest to the covariates of the test case in terms of Euclidean distance.</p>
+<p>There are many different implementations of knn, for instance in the class package (see <em>?class::knn</em>). But since we will be using the package bundle <em>tidymodels</em> in the next lecture we will also use it here. Tidymodels is, similar to the tidyverse, a combination of many packages using a kind of pipe notation to build models. It is very well integrated with tidyverse and provides a general framework for many different models. We will use knn as an example of how we set up a model in the tidymodels setup.</p>
+<p>As an example for classification we will use the famous Iris dataset of Edgar Anderson (see <em>?iris</em>). We start by loaded the packages and the data containing inforation of sepal- and petal- lengths and widths of three different iris flower species (Iris setosa, Iris versicolor and Iris virginica). The goal will be to make a model that can tell us which Iris flower species we are dealing with, based on the given lengths and widths.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="lecture4.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb53-2"><a href="lecture4.html#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb53-3"><a href="lecture4.html#cb53-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris)</span>
+<span id="cb53-4"><a href="lecture4.html#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+## 1          5.1         3.5          1.4         0.2 setosa 
+## 2          4.9         3            1.4         0.2 setosa 
+## 3          4.7         3.2          1.3         0.2 setosa 
+## 4          4.6         3.1          1.5         0.2 setosa 
+## 5          5           3.6          1.4         0.2 setosa 
+## 6          5.4         3.9          1.7         0.4 setosa</code></pre>
+<p>We make our train-test split using the <em>tidymodels::initial_split</em> function to create the split and respecitvely the training and testing functions to extract the train and test sets. Note that we use <em>strata = Specices</em>. This means we are doing stratified subsampling so that we have the (roughly) the same proportion of the different species in the test and train sets.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="lecture4.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">999</span>)</span>
+<span id="cb55-2"><a href="lecture4.html#cb55-2" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">strata =</span> Species) </span>
+<span id="cb55-3"><a href="lecture4.html#cb55-3" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
+<span id="cb55-4"><a href="lecture4.html#cb55-4" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span></code></pre></div>
+<p>To fit a model in tidymodels we must first specify which type of model (nearest neighbor) we want to create and set an engine and a mode. The engine is the package used to fit the model and the mode is usually “classification” or “regression,” depending on what type of y variable you are considering.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="lecture4.html#cb56-1" aria-hidden="true" tabindex="-1"></a>knn_spec <span class="ot">&lt;-</span> <span class="fu">nearest_neighbor</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb56-2"><a href="lecture4.html#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;kknn&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># requires &quot;kknn&quot; package installed</span></span>
+<span id="cb56-3"><a href="lecture4.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>)</span></code></pre></div>
+<p>Then we are ready to fit the model using the fit function, where we specify a formula and which data to use. We will here use all covariates in the train set to predict <em>Species</em>.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="lecture4.html#cb57-1" aria-hidden="true" tabindex="-1"></a>knn_fit <span class="ot">&lt;-</span> knn_spec <span class="sc">%&gt;%</span> </span>
+<span id="cb57-2"><a href="lecture4.html#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Species <span class="sc">~</span>., <span class="at">data =</span> df_train)</span>
+<span id="cb57-3"><a href="lecture4.html#cb57-3" aria-hidden="true" tabindex="-1"></a>knn_fit</span></code></pre></div>
+<pre><code>## parsnip model object
+## 
+## Fit time:  0ms 
+## 
+## Call:
+## kknn::train.kknn(formula = Species ~ ., data = data, ks = min_rows(5,     data, 5))
+## 
+## Type of response variable: nominal
+## Minimal misclassification: 0.05405405
+## Best kernel: optimal
+## Best k: 5</code></pre>
+<p>As you can see fromt he output, the best number of neighbors to be used was 5. The knn model will thus look for the 5 flowers that has the nearest covariates and then predict based on the majority vote of the five. For example if three of them are Iris Virginica and two are Iris versicolor, the prediction will be Iris Virginica.</p>
+<p>Let us predict on the test set and chech the accuracy and <span class="math inline">\(\kappa\)</span> using the metrics function.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="lecture4.html#cb59-1" aria-hidden="true" tabindex="-1"></a>knn_fit <span class="sc">%&gt;%</span> </span>
+<span id="cb59-2"><a href="lecture4.html#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">predict</span>(df_test) <span class="sc">%&gt;%</span>      <span class="co"># predict on the test set</span></span>
+<span id="cb59-3"><a href="lecture4.html#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span>    <span class="co"># bind columns (adding the truth and covariates) </span></span>
+<span id="cb59-4"><a href="lecture4.html#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metrics</span>(<span class="at">truth =</span> Species, <span class="at">estimate =</span> .pred_class) <span class="co"># calculate metrics</span></span></code></pre></div>
+<pre><code>## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy multiclass     0.949
+## 2 kap      multiclass     0.923</code></pre>
+<p>The accurcay metric is simply the number of correct classifcation divided by the total number of predictions made. We get (roughly) 95% correct, which seems very acceptable. The <a href="https://en.wikipedia.org/wiki/Cohen%27s_kappa">Cohen’s kappa</a> metric is useful when the data is imbalanced, e.g. you have many more Iris versicolor than Iris setosa in the data, such that predicting all flowers as Iris versicolor would also give a high accuracy.</p>
+</div>
+<div id="naive-bayes" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Naive bayes</h2>
+</div>
+<div id="logistic-regression" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Logistic regression</h2>
+<p>Logistic regression is a classical method for estimating the conditional probability of certain discrete outcomes given the value of covariates. In the Iris example, we can get estimates of the probability of the flower species being setosa, vercicolor or viriginca given the length and width of sepal and petal. For logistic regression the prediction is thus a value between 0 and 1, and this is achieved by mapping the linear prediction using the inverse logit link function, defined by</p>
+<p><span class="math display">\[\rm{logit}^{-1}(x) = \frac{e^x}{1+e^x}, \quad x\in\mathbb R.\]</span></p>
+<p>We can also define the logit function directly, mapping probabilites <span class="math inline">\(p\in (0,1)\)</span> to <span class="math inline">\(\mathbb R\)</span>, by</p>
+<p><span class="math display">\[\rm{logit}(p) = \ln \bigg(\frac{p}{1-p}\bigg)\]</span>
+Thus, if <span class="math inline">\(x\)</span> is the vector of covariate for a certain flower and <span class="math inline">\(\beta\)</span> the parameter vector, we will model the probability of an Iris flower belonging to either of the three species given the set of lengths and widhts, by
+<span class="math display">\[P(Y=y|x) = \rm{logit}^{-1}(x^\prime \beta)=\frac{\exp(x^\prime \beta)}{1+\exp(x^\prime \beta)}.\]</span></p>
+<div id="data-camp-1" class="section level3 unnumbered">
+<h3>Data camp</h3>
+<p>We highly recommend the data camp course <a href="https://app.datacamp.com/learn/courses/supervised-learning-in-r-classification">Supervised Learning in R: Classification</a> - chapters 1-3. The subject of chapter 4 is covered separately in the next lecture <a href="lecture5.html#lecture5">5</a>.</p>
+</div>
+<div id="sources" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Sources</h3>
+<p><a href="https://rpubs.com/Nilafhiosagam/574373">rpubs</a></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="lecture3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="lecture5.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["STAT623 compendium.pdf", "STAT623 compendium.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
