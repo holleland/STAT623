@@ -68,6 +68,8 @@ If you have not already installed the newest version of R and Rstudio on your pe
 knitr::include_app("http://www.youtube.com/embed/YghkXuLXr7o?rel=0", height = "700px")
 ```
 
+<iframe width="560" height="315" src="http://www.youtube.com/embed/YghkXuLXr7o" frameborder="0"     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-external="1"></iframe>
+
 First we install R: 
 
 1. Go to [https://cran.uib.no](https://cran.uib.no).
