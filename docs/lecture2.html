@@ -21,10 +21,9 @@
   <meta name="twitter:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
 
-<meta name="author" content="Sondre Hølleland" />
+<meta name="author" content="Sondre Hølleland and Kristian Gundersen" />
 
 
-<meta name="date" content="2022-03-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +160,7 @@ div.csl-indent {
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course overview</a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#learning-outcomes"><i class="fa fa-check"></i>Learning outcomes</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#learning-outcomes-and-objectives"><i class="fa fa-check"></i>Learning outcomes and objectives</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#lecture-overview"><i class="fa fa-check"></i>Lecture overview</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#litterature"><i class="fa fa-check"></i>Litterature</a></li>
 </ul></li>
@@ -171,7 +170,6 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.1.1" data-path="lecture1.html"><a href="lecture1.html#prediction-or-interpretation"><i class="fa fa-check"></i><b>1.1.1</b> Prediction or interpretation?</a></li>
 <li class="chapter" data-level="1.1.2" data-path="lecture1.html"><a href="lecture1.html#terminology"><i class="fa fa-check"></i><b>1.1.2</b> Terminology</a></li>
-<li class="chapter" data-level="1.1.3" data-path="lecture1.html"><a href="lecture1.html#overview"><i class="fa fa-check"></i><b>1.1.3</b> Overview</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="lecture1.html"><a href="lecture1.html#recap-of-r"><i class="fa fa-check"></i><b>1.2</b> Recap of R</a>
 <ul>
@@ -376,8 +374,11 @@ where <span class="math inline">\(\widehat Y_i\)</span> is the predictor of obse
 <div id="example" class="section level3" number="2.3.1">
 <h3><span class="header-section-number">2.3.1</span> Example</h3>
 <p>In this example, we consider a dataset containing the impact of three advertising medias (youtube, facebook and newspaper) on sales for different companies. The advertising budgets and sales are in thousands of dollars and the advertising experiment has been repeated 200 times. We will use multiple regression to model the relationship between sales and the advertising budgets from the different medias. In the video below we walk you through the example, but you can also read it below.</p>
-<iframe src="http://www.youtube.com/embed/_In2EOI2RWo?rel=0" width="672" height="400px" data-external="1">
+<div style="padding:56.25% 0 0 0;position:relative;">
+<iframe src="https://player.vimeo.com/video/690634468?h=816a975dee&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;">
 </iframe>
+</div>
+<script src="https://player.vimeo.com/api/player.js"></script>
 <p>We start by looking at the data:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="lecture2.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data: </span></span>
 <span id="cb17-2"><a href="lecture2.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;marketing&quot;</span>, <span class="at">package =</span> <span class="st">&quot;datarium&quot;</span>)</span>
@@ -494,7 +495,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <span id="cb30-7"><a href="lecture2.html#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;models&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;pred&quot;</span>)  <span class="sc">%&gt;%</span></span>
 <span id="cb30-8"><a href="lecture2.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(models) <span class="sc">%&gt;%</span></span>
 <span id="cb30-9"><a href="lecture2.html#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((sales<span class="sc">-</span>pred)<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
-<pre><code>## # A tibble: 3 × 2
+<pre><code>## # A tibble: 3 x 2
 ##   models  RMSE
 ##   &lt;chr&gt;  &lt;dbl&gt;
 ## 1 mod1    1.16
@@ -509,7 +510,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <span id="cb32-6"><a href="lecture2.html#cb32-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
 <span id="cb32-7"><a href="lecture2.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;models&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;pred&quot;</span>) </span>
 <span id="cb32-8"><a href="lecture2.html#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(predictions)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 6
+<pre><code>## # A tibble: 6 x 6
 ##   youtube facebook newspaper sales models  pred
 ##     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;
 ## 1    240.     3.12      25.4  12.7 mod1    13.4
@@ -521,7 +522,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="lecture2.html#cb34-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="sc">%&gt;%</span></span>
 <span id="cb34-2"><a href="lecture2.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(models) <span class="sc">%&gt;%</span></span>
 <span id="cb34-3"><a href="lecture2.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((sales<span class="sc">-</span>pred)<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
-<pre><code>## # A tibble: 3 × 2
+<pre><code>## # A tibble: 3 x 2
 ##   models  RMSE
 ##   &lt;chr&gt;  &lt;dbl&gt;
 ## 1 mod1   0.957

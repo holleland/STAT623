@@ -1,8 +1,8 @@
 --- 
 title: "Data science with R: Applied Predictive Modelling"
 subtitle: "Compendium for STAT623"
-author: "Sondre Hølleland"
-date: "`r Sys.Date()`"
+author: "Sondre Hølleland and Kristian Gundersen"
+date: "`r Sys.time()`"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -14,14 +14,23 @@ description: "Course in applied predictive modelling made for teaching STAT623 a
 
 # Course overview {-}
 
-## Learning outcomes {-}
-After completing this course, students should 
+## Learning outcomes and objectives{-}
+The course presents various advanced methods within data science for predictive modelling and the use of R. Methods for regression, including non-linear regression and generalized additive models, and methods for classification, including trees, boosting and Support Vector Machines, will be examined. The course will focus on practical use in r, without going into details of the mathematical theory of the methods. 
 
-- Be able to make their own models for different situations using methods such as: linear regression, multiple regression, generalized additive models, splines, support vector machines, decision trees, etc. 
-- Become native speakers of the R language. 
-- ....
-- ....
+On completion of the course the student should have the following learning outcomes:
 
+####  Knowledge{-}
+
+- Knows the basic ideas underpinning carious methods in data science/predictive modelling
+
+#### Skills{-}
+
+- Can implement various models within data science/predictive modelling in R
+- Use data science methods on real data sets and perform predictions
+
+#### General competence{-}
+
+- Have an overview of how data science methods can be used to analyze larger data sets
 
 ## Lecture overview {-}
 

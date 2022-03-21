@@ -5,7 +5,6 @@ lecture1
 introduction
 prediction-or-interpretation
 terminology
-overview
 recap-of-r
 installing-r-and-rstudio
 r-community-and-packages

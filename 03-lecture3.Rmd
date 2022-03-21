@@ -35,9 +35,8 @@ where $\{f_j:\, j = 1,\ldots, k\}$ is a set of basis functions. The standard in 
 
 In the video below, Sondre goes through this section's example in a bit more detail and with more in-depth explanations of the code. You can also read the example below the video. 
 
-```{r, echo = FALSE}
-knitr::include_url("http://www.youtube.com/embed/OAjA1m3pGP8?rel=0")
-```
+
+<div style="padding:75% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/690665563?h=a390bfda20&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title=""></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
 
 We will simulate a dataset where the "true" relationship between X and Y is given by (for observation $i$),

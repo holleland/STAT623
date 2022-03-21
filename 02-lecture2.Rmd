@@ -103,9 +103,7 @@ To learn more about multiple regression, take the datacamp course [*Multiple and
 
 In this example, we consider a dataset containing the impact of three advertising medias (youtube, facebook and newspaper) on sales for different companies. The advertising budgets and sales are in thousands of dollars and the advertising experiment has been repeated 200 times. We will use multiple regression to model the relationship between sales and the advertising budgets from the different medias. In the video below we walk you through the example, but you can also read it below.
 
-```{r, echo = FALSE}
-knitr::include_url("http://www.youtube.com/embed/_In2EOI2RWo?rel=0")
-```
+<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/690634468?h=816a975dee&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
 We start by looking at the data:
 
