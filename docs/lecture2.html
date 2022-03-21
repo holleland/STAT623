@@ -24,7 +24,7 @@
 <meta name="author" content="Sondre Hølleland" />
 
 
-<meta name="date" content="2022-03-18" />
+<meta name="date" content="2022-03-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -494,7 +494,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <span id="cb30-7"><a href="lecture2.html#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;models&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;pred&quot;</span>)  <span class="sc">%&gt;%</span></span>
 <span id="cb30-8"><a href="lecture2.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(models) <span class="sc">%&gt;%</span></span>
 <span id="cb30-9"><a href="lecture2.html#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((sales<span class="sc">-</span>pred)<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<pre><code>## # A tibble: 3 × 2
 ##   models  RMSE
 ##   &lt;chr&gt;  &lt;dbl&gt;
 ## 1 mod1    1.16
@@ -509,7 +509,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <span id="cb32-6"><a href="lecture2.html#cb32-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
 <span id="cb32-7"><a href="lecture2.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;models&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;pred&quot;</span>) </span>
 <span id="cb32-8"><a href="lecture2.html#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(predictions)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 6
+<pre><code>## # A tibble: 6 × 6
 ##   youtube facebook newspaper sales models  pred
 ##     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;
 ## 1    240.     3.12      25.4  12.7 mod1    13.4
@@ -521,7 +521,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="lecture2.html#cb34-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="sc">%&gt;%</span></span>
 <span id="cb34-2"><a href="lecture2.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(models) <span class="sc">%&gt;%</span></span>
 <span id="cb34-3"><a href="lecture2.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((sales<span class="sc">-</span>pred)<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 2
+<pre><code>## # A tibble: 3 × 2
 ##   models  RMSE
 ##   &lt;chr&gt;  &lt;dbl&gt;
 ## 1 mod1   0.957

@@ -64,7 +64,8 @@ In the predictive modelling terminology there are quite a lot of things that mea
 If you have not already installed the newest version of R and Rstudio on your personal computer, we will now tell you how. This installation guide will be based on Windows, but iOS and Linux are very similar and we will indicate where to deviate. The video below shows the same steps as listed. 
 
 ```{r, echo = FALSE}
-knitr::include_url("http://www.youtube.com/embed/YghkXuLXr7o?rel=0")
+#knitr::include_url("http://www.youtube.com/embed/YghkXuLXr7o?rel=0")
+knitr::include_app("http://www.youtube.com/embed/YghkXuLXr7o?rel=0", height = "700px")
 ```
 
 First we install R: 

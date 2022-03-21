@@ -8,6 +8,7 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
+chunk_output_type: console
 description: "Course in applied predictive modelling made for teaching STAT623 at University of Bergen"
 ---
 
