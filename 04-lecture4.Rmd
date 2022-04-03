@@ -4,6 +4,8 @@ Sometimes we are not interested in predicting a continuous output, but rather a 
 
 In this chapter we will learn about the classification methods k-nearest neighbor (knn), naive bayes and logistic regression. We will briefly consider all three methods here, and refer to the data camp course for further details (see data camp section below). We will also use the same case as an example for all three methods, and compare them all together at the end. 
 
+In the video at the end, we walk through all the example code. 
+
 
 
 ## k-nearest neighbor
@@ -15,7 +17,7 @@ There are many different implementations of knn, for instance in the class packa
 
 As an example for classification we will use the famous Iris dataset of Edgar Anderson (see *?iris*). We start by loaded the packages and the data containing inforation of sepal- and petal- lengths and widths of three different iris flower species (Iris setosa, Iris versicolor and Iris virginica). The goal will be to make a model that can tell us which Iris flower species we are dealing with, based on the given lengths and widths. 
 
-```{r, setupknn}
+```{r, setupknn, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(tidymodels)
 df <- as_tibble(iris)
@@ -201,6 +203,8 @@ conf_mat(data = predictions, truth = knn, estimate = lr)
 ```
 
 For this partitular problem, logsitic regression was not the method to choose, but remember that it may be different in other settings. 
+
+<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/695447413?h=36ae0d1e48&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="STAT623_L4_classification_methods.mp4"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
 ### Data camp {-}
 
