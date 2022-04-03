@@ -23,8 +23,9 @@ lecture3
 gam-example
 lecture4
 k-nearest-neighbor
-naive-bayes
 logistic-regression
+naive-bayes
+wrap-up
 sources
 lecture5
 decision-trees

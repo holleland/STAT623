@@ -203,12 +203,22 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4" data-path="lecture4.html"><a href="lecture4.html"><i class="fa fa-check"></i><b>4</b> Classification methods</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="lecture4.html"><a href="lecture4.html#k-nearest-neighbor"><i class="fa fa-check"></i><b>4.1</b> k-nearest neighbor</a></li>
-<li class="chapter" data-level="4.2" data-path="lecture4.html"><a href="lecture4.html#naive-bayes"><i class="fa fa-check"></i><b>4.2</b> Naive bayes</a></li>
-<li class="chapter" data-level="4.3" data-path="lecture4.html"><a href="lecture4.html#logistic-regression"><i class="fa fa-check"></i><b>4.3</b> Logistic regression</a>
+<li class="chapter" data-level="4.1" data-path="lecture4.html"><a href="lecture4.html#k-nearest-neighbor"><i class="fa fa-check"></i><b>4.1</b> k-nearest neighbor</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture4.html"><a href="lecture4.html#example-1"><i class="fa fa-check"></i>Example</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="lecture4.html"><a href="lecture4.html#logistic-regression"><i class="fa fa-check"></i><b>4.2</b> Logistic regression</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture4.html"><a href="lecture4.html#example-2"><i class="fa fa-check"></i>Example</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="lecture4.html"><a href="lecture4.html#naive-bayes"><i class="fa fa-check"></i><b>4.3</b> Naive bayes</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture4.html"><a href="lecture4.html#example-3"><i class="fa fa-check"></i>Example</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="lecture4.html"><a href="lecture4.html#wrap-up"><i class="fa fa-check"></i><b>4.4</b> Wrap-up</a>
 <ul>
 <li class="chapter" data-level="" data-path="lecture4.html"><a href="lecture4.html#data-camp-1"><i class="fa fa-check"></i>Data camp</a></li>
-<li class="chapter" data-level="4.3.1" data-path="lecture4.html"><a href="lecture4.html#sources"><i class="fa fa-check"></i><b>4.3.1</b> Sources</a></li>
+<li class="chapter" data-level="4.4.1" data-path="lecture4.html"><a href="lecture4.html#sources"><i class="fa fa-check"></i><b>4.4.1</b> Sources</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="lecture5.html"><a href="lecture5.html"><i class="fa fa-check"></i><b>5</b> Trees</a>
@@ -262,18 +272,18 @@ div.csl-indent {
 <h1><span class="header-section-number"> 5</span> Trees</h1>
 <p>In this lecture we will learn about tree based models. We start out with simple decision trees and end up with a random forrest.</p>
 <p>For this chapter we will use the <em>tidymodels</em> package <span class="citation">(<a href="#ref-tidymodels" role="doc-biblioref">Kuhn and Wickham 2020</a>)</span>. This can be installed by running</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="lecture5.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidymodels&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="lecture5.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidymodels&quot;</span>)</span></code></pre></div>
 <div id="decision-trees" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Decision trees</h2>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="lecture5.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb62-2"><a href="lecture5.html#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;PimaIndiansDiabetes&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
-<span id="cb62-3"><a href="lecture5.html#cb62-3" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> PimaIndiansDiabetes</span>
-<span id="cb62-4"><a href="lecture5.html#cb62-4" aria-hidden="true" tabindex="-1"></a>diabetes_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(diabetes, <span class="at">prop =</span> <span class="fl">0.9</span>, <span class="at">strata =</span> diabetes)</span>
-<span id="cb62-5"><a href="lecture5.html#cb62-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-6"><a href="lecture5.html#cb62-6" aria-hidden="true" tabindex="-1"></a>diabetes_train <span class="ot">&lt;-</span> <span class="fu">training</span>(diabetes_split)</span>
-<span id="cb62-7"><a href="lecture5.html#cb62-7" aria-hidden="true" tabindex="-1"></a>diabetes_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(diabetes_split)</span>
-<span id="cb62-8"><a href="lecture5.html#cb62-8" aria-hidden="true" tabindex="-1"></a>counts_train <span class="ot">&lt;-</span> <span class="fu">table</span>(diabetes_train<span class="sc">$</span>diabetes)</span>
-<span id="cb62-9"><a href="lecture5.html#cb62-9" aria-hidden="true" tabindex="-1"></a>counts_test <span class="ot">&lt;-</span> <span class="fu">table</span>(diabetes_test<span class="sc">$</span>diabetes)</span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="lecture5.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb81-2"><a href="lecture5.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;PimaIndiansDiabetes&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
+<span id="cb81-3"><a href="lecture5.html#cb81-3" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> PimaIndiansDiabetes</span>
+<span id="cb81-4"><a href="lecture5.html#cb81-4" aria-hidden="true" tabindex="-1"></a>diabetes_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(diabetes, <span class="at">prop =</span> <span class="fl">0.9</span>, <span class="at">strata =</span> diabetes)</span>
+<span id="cb81-5"><a href="lecture5.html#cb81-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-6"><a href="lecture5.html#cb81-6" aria-hidden="true" tabindex="-1"></a>diabetes_train <span class="ot">&lt;-</span> <span class="fu">training</span>(diabetes_split)</span>
+<span id="cb81-7"><a href="lecture5.html#cb81-7" aria-hidden="true" tabindex="-1"></a>diabetes_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(diabetes_split)</span>
+<span id="cb81-8"><a href="lecture5.html#cb81-8" aria-hidden="true" tabindex="-1"></a>counts_train <span class="ot">&lt;-</span> <span class="fu">table</span>(diabetes_train<span class="sc">$</span>diabetes)</span>
+<span id="cb81-9"><a href="lecture5.html#cb81-9" aria-hidden="true" tabindex="-1"></a>counts_test <span class="ot">&lt;-</span> <span class="fu">table</span>(diabetes_test<span class="sc">$</span>diabetes)</span></code></pre></div>
 </div>
 <div id="random-forrest" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Random forrest</h2>

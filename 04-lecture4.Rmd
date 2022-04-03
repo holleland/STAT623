@@ -2,21 +2,16 @@
 
 Sometimes we are not interested in predicting a continuous output, but rather a factor or a class. We use classes or categories for many things and often we want a model to make a prediction into discrete categories. Is this an image of a cat or a dog? Given information of each passenger, is it likely that a certain individual would survive the shipwrecking of Titanic? Based on the score of certain hand-ins in a predictive modelling course, what final grade (A-F) is the student likely to get on the final exam? 
 
-In this chapter we will learn about the classification methods k-nearest neighbor (knn), naive bayes and logistic regression. We will briefly consider all three methods here, and refer to the data camp course for further details (see data camp section below).
+In this chapter we will learn about the classification methods k-nearest neighbor (knn), naive bayes and logistic regression. We will briefly consider all three methods here, and refer to the data camp course for further details (see data camp section below). We will also use the same case as an example for all three methods, and compare them all together at the end. 
 
 
-```{r loadTitcanic4}
-library(class)
-data("titanic.raw", package = "datarium")
-# test = titanic.raw[1,-4]
-# knn(train = titanic.raw[,-4],test =test, cl = titanic.raw[,4])
-
-```
 
 ## k-nearest neighbor
 The method k-nearest neighbor (knn) is a very simple classificiation method, where for predicting a class of observations in the test set one find the $k$ observations in the training set that has covariates nearest to the covariates of the test case in terms of Euclidean distance. 
 
 There are many different implementations of knn, for instance in the class package (see *?class::knn*). But since we will be using the package bundle *tidymodels* in the next lecture we will also use it here. Tidymodels is, similar to the tidyverse, a combination of many packages using a kind of pipe notation to build models. It is very well integrated with tidyverse and provides a general framework for many different models. We will use knn as an example of how we set up a model in the tidymodels setup. 
+
+### Example{-}
 
 As an example for classification we will use the famous Iris dataset of Edgar Anderson (see *?iris*). We start by loaded the packages and the data containing inforation of sepal- and petal- lengths and widths of three different iris flower species (Iris setosa, Iris versicolor and Iris virginica). The goal will be to make a model that can tell us which Iris flower species we are dealing with, based on the given lengths and widths. 
 
@@ -50,7 +45,7 @@ knn_fit <- knn_spec %>%
 knn_fit
 ```
 
-As you can see fromt he output, the best number of neighbors to be used was 5. The knn model will thus look for the 5 flowers that has the nearest covariates and then predict based on the majority vote of the five. For example if three of them are Iris Virginica and two are Iris versicolor, the prediction will be Iris Virginica. 
+As you can see from the output, the best number of neighbors to be used was 5. The knn model will thus look for the 5 flowers that has the nearest covariates and then predict based on the majority vote of the five. For example if three of them are Iris Virginica and two are Iris versicolor, the prediction will be Iris Virginica. 
 
 Let us predict on the test set and chech the accuracy and $\kappa$ using the metrics function. 
 ```{r knnpredict}
@@ -61,21 +56,151 @@ knn_fit %>%
 ```
 The accurcay metric is simply the number of correct classifcation divided by the total number of predictions made. We get (roughly) 95\% correct, which seems very acceptable. The [Cohen's kappa](https://en.wikipedia.org/wiki/Cohen%27s_kappa) metric is useful when the data is imbalanced, e.g. you have many more Iris versicolor than Iris setosa in the data, such that predicting all flowers as Iris versicolor would also give a high accuracy. 
 
-
-## Naive bayes
-
+We can also check the confusion matrix. This is a matrix with frequencies of the true classes as columns and the predicted classes as rows. If all cells except the diagonal is zero, it means the classifier has 100\% correct classification. Otherwise, we can see where the "mistakes" happen. To make the confusion matrix, we only need to change the last line of the previous code snippet:
+```{r knnpredict2}
+knn_fit %>% 
+    predict(df_test) %>%      # predict on the test set
+    bind_cols(df_test) %>%    # bind columns (adding the truth and covariates) 
+    conf_mat(truth = Species, estimate = .pred_class) # calculate metrics
+```
 
 ## Logistic regression
-Logistic regression is a classical method for estimating the conditional probability of certain discrete outcomes given the value of covariates. In the Iris example, we can get estimates of the probability of the flower species being setosa, vercicolor or viriginca given the length and width of sepal and petal. For logistic regression the prediction is thus a value between 0 and 1, and this is achieved by mapping the linear prediction using the inverse logit link function, defined by
+Logistic regression is a classical method for estimating the conditional probability of certain discrete outcomes given the value of covariates. In the Iris example, we can get estimates of the probability of the flower species being setosa, vercicolor or viriginca given the length and width of sepal and petal. As a first step, we will only assume we have two outcomes, either the flower is a setosa or it is something else. THe response variable is then 1 for *setosa* and 0 for *other*.
+
+For logistic regression the prediction is thus a value between 0 and 1, and this is achieved by mapping the linear predictors using the inverse logit link function, defined by
 
 $$\rm{logit}^{-1}(x) = \frac{e^x}{1+e^x}, \quad x\in\mathbb R.$$ 
 
 We can also define the logit function directly, mapping probabilites $p\in (0,1)$ to $\mathbb R$, by
 
-$$\rm{logit}(p) = \ln \bigg(\frac{p}{1-p}\bigg)$$
-Thus, if $x$ is the vector of covariate for a certain flower and $\beta$ the parameter vector, we will model the probability of an Iris flower belonging to either of the three species given the set of lengths and widhts, by
-$$P(Y=y|x) = \rm{logit}^{-1}(x^\prime \beta)=\frac{\exp(x^\prime \beta)}{1+\exp(x^\prime \beta)}.$$
+$$\rm{logit}(p) = \ln \bigg(\frac{p}{1-p}\bigg).$$
+The right hand side of this definition is often referred to as the *log-odds* and p would in our case be the probability of a certain flower being an *iris setosa*.  
+Thus, if $x$ is the vector of covariates for a certain flower and $\beta$ the parameter vector, we will model the probability of an Iris flower belonging to the species setosa given the set of lengths and widths, by
+$$p=P(Y=1|x) = \rm{logit}^{-1}(x^\prime \beta)=\frac{\exp(x^\prime \beta)}{1+\exp(x^\prime \beta)}.$$
+We can also express it in terms of the log-odds
+$$\log \frac p{1-p} = x^\prime \beta = \beta_0 + \beta_1x_1 + \cdots + x_p\beta_p,$$
+which you may note is linear in the parameters. 
 
+Since the outcome here is binary, we can assume a Binomial distribution and estimate the parameters using maxmimum likelihood estimators. In a prediction setting, a logistic regression model will output a *probabilty of flower belonging to class setosa*, i.e. a number between zero and one. To translate this into a classification we need to set a threshold, e.g. 50\%. Is it more than a 50\% chance that the flower is setosa, we will predict that it is. 
+
+We have tried to explain logistic regression for a binary classification setting, but it can also be used in multinomial settings. We will not go into details about this now, but move over to the practicle implementation in R. If you want to learn more about the theory of logistic regression, see @dobson2018.
+
+### Example{-}
+
+In the practicle example, we will use all three categories of iris flowers. We will use the same train and test sets as we used for knn. We will again, stick to the tidymodels set-up. There are simpler ways to set up a logistic regression using basic functions in R (see *?stats::glm*).
+```{r iris_logistic}
+lr_spec <- logistic_reg() %>% 
+  set_engine("glm") %>%  # requires "kknn" package installed
+  set_mode("classification")
+lr_spec
+```
+Let us fit the model: 
+```{r iris_logistic_fit}
+lr_fit <- lr_spec %>% 
+  fit(Species ~., data = df_train)
+```
+As you can see from the output, the algorithm did not converge and the fitted probabilities are at the extremeties 0 and 1, which is not good. We could try to centralize (subtract the mean value) and standardize (divide by the standard deviation) the covariates or to take away some of them to see if we can a converging algorithm. 
+
+```{r iris_logistic_fit2}
+lr_fit <- lr_spec %>% 
+  fit(Species ~ Sepal.Length, data = df_train)
+```
+Using only Sepal.Length seems to converge at least. Let us look at the performance on the test set.
+```{r iris_logistic_testset}
+lr_fit %>% 
+  predict(new_data = df_test) %>%
+  bind_cols(df_test) %>%
+  metrics(truth = Species, estimate = .pred_class)
+```
+
+As expected the accuracy is poor. We can also look at the confusion matrix to see why:
+```{r iris_logistic_confmat}
+lr_fit %>% 
+  predict(new_data = df_test) %>%
+  bind_cols(df_test) %>%
+  conf_mat(truth = Species, estimate = .pred_class)
+```
+The logistic regression model we built cannot separate Iris Virginica from Iris Versicolor.  
+
+## Naive bayes
+
+Naive Bayes is the third and last classification method we will consider in this lecture. It is a probabilistic classifier based on applying Bayes theorem with independence assumptions between the features (making it "naive"). They are a type of Bayesian network, but in combination with kernel density estimation, you will not notice the Bayesian framework they are usually wrapped in. In Bayesian methods, you have to specify priors for your parameters, but the R packages we will be using uses Kernel densities instead and you only need to tune them with smoothness parameters. In its essence, a naive bayes classifier finds the probability that a certain flower belongs to any of the classes and select the one with highest probability. We will derive the objective function using Bayes theorem below and use the methods on our Iris data with *tidymodels* and the *discrim* package. 
+
+As the name describes, Naive bayes classifiers uses Bayes theorem to assign a conditional probability given the covariates $X_1, \ldots, X_p$ that the instance in question belongs to category $C_k$, i.e.
+$$P(C_k|X_1,\ldots, X_p),\quad k = 1,\ldots, K,$$
+for each of K outcomes or classes $C_k$. According to Bayes theorem, we can write this probability as
+$$P(C_k|X_1\ldots, X_p) = \frac{P(C_k)P(X_1,\ldots, X_p|C_k)}{P(X_1,\ldots, X_p)}.$$
+
+As is often the case for Bayesian methods, the denominator is not of interest here, since it does not depend on $C_k$ - it is only a normalizing constant. Now, the "naive" property of naive bayes is that we assume all covariates to be conditionally independent of each other given $C_k$. Meaning, $P(X_i|X_1,\ldots, X_{i-1}, X_{i+1}, \ldots, X_p, C_k) = P(X_i|C_k)$ for all i and any $k$. The numerator above is the joint probability of $C_k$ and $X_1,\ldots, X_p$. We can write it as 
+\begin{align}
+P(C_k)P(X_1,\ldots, X_p) &= P(X_1, \ldots, X_p, C_k) \\
+&= P(X_1|X_2, \ldots, X_p, C_k)P(X_2, \ldots, X_p, C_k)\\
+&= P(X_1|X_2, \ldots, X_p, C_k)P(X_2|X_3, \ldots, X_p, C_k)P(X_3, \ldots, X_p, C_k)\\
+&=\ldots\\
+&= P(X_1|X_2, \ldots, X_p, C_k)P(X_2|X_3, \ldots, X_p, C_k)\cdots \\&\hspace{50pt}\cdots P(X_{p-1}|X_p, C_k) P(X_p| C_k)P(C_k)
+\end{align}
+Using the Naive conditional independence property, we get
+\begin{align}
+P(C_k)P(X_1,\ldots, X_p) &= P(C_k)\prod_{i=1}^p P(X_i|C_k)
+\end{align}
+Thus, we can write that the conditional probability of $C_k$ given the covariates (commonly known as the posterior distribution in Bayesian theory) as
+$$P(C_k|X_1,\ldots, X_p) \propto P(C_k)\prod_{i=1}^p P(X_i|C_k),$$
+where $\propto$ mean proportional to, because we have neglected the denominator. We can then construct a classifier based on this posterior distribution, selecting the category or class $k$ that has the highest posterior probability. Formallly, we can define the classifier $\widehat y$ as
+$$\widehat y = \mathrm{argmax}_k\, P(C_k)\prod_{i=1}^p P(X_i|C_k)$$
+There are different ways of selecting priors, i.e. the probability functions $P(C_k)$ and $P(X_i|C_k)$. For the $P(C_k)$ it is common to either use the proportion of each class in the training set or set all probabilities equal $1/K$. For the feature distributions one can select Mutinomial or Bernoulli distributions for discrete covariates or Gaussian for continous, for instance. The package we will be using is using Kernel density estimation for the priors, which is a non-parametric procedure. 
+
+
+### Example{-}
+Turning back to the flowers one last time, we will be using the package *discrim* with tidymodels. For hyper parameters there is a smoothness term one can set in the *set_engine* that determines how smooth the kernel should be. We will only use standard values here and see how it goes. The procedure is more or less the same as for the other two approaches we have considered - as you will see in the code below. 
+
+```{r nb_iris}
+# Load naive bayes pacakge: 
+library(discrim)
+# Set up model specification: 
+nb_spec <- naive_Bayes() %>%
+  set_engine("naivebayes") %>%
+  set_mode("classification")
+# Fit the model: 
+nb_fit <- nb_spec %>% 
+  fit(Species ~ ., data = df_train)
+# Evaluate performance on the test set: 
+nb_fit %>% 
+  predict(new_data = df_test) %>% 
+  bind_cols(df_test) %>%
+  metrics(truth = Species, estimate = .pred_class)
+# Confusion matrix: 
+nb_fit %>% 
+  predict(new_data = df_test) %>% 
+  bind_cols(df_test) %>%
+  conf_mat(truth = Species, estimate = .pred_class)
+```
+
+
+## Wrap-up
+We have now fitted three different classfiers to the iris data set. In this setting and without doing any in-depth fine tuning of the models, we found that the logistic regression did not perform very well, while k-nearest neighbour and naive bayes seemed to do a good job of splitting the flowers into the correct categories. In fact, on this particular example and without model tuning, KNN and naive bayes performed exacly equal. Let's do a quick check that they are 100\% in agreement by making a confusion matrix between the predictions from KNN and naive bayes.
+
+```{r final_wrapUP}
+# KNN prediction on test set
+knn_pred <- knn_fit %>% 
+  predict(new_data = df_test) %>% 
+  rename("knn"=".pred_class") # Renaming column for predictions
+# Logistic regression prediction on test set
+lr_pred <- lr_fit %>% 
+  predict(new_data = df_test) %>% 
+  rename("lr"=".pred_class") 
+# Naive Bayes prediction on test set
+nb_pred <- nb_fit %>% 
+  predict(new_data = df_test) %>% 
+  rename("nb"=".pred_class") 
+predictions <- bind_cols(knn_pred, nb_pred, lr_pred)
+conf_mat(data = predictions, truth = knn, estimate = nb)
+```
+Let us also compare one of them to the logistic regression predictions
+```{r final_wrapUP2}
+conf_mat(data = predictions, truth = knn, estimate = lr)
+```
+
+For this partitular problem, logsitic regression was not the method to choose, but remember that it may be different in other settings. 
 
 ### Data camp {-}
 
