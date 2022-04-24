@@ -1,4 +1,4 @@
-# Unsupervised Learning {#lecture8}
+# Support vector machines {#lecture8}
 
 We have finished a nice book.
 

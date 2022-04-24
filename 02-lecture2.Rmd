@@ -83,7 +83,7 @@ Once you have found a model that does not overfit to training data and performs 
 knitr::include_graphics("ppt/trainvalidatetestfig.png")
 ```
 
-We will illustrate how this threeway split can be used on an example, after we have learned about multiple regression.
+We will illustrate how this three-way split can be used on an example, after we have learned about multiple regression.
 
 ## Multiple regression
 

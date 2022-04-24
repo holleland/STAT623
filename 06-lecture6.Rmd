@@ -1,3 +1,3 @@
-# Support Vector Machines {#lecture6}
+# Random forrest and boosting {#lecture6}
 
-SVM
+

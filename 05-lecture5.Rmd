@@ -1,33 +1,153 @@
-# Trees {#lecture5}
+# Decision Trees and Bagged Trees {#lecture5}
 
-In this lecture we will learn about tree based models. We start out with simple decision trees and end up with a random forrest. 
-
-For this chapter we will use the *tidymodels* package [@tidymodels]. This can be installed by running
+In this lecture we will learn about decision trees and bagged trees for classification or regression models. As in the previous lecture, we will use the tidymodels framework [@tidymodels]. If you have not installed *tidymodels*, this can be done by
 ```{r installtidymodels, eval =FALSE}
 install.packages("tidymodels")
 ```
 
+We start with decision trees. 
 
 ## Decision trees
 
+A decision tree is a classifier that can be represented as a flow chart that looks like a tree. In each prediction, we start at the root asking a question deciding to which branch we should go for the prediction. As an example, say we want to predict whether or not a person likes computer games and make a decision tree for solving that problem. We have illustrated such a tree below. First you must ask: Is the person younger than 15 years old? If yes, predict that the person likes computer games. If the answer is no, is the person a boy? If yes, predict YES, he likes computer games, or if no, then NO, she does not like computer games. 
 
-```{r dtrees}
+```{r "decisiontree_computergames", fig.cap = "A simple decision tree", echo = FALSE}
+knitr::include_graphics("ppt/decisiontree_computergames.png")
+```
+
+In the illustration we have tried to make the decision tree "grow from the ground-up", but it is most common to print them the other way around. 
+
+The pros of decision trees are:
+
+- Easy to explain and intuitive to understand
+- Possible to capture non-linear relationships
+- Require no standardization or normalization of numeric features
+- No need for dummy variables for categoric features
+- Robust to outliers
+- Fast for large datasets
+- Can be used for regression and classification
+
+The cons are:
+
+- Hard to interpret if large, deep, or ensembled
+- High variance, complex trees are prone to overfitting
+
+
+To set up a tidymodels decision tree, we start by loading the package
+```{r tidytree1}
 library(tidymodels)
-data("PimaIndiansDiabetes", package = "mlbench")
-diabetes <- PimaIndiansDiabetes
-diabetes_split <- initial_split(diabetes, prop = 0.9, strata = diabetes)
+```
+To make a decision tree, there are three elements we need. First a decision tree object, then the engine and finally the mode. 
+```{r tidytree2}
+tree_spec <- decision_tree() %>%
+  set_engine("rpart") %>%
+  set_mode("classification")
+```
+Here *decision_tree()* makes the decision tree object. There are different packages we can use for decision trees, but we select a package called *rpart*, which is a package for recursive partitioning. This is called the engine in the tidymodels framework. Finally, we must decide if we are to do classification or regression, and this is the mode. Here we use classification. 
 
-diabetes_train <- training(diabetes_split)
-diabetes_test <- testing(diabetes_split)
-counts_train <- table(diabetes_train$diabetes)
-counts_test <- table(diabetes_test$diabetes)
+The *tree_spec* object is just a skeleton, we need data to make it useful. For example purposes, let use the same data as in lecture 4 (the iris data).
+```{r tidytree3}
+library(tidyverse)
+df <- as_tibble(iris)
+set.seed(999)
+split <- initial_split(df, strata = Species) 
+df_train <- training(split)
+df_test <- testing(split)
+```
+Then we are ready to fit a decition tree to our training data. You will notice the procedure is very similar to the procedure we used in lecture 4. This is the largest benefit of using tidymodels.
+```{r tidytree4}
+tree_fit <- tree_spec %>% 
+  fit(Species ~., data = df_train)
+tree_fit
+```
+Using the *rpart.plot* package, we can visualize the decision tree we have fitted by
+```{r tidytree5}
+library(rpart.plot)
+rpart.plot(tree_fit$fit,roundint=FALSE)
+```
+
+So, to make a prediction, the decision tree asks first: "Is the petal length below 2.6?" If yes, predict **Setosa**. If no: "Is the petal width below 1.75 (rounded off to 1.8 in the illustration)?" If the answer is yes, it is a **vercicolor** and a **virginica** if no. 
+
+We can also make predictions on the test set and calculate the accuracy 
+
+```{r tidytree6}
+tree_fit %>% 
+    predict(df_test) %>%      # predict on the test set
+    bind_cols(df_test) %>%    # bind columns (adding the truth and covariates) 
+    metrics(truth = Species, estimate = .pred_class) # calculate metrics
+```
+
+and the confusion matrix
+
+```{r tidytree7}
+tree_fit %>% 
+    predict(df_test) %>%      # predict on the test set
+    bind_cols(df_test) %>%    # bind columns (adding the truth and covariates) 
+    conf_mat(truth = Species, estimate = .pred_class) # confusion matrix
+```
+
+If you remember from the last lecture, this is the same result as we got using knn and naive bayes. 
+
+
+## Bagged trees
+Bagged threes is an ensemble method. This means, instead of fitting just one decision tree, we fit many, and aggregate the predictions from all of them to improve our final prediction. Bagging is short for bootstrap aggregation. Bootstrap is a method for resampling that we use on the training set to get many training sets with the same properties as the original one. We sample random rows of the training set with replacement to make these bootstrapped datasets and fit a decision tree to each of these.
+
+```{r "bagged_ensemble", fig.cap = "A bagged tree", echo = FALSE}
+knitr::include_graphics("ppt/bootstrap_ensemble.png")
+```
+
+This will give us many predictions that we then aggregate to arrive at our bagged prediction. If we are in a regression setting, the aggregated prediction is simply the mean, while in a classification setting the majority vote becomes the final prediction. Bagging can reduce the variance of our prediction significantly. 
+
+```{r "bagged_ensemble_pred", fig.cap = "A bagged tree prediction", echo = FALSE}
+knitr::include_graphics("ppt/esemble_prediction.png")
 ```
 
 
+Let us fit a bagged tree to the iris data. Here we need to install an additional package called *baguette*. 
+```{r installBag, eval = FALSE}
+install.packages("baguette")
+```
 
-## Random forrest
+This package contains the function **bag_tree** that we will use in our model spec. 
 
+```{r bag1}
+library(baguette)
+bag_spec <- bag_tree() %>%
+  set_engine("rpart", times = 100) %>%
+  set_mode("classification")
+```
+As you have learned by now, the structure is the same, but notice in the engine specification we have set *times = 100*. This is how we specify how many trees we want to include in our bag.  
+
+```{r bag2}
+set.seed(123)
+bag_fit <- bag_spec %>% 
+  fit(Species ~., data = df_train)
+bag_fit
+```
+
+In the output, we see the variable importance scores. As you can see the *Petal.Length* is the most important covariate. 
+
+We can also make predictions on the test set and calculate the accuracy 
+
+```{r bagtree3}
+bag_fit %>% 
+    predict(df_test) %>%    
+    bind_cols(df_test) %>%    
+    metrics(truth = Species, estimate = .pred_class) 
+```
+
+and the confusion matrix
+
+```{r bagtree4}
+bag_fit %>% 
+    predict(df_test) %>%     
+    bind_cols(df_test) %>%    
+    conf_mat(truth = Species, estimate = .pred_class) 
+```
+It seems this is the best we can do with the data that we have - same result as for knn, naive bayes and a simple decision tree. 
+
+On data camp you will learn more about decision trees and bagged trees - also how to use them in a regression setting. 
 
 ### Data camp {-}
 
-We highly recommend the data camp course [Machine Learning with Tree-Based Models in R](https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r) chapters 1-4.
+We highly recommend the data camp course [Machine Learning with Tree-Based Models in R](https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r) chapters 1-3.

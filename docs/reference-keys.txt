@@ -29,7 +29,7 @@ wrap-up
 sources
 lecture5
 decision-trees
-random-forrest
+bagged-trees
 lecture6
 lecture7
 mlp
