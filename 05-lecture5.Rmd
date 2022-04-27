@@ -104,6 +104,7 @@ This will give us many predictions that we then aggregate to arrive at our bagge
 knitr::include_graphics("ppt/esemble_prediction.png")
 ```
 
+<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/703581002?h=1aad939c3d&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="STAT623: Bagged Trees"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
 Let us fit a bagged tree to the iris data. Here we need to install an additional package called *baguette*. 
 ```{r installBag, eval = FALSE}
