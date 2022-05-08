@@ -34,7 +34,6 @@ lecture6
 hyperparameter-tuning
 random-forest
 boosted-trees
-iris-data
 lecture7
 mlp
 objective-functions-and-training

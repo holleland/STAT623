@@ -236,9 +236,9 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="lecture6.html"><a href="lecture6.html#example-4"><i class="fa fa-check"></i>Example</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="lecture6.html"><a href="lecture6.html#boosted-trees"><i class="fa fa-check"></i><b>6.3</b> Boosted trees</a></li>
-<li class="chapter" data-level="6.4" data-path="lecture6.html"><a href="lecture6.html#iris-data"><i class="fa fa-check"></i><b>6.4</b> Iris data</a>
+<li class="chapter" data-level="6.3" data-path="lecture6.html"><a href="lecture6.html#boosted-trees"><i class="fa fa-check"></i><b>6.3</b> Boosted trees</a>
 <ul>
+<li class="chapter" data-level="" data-path="lecture6.html"><a href="lecture6.html#iris-data"><i class="fa fa-check"></i>Iris data</a></li>
 <li class="chapter" data-level="" data-path="lecture6.html"><a href="lecture6.html#data-camp-3"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
@@ -365,7 +365,7 @@ div.csl-indent {
 <li>min_n: smallest node size allowed</li>
 </ul>
 <p>Increasing the number of trees can be one way of improving the model performance.</p>
-<p>There are also different options for algorithms to be used for the node split. If you use the <em>ranger</em> implementation the options are impurity or permutation. This is set in the set_engine call.</p>
+<p>There are also different options for algorithms to be used for the node split. If you use the <em>ranger</em> implementation the options are impurity or permutation. This is set in the set_engine call. We will not go into the details here, but use the impurity option as default.</p>
 <div id="example-4" class="section level3 unnumbered">
 <h3>Example</h3>
 <p>In this lecture, we will move away from the Iris data set and consider the problem of predicting the sex of abalones. The data is produced by <span class="citation"><a href="#ref-nash1994" role="doc-biblioref">Nash et al.</a> (<a href="#ref-nash1994" role="doc-biblioref">1994</a>)</span> and downloaded <a href="https://archive.ics.uci.edu/ml/datasets/abalone">here</a>. Here you will also find the following explanation of the columns of the data:
@@ -437,7 +437,7 @@ Name / Data Type / Measurement Unit / Description</p>
 <span id="cb115-4"><a href="lecture6.html#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fit final model:</span></span>
 <span id="cb115-5"><a href="lecture6.html#cb115-5" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> rf_spec_final <span class="sc">%&gt;%</span></span>
 <span id="cb115-6"><a href="lecture6.html#cb115-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., <span class="at">data =</span> df_train)</span></code></pre></div>
-<p>An interesting function to be aware of is the vip function in the vip packages, which produces a variable of importance plot.</p>
+<p>An interesting function to be aware of is the vip function in the vip package <span class="citation">(<a href="#ref-vipPackage" role="doc-biblioref">Greenwell and Boehmke 2020</a>)</span>, which produces a variable of importance plot.</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="lecture6.html#cb116-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">%&gt;%</span> vip<span class="sc">::</span><span class="fu">vip</span>()</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>From this plot, it seems the Viscera weight is the most important variable.</p>
@@ -476,7 +476,7 @@ Name / Data Type / Measurement Unit / Description</p>
 <span id="cb119-3"><a href="lecture6.html#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;xgboost&quot;</span>)</span>
 <span id="cb119-4"><a href="lecture6.html#cb119-4" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> boost_spec <span class="sc">%&gt;%</span></span>
 <span id="cb119-5"><a href="lecture6.html#cb119-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., df_train)</span></code></pre></div>
-<pre><code>## [20:18:45] WARNING: amalgamation/../src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;multi:softprob&#39; was changed from &#39;merror&#39; to &#39;mlogloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.</code></pre>
+<pre><code>## [20:29:27] WARNING: amalgamation/../src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;multi:softprob&#39; was changed from &#39;merror&#39; to &#39;mlogloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.</code></pre>
 <div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="lecture6.html#cb121-1" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
 <span id="cb121-2"><a href="lecture6.html#cb121-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Sex, .pred_class) <span class="sc">%&gt;%</span></span>
 <span id="cb121-3"><a href="lecture6.html#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
@@ -557,10 +557,9 @@ Name / Data Type / Measurement Unit / Description</p>
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
 ## 1 accuracy multiclass     0.558
 ## 2 kap      multiclass     0.331</code></pre>
-<p>We see we go from 0.551 accuracy to 0.557 - so very slight improvement.</p>
-</div>
-<div id="iris-data" class="section level2" number="6.4">
-<h2><span class="header-section-number">6.4</span> Iris data</h2>
+<p>We see we go from 0.551 accuracy to 0.558 - so very slight improvement.</p>
+<div id="iris-data" class="section level3 unnumbered">
+<h3>Iris data</h3>
 <p>For the sake of continuity, let’s us also see if the boosted tree can manage to correctly predict the last three iris flowers:</p>
 <div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="lecture6.html#cb134-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris)</span>
 <span id="cb134-2"><a href="lecture6.html#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">999</span>)</span>
@@ -617,17 +616,18 @@ Name / Data Type / Measurement Unit / Description</p>
 <span id="cb139-5"><a href="lecture6.html#cb139-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the best model:</span></span>
 <span id="cb139-6"><a href="lecture6.html#cb139-6" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> final_spec <span class="sc">%&gt;%</span></span>
 <span id="cb139-7"><a href="lecture6.html#cb139-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Species <span class="sc">~</span> ., df_train)</span></code></pre></div>
-<pre><code>## [20:01:12] WARNING: amalgamation/../src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;multi:softprob&#39; was changed from &#39;merror&#39; to &#39;mlogloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.</code></pre>
+<pre><code>## [20:27:46] WARNING: amalgamation/../src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;multi:softprob&#39; was changed from &#39;merror&#39; to &#39;mlogloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.</code></pre>
 <div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="lecture6.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate out-of-sample performance on test set:</span></span>
 <span id="cb141-2"><a href="lecture6.html#cb141-2" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
 <span id="cb141-3"><a href="lecture6.html#cb141-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb141-4"><a href="lecture6.html#cb141-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> <span class="st">&quot;Species&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 3
-##   .metric  .estimator .estimate
-##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy multiclass     0.949
-## 2 kap      multiclass     0.923</code></pre>
+<span id="cb141-4"><a href="lecture6.html#cb141-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> <span class="st">&quot;Species&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
+<pre><code>##             Truth
+## Prediction   setosa versicolor virginica
+##   setosa         13          0         0
+##   versicolor      0         13         2
+##   virginica       0          0        11</code></pre>
 <p>Same as for the other methods - should have used another example data from the start!</p>
+</div>
 <div id="data-camp-3" class="section level3 unnumbered">
 <h3>Data camp</h3>
 <p>We highly recommend the data camp course <a href="https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r">Machine Learning with Tree-Based Models in R</a> chapters 3-4.</p>
@@ -637,6 +637,9 @@ Name / Data Type / Measurement Unit / Description</p>
 </div>
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-vipPackage" class="csl-entry">
+Greenwell, Brandon M., and Bradley C. Boehmke. 2020. <span>“Variable Importance Plots—an Introduction to the Vip Package.”</span> <em>The R Journal</em> 12 (1): 343–66. <a href="https://doi.org/10.32614/RJ-2020-013">https://doi.org/10.32614/RJ-2020-013</a>.
+</div>
 <div id="ref-tune2021" class="csl-entry">
 Kuhn, Max. 2021. <em>Tune: Tidy Tuning Tools</em>. <a href="https://CRAN.R-project.org/package=tune">https://CRAN.R-project.org/package=tune</a>.
 </div>
