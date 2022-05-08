@@ -229,7 +229,19 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="lecture5.html"><a href="lecture5.html#data-camp-2"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="lecture6.html"><a href="lecture6.html"><i class="fa fa-check"></i><b>6</b> Random forrest and boosting</a></li>
+<li class="chapter" data-level="6" data-path="lecture6.html"><a href="lecture6.html"><i class="fa fa-check"></i><b>6</b> Random forrest and boosting</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="lecture6.html"><a href="lecture6.html#hyperparameter-tuning"><i class="fa fa-check"></i><b>6.1</b> Hyperparameter tuning</a></li>
+<li class="chapter" data-level="6.2" data-path="lecture6.html"><a href="lecture6.html#random-forest"><i class="fa fa-check"></i><b>6.2</b> Random Forest</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture6.html"><a href="lecture6.html#example-4"><i class="fa fa-check"></i>Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="lecture6.html"><a href="lecture6.html#boosted-trees"><i class="fa fa-check"></i><b>6.3</b> Boosted trees</a></li>
+<li class="chapter" data-level="6.4" data-path="lecture6.html"><a href="lecture6.html#iris-data"><i class="fa fa-check"></i><b>6.4</b> Iris data</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture6.html"><a href="lecture6.html#data-camp-3"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="lecture7.html"><a href="lecture7.html"><i class="fa fa-check"></i><b>7</b> Artificial Neural networks</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="lecture7.html"><a href="lecture7.html#mlp"><i class="fa fa-check"></i><b>7.1</b> MLP</a></li>
@@ -456,7 +468,7 @@ There are different ways of selecting priors, i.e. the probability functions <s
 </div>
 <div id="wrap-up" class="section level2" number="4.4">
 <h2><span class="header-section-number">4.4</span> Wrap-up</h2>
-<p>We have now fitted three different classfiers to the iris data set. In this setting and without doing any in-depth fine tuning of the models, we found that the logistic regression did not perform very well, while k-nearest neighbour and naive bayes seemed to do a good job of splitting the flowers into the correct categories. In fact, on this particular example and without model tuning, KNN and naive bayes performed exacly equal. Let’s do a quick check that they are 100% in agreement by making a confusion matrix between the predictions from KNN and naive bayes.</p>
+<p>We have now fitted three different classfiers to the iris data set. In this setting and without doing any in-depth fine tuning of the models, we found that the logistic regression did not perform very well, while k-nearest neighbour and naive bayes seemed to do a good job of splitting the flowers into the correct categories. In fact, on this particular example and without model tuning, KNN and naive bayes performed exactly equal. Let’s do a quick check that they are 100% in agreement by making a confusion matrix between the predictions from KNN and naive bayes.</p>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="lecture4.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># KNN prediction on test set</span></span>
 <span id="cb76-2"><a href="lecture4.html#cb76-2" aria-hidden="true" tabindex="-1"></a>knn_pred <span class="ot">&lt;-</span> knn_fit <span class="sc">%&gt;%</span> </span>
 <span id="cb76-3"><a href="lecture4.html#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span> </span>
