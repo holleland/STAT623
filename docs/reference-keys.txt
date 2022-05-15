@@ -35,7 +35,9 @@ hyperparameter-tuning
 random-forest
 boosted-trees
 lecture7
-mlp
+linear-svms
+lecture8
+multilayer-perceptron-mlp
 objective-functions-and-training
 validation-of-trained-models
 implementation-of-mlp-in-keras
@@ -45,5 +47,4 @@ preprocessing
 mlp-model
 compiling-and-training-the-model
 evaluating-the-model
-lecture8
 lecture9

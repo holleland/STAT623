@@ -5,6 +5,8 @@ In this lecture we will learn about decision trees and bagged trees for classifi
 install.packages("tidymodels")
 ```
 
+This lecture is highly inspired by the data camp course *Machine learning with three based models in R* (see link at the buttom).
+
 We start with decision trees. 
 
 ## Decision trees

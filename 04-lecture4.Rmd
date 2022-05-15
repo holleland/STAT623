@@ -179,7 +179,7 @@ nb_fit %>%
 
 
 ## Wrap-up
-We have now fitted three different classfiers to the iris data set. In this setting and without doing any in-depth fine tuning of the models, we found that the logistic regression did not perform very well, while k-nearest neighbour and naive bayes seemed to do a good job of splitting the flowers into the correct categories. In fact, on this particular example and without model tuning, KNN and naive bayes performed exacly equal. Let's do a quick check that they are 100\% in agreement by making a confusion matrix between the predictions from KNN and naive bayes.
+We have now fitted three different classfiers to the iris data set. In this setting and without doing any in-depth fine tuning of the models, we found that the logistic regression did not perform very well, while k-nearest neighbour and naive bayes seemed to do a good job of splitting the flowers into the correct categories. In fact, on this particular example and without model tuning, KNN and naive bayes performed exactly equal. Let's do a quick check that they are 100\% in agreement by making a confusion matrix between the predictions from KNN and naive bayes.
 
 ```{r final_wrapUP}
 # KNN prediction on test set
