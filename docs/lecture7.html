@@ -245,7 +245,7 @@ div.csl-indent {
 <li class="chapter" data-level="7" data-path="lecture7.html"><a href="lecture7.html"><i class="fa fa-check"></i><b>7</b> Support vector machines</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="lecture7.html"><a href="lecture7.html#linear-svms"><i class="fa fa-check"></i><b>7.1</b> Linear SVMs</a></li>
-<li class="chapter" data-level="" data-path="lecture7.html"><a href="lecture7.html#polynomial-svm"><i class="fa fa-check"></i>Polynomial SVM</a>
+<li class="chapter" data-level="7.2" data-path="lecture7.html"><a href="lecture7.html#polynomial-svm"><i class="fa fa-check"></i><b>7.2</b> Polynomial SVM</a>
 <ul>
 <li class="chapter" data-level="" data-path="lecture7.html"><a href="lecture7.html#data-camp-4"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
@@ -424,8 +424,8 @@ div.csl-indent {
 <img src="STAT623-compendium_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>Here you see that the margin is much narrower. Increasing the cost like this for linear support vector machines can be useful in situations where the decision boundary is known to be linear. We will now consider a situation where the decision boundary is non-linear - in fact a circle.</p>
 </div>
-<div id="polynomial-svm" class="section level2 unnumbered">
-<h2>Polynomial SVM</h2>
+<div id="polynomial-svm" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Polynomial SVM</h2>
 <p>To generate circles for plotting, we introduce the function <em>circle</em>. This creates a tibble data frame with <em>npoints</em> rows containing x1 and x2 coordinates for a circle of radius r.</p>
 <div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="lecture7.html#cb162-1" aria-hidden="true" tabindex="-1"></a>circle <span class="ot">&lt;-</span> <span class="cf">function</span>(x1_center, x2_center, r, <span class="at">npoints =</span> <span class="dv">100</span>){</span>
 <span id="cb162-2"><a href="lecture7.html#cb162-2" aria-hidden="true" tabindex="-1"></a>  theta <span class="ot">=</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">2</span><span class="sc">*</span>pi,<span class="at">length.out=</span>npoints)</span>
@@ -435,24 +435,47 @@ div.csl-indent {
 <span id="cb162-6"><a href="lecture7.html#cb162-6" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb162-7"><a href="lecture7.html#cb162-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>We generate the data and plot it with the decision boundary being a circle of radius 0.7.</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="lecture7.html#cb163-1" aria-hidden="true" tabindex="-1"></a>radius <span class="ot">&lt;-</span> .<span class="dv">7</span></span>
+<span id="cb163-2"><a href="lecture7.html#cb163-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">54321</span>)</span>
+<span id="cb163-3"><a href="lecture7.html#cb163-3" aria-hidden="true" tabindex="-1"></a><span class="co"># generate data: </span></span>
+<span id="cb163-4"><a href="lecture7.html#cb163-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb163-5"><a href="lecture7.html#cb163-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="at">min =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">max =</span> <span class="dv">1</span>),</span>
+<span id="cb163-6"><a href="lecture7.html#cb163-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x2 =</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="at">min =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">max =</span> <span class="dv">1</span>),</span>
+<span id="cb163-7"><a href="lecture7.html#cb163-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(x1<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>x2<span class="sc">^</span><span class="dv">2</span> <span class="sc">&lt;</span> radius<span class="sc">^</span><span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb163-8"><a href="lecture7.html#cb163-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb163-9"><a href="lecture7.html#cb163-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb163-10"><a href="lecture7.html#cb163-10" aria-hidden="true" tabindex="-1"></a><span class="co"># train-test split</span></span>
+<span id="cb163-11"><a href="lecture7.html#cb163-11" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">prop =</span> .<span class="dv">8</span>, <span class="at">strata =</span> <span class="st">&quot;y&quot;</span>)</span>
+<span id="cb163-12"><a href="lecture7.html#cb163-12" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
+<span id="cb163-13"><a href="lecture7.html#cb163-13" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span>
+<span id="cb163-14"><a href="lecture7.html#cb163-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate decision boundary circle: </span></span>
+<span id="cb163-15"><a href="lecture7.html#cb163-15" aria-hidden="true" tabindex="-1"></a>boundary <span class="ot">=</span> <span class="fu">circle</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="at">r =</span> radius)</span>
+<span id="cb163-16"><a href="lecture7.html#cb163-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb163-17"><a href="lecture7.html#cb163-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb163-18"><a href="lecture7.html#cb163-18" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>x1,<span class="at">y=</span>x2,<span class="at">col=</span>y)) <span class="sc">+</span> </span>
+<span id="cb163-19"><a href="lecture7.html#cb163-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb163-20"><a href="lecture7.html#cb163-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="at">data =</span> boundary, </span>
+<span id="cb163-21"><a href="lecture7.html#cb163-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x=</span>x1c, <span class="at">y=</span> x2c),</span>
+<span id="cb163-22"><a href="lecture7.html#cb163-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">inherit.aes=</span><span class="cn">FALSE</span>)</span>
+<span id="cb163-23"><a href="lecture7.html#cb163-23" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>Let us first try to fit a linear svm to these data. We expect it not to perform very well, but let us see how bad it will be. For a quick check we just plot the result using the plot function.</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="lecture7.html#cb163-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
-<span id="cb163-2"><a href="lecture7.html#cb163-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
-<span id="cb163-3"><a href="lecture7.html#cb163-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
-<span id="cb163-4"><a href="lecture7.html#cb163-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;linear&quot;</span>,</span>
-<span id="cb163-5"><a href="lecture7.html#cb163-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb163-6"><a href="lecture7.html#cb163-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">1</span>)</span>
-<span id="cb163-7"><a href="lecture7.html#cb163-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
-<p>As expected, the linear svm performs bad and predicts all observations to belong to the class <span class="math inline">\(y=1\)</span>. The number of support vectors (114) is also very high, which is a sign of poor performance. We can try to increase the cost, as we did before.</p>
 <div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="lecture7.html#cb164-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
 <span id="cb164-2"><a href="lecture7.html#cb164-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
 <span id="cb164-3"><a href="lecture7.html#cb164-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
 <span id="cb164-4"><a href="lecture7.html#cb164-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;linear&quot;</span>,</span>
 <span id="cb164-5"><a href="lecture7.html#cb164-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb164-6"><a href="lecture7.html#cb164-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">100</span>)</span>
+<span id="cb164-6"><a href="lecture7.html#cb164-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">1</span>)</span>
 <span id="cb164-7"><a href="lecture7.html#cb164-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>As expected, the linear svm performs bad and predicts all observations to belong to the class <span class="math inline">\(y=1\)</span>. The number of support vectors (114) is also very high, which is a sign of poor performance. We can try to increase the cost, as we did before.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="lecture7.html#cb165-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
+<span id="cb165-2"><a href="lecture7.html#cb165-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
+<span id="cb165-3"><a href="lecture7.html#cb165-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
+<span id="cb165-4"><a href="lecture7.html#cb165-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;linear&quot;</span>,</span>
+<span id="cb165-5"><a href="lecture7.html#cb165-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb165-6"><a href="lecture7.html#cb165-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">100</span>)</span>
+<span id="cb165-7"><a href="lecture7.html#cb165-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <p>More or less the same result. Increasing the cost reduced the number of support vectors to 119.</p>
 <p>The solution to this problem is to use another kernel than the linear one, but before we to that, we will use the transformation trick. As is often the case, a smart transformation can often take a non-linear problem and make it linear. In this case, we know the boundary is a circle and the formula for a circle is
@@ -461,64 +484,64 @@ where <span class="math inline">\(r\)</span> is the radius. If we transform the 
 <span class="math display">\[z_1 = x_1^2 \quad\text{and}\quad z_2=x_2^2,\]</span>
 we get that <span class="math display">\[x_1^2+x_2^2 = z_1+z_2 = r^2 \quad\Rightarrow \quad z_2 = r^2-z_1.\]</span>
 That is the relationship between <span class="math inline">\(z_1\)</span> and <span class="math inline">\(z_2\)</span> is linear with a slope of <span class="math inline">\(-1\)</span> and an intercept of <span class="math inline">\(r^2\)</span>. Since we know the true radius, we can plot this directly:</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="lecture7.html#cb165-1" aria-hidden="true" tabindex="-1"></a>df_train2 <span class="ot">&lt;-</span> df_train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">z1=</span>x1<span class="sc">^</span><span class="dv">2</span>, <span class="at">z2 =</span> x2<span class="sc">^</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(z1,z2,y)</span>
-<span id="cb165-2"><a href="lecture7.html#cb165-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_train2, <span class="fu">aes</span>(<span class="at">x=</span>z1,<span class="at">y=</span>z2,<span class="at">col=</span>y)) <span class="sc">+</span> </span>
-<span id="cb165-3"><a href="lecture7.html#cb165-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb165-4"><a href="lecture7.html#cb165-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">intercept =</span> radius<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="lecture7.html#cb166-1" aria-hidden="true" tabindex="-1"></a>df_train2 <span class="ot">&lt;-</span> df_train <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">z1=</span>x1<span class="sc">^</span><span class="dv">2</span>, <span class="at">z2 =</span> x2<span class="sc">^</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(z1,z2,y)</span>
+<span id="cb166-2"><a href="lecture7.html#cb166-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_train2, <span class="fu">aes</span>(<span class="at">x=</span>z1,<span class="at">y=</span>z2,<span class="at">col=</span>y)) <span class="sc">+</span> </span>
+<span id="cb166-3"><a href="lecture7.html#cb166-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb166-4"><a href="lecture7.html#cb166-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">intercept =</span> radius<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>Let us fit a linear svm to the transformed data.</p>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="lecture7.html#cb166-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
-<span id="cb166-2"><a href="lecture7.html#cb166-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train2,</span>
-<span id="cb166-3"><a href="lecture7.html#cb166-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
-<span id="cb166-4"><a href="lecture7.html#cb166-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;linear&quot;</span>,</span>
-<span id="cb166-5"><a href="lecture7.html#cb166-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb166-6"><a href="lecture7.html#cb166-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">100</span>)</span>
-<span id="cb166-7"><a href="lecture7.html#cb166-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train2)</span></code></pre></div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="lecture7.html#cb167-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
+<span id="cb167-2"><a href="lecture7.html#cb167-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train2,</span>
+<span id="cb167-3"><a href="lecture7.html#cb167-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
+<span id="cb167-4"><a href="lecture7.html#cb167-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;linear&quot;</span>,</span>
+<span id="cb167-5"><a href="lecture7.html#cb167-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb167-6"><a href="lecture7.html#cb167-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">100</span>)</span>
+<span id="cb167-7"><a href="lecture7.html#cb167-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train2)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p>Clearly, this is more satisfying.</p>
 <p>The next step we will test is to use the original data without transforming, but using a different kernel. Instead of squaring the data, we will use a polynomial kernel of 2nd degree. Using the polynomial kernel option, there are three hyperparameters: <em>degree</em>, <em>gamma</em> and <em>coef0</em>. The polynomial kernel is parameterized as
 <span class="math inline">\((\text{gamma*u&#39;*v}+ \text{coef0})\text{^degree}\)</span>, where <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span> are data vectors. We set the kernel argument to “polynomial” and degree to 2, and for now we use standard options for gamma and coef0.</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="lecture7.html#cb167-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
-<span id="cb167-2"><a href="lecture7.html#cb167-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
-<span id="cb167-3"><a href="lecture7.html#cb167-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
-<span id="cb167-4"><a href="lecture7.html#cb167-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;polynomial&quot;</span>,</span>
-<span id="cb167-5"><a href="lecture7.html#cb167-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">degree =</span> <span class="dv">2</span>,</span>
-<span id="cb167-6"><a href="lecture7.html#cb167-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb167-7"><a href="lecture7.html#cb167-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">1</span>)</span>
-<span id="cb167-8"><a href="lecture7.html#cb167-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="lecture7.html#cb168-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
+<span id="cb168-2"><a href="lecture7.html#cb168-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
+<span id="cb168-3"><a href="lecture7.html#cb168-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
+<span id="cb168-4"><a href="lecture7.html#cb168-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;polynomial&quot;</span>,</span>
+<span id="cb168-5"><a href="lecture7.html#cb168-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">degree =</span> <span class="dv">2</span>,</span>
+<span id="cb168-6"><a href="lecture7.html#cb168-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb168-7"><a href="lecture7.html#cb168-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">1</span>)</span>
+<span id="cb168-8"><a href="lecture7.html#cb168-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="lecture7.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_train<span class="sc">$</span>y <span class="sc">==</span> <span class="fu">predict</span>(svm_fit, df_train)) <span class="co">#Accuracy</span></span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="lecture7.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_train<span class="sc">$</span>y <span class="sc">==</span> <span class="fu">predict</span>(svm_fit, df_train)) <span class="co">#Accuracy</span></span></code></pre></div>
 <pre><code>## [1] 0.9874214</code></pre>
 <p>The accuracy is certainly very high (98.7%), but for the sake of learning, we will try to improve this further by tuning the hyperparameters instead of using the defaults. We do this by using the <em>tune.svm</em> function in <em>e1071</em>. The syntax is very similar to the svm function, but we need to feed in the x’s and y’s separately as below and also feed in a vector for each of the hyperparaemters with the values we want to consider. We use costs of 0.1,1,10 and 100, gamma values of 0.1,1 and 10 and coef0 of 0,0.1,1 and 10. The tuning can take some time, but on this example it is quite fast.</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="lecture7.html#cb170-1" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(df_train)</span>
-<span id="cb170-2"><a href="lecture7.html#cb170-2" aria-hidden="true" tabindex="-1"></a>tuning <span class="ot">&lt;-</span> <span class="fu">tune.svm</span>(</span>
-<span id="cb170-3"><a href="lecture7.html#cb170-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> df_train[,<span class="sc">-</span><span class="dv">3</span>], </span>
-<span id="cb170-4"><a href="lecture7.html#cb170-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> df_train[,<span class="dv">3</span>],</span>
-<span id="cb170-5"><a href="lecture7.html#cb170-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
-<span id="cb170-6"><a href="lecture7.html#cb170-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">&quot;polynomial&quot;</span>,</span>
-<span id="cb170-7"><a href="lecture7.html#cb170-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">2</span>,</span>
-<span id="cb170-8"><a href="lecture7.html#cb170-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Suggestions for the hyperparameters:</span></span>
-<span id="cb170-9"><a href="lecture7.html#cb170-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost =</span> <span class="dv">10</span><span class="sc">^</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">:</span> <span class="dv">2</span>),</span>
-<span id="cb170-10"><a href="lecture7.html#cb170-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>),</span>
-<span id="cb170-11"><a href="lecture7.html#cb170-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef0 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>,<span class="dv">1</span>,<span class="dv">10</span>)</span>
-<span id="cb170-12"><a href="lecture7.html#cb170-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb170-13"><a href="lecture7.html#cb170-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the &quot;best&quot; parametrs:</span></span>
-<span id="cb170-14"><a href="lecture7.html#cb170-14" aria-hidden="true" tabindex="-1"></a>tuning<span class="sc">$</span>best.parameters</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="lecture7.html#cb171-1" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(df_train)</span>
+<span id="cb171-2"><a href="lecture7.html#cb171-2" aria-hidden="true" tabindex="-1"></a>tuning <span class="ot">&lt;-</span> <span class="fu">tune.svm</span>(</span>
+<span id="cb171-3"><a href="lecture7.html#cb171-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> df_train[,<span class="sc">-</span><span class="dv">3</span>], </span>
+<span id="cb171-4"><a href="lecture7.html#cb171-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> df_train[,<span class="dv">3</span>],</span>
+<span id="cb171-5"><a href="lecture7.html#cb171-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
+<span id="cb171-6"><a href="lecture7.html#cb171-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">kernel =</span> <span class="st">&quot;polynomial&quot;</span>,</span>
+<span id="cb171-7"><a href="lecture7.html#cb171-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">2</span>,</span>
+<span id="cb171-8"><a href="lecture7.html#cb171-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Suggestions for the hyperparameters:</span></span>
+<span id="cb171-9"><a href="lecture7.html#cb171-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost =</span> <span class="dv">10</span><span class="sc">^</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">:</span> <span class="dv">2</span>),</span>
+<span id="cb171-10"><a href="lecture7.html#cb171-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>),</span>
+<span id="cb171-11"><a href="lecture7.html#cb171-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef0 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>,<span class="dv">1</span>,<span class="dv">10</span>)</span>
+<span id="cb171-12"><a href="lecture7.html#cb171-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb171-13"><a href="lecture7.html#cb171-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the &quot;best&quot; parametrs:</span></span>
+<span id="cb171-14"><a href="lecture7.html#cb171-14" aria-hidden="true" tabindex="-1"></a>tuning<span class="sc">$</span>best.parameters</span></code></pre></div>
 <pre><code>##   degree gamma coef0 cost
 ## 6      2    10   0.1  0.1</code></pre>
 <p>We fit the model using the best parameters from the tuning:</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="lecture7.html#cb172-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
-<span id="cb172-2"><a href="lecture7.html#cb172-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
-<span id="cb172-3"><a href="lecture7.html#cb172-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
-<span id="cb172-4"><a href="lecture7.html#cb172-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;polynomial&quot;</span>,</span>
-<span id="cb172-5"><a href="lecture7.html#cb172-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">degree =</span> <span class="dv">2</span>,</span>
-<span id="cb172-6"><a href="lecture7.html#cb172-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb172-7"><a href="lecture7.html#cb172-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>cost,</span>
-<span id="cb172-8"><a href="lecture7.html#cb172-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">gamma =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>gamma, </span>
-<span id="cb172-9"><a href="lecture7.html#cb172-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">coef0 =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>coef0)</span>
-<span id="cb172-10"><a href="lecture7.html#cb172-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="lecture7.html#cb173-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
+<span id="cb173-2"><a href="lecture7.html#cb173-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
+<span id="cb173-3"><a href="lecture7.html#cb173-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="st">&quot;C-classification&quot;</span>,</span>
+<span id="cb173-4"><a href="lecture7.html#cb173-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">kernel =</span> <span class="st">&quot;polynomial&quot;</span>,</span>
+<span id="cb173-5"><a href="lecture7.html#cb173-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">degree =</span> <span class="dv">2</span>,</span>
+<span id="cb173-6"><a href="lecture7.html#cb173-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb173-7"><a href="lecture7.html#cb173-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>cost,</span>
+<span id="cb173-8"><a href="lecture7.html#cb173-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">gamma =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>gamma, </span>
+<span id="cb173-9"><a href="lecture7.html#cb173-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">coef0 =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>coef0)</span>
+<span id="cb173-10"><a href="lecture7.html#cb173-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="lecture7.html#cb173-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_train<span class="sc">$</span>y <span class="sc">==</span> <span class="fu">predict</span>(svm_fit, df_train)) <span class="co">#Accuracy</span></span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="lecture7.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_train<span class="sc">$</span>y <span class="sc">==</span> <span class="fu">predict</span>(svm_fit, df_train)) <span class="co">#Accuracy</span></span></code></pre></div>
 <pre><code>## [1] 0.9937107</code></pre>
 <p>The tuning resulted in a slight improvement of roughly half a percent of accuracy going from 98.7% to 99.4%, but we are already very close to 100%.</p>
 <p>On the data camp course recommended below you will learn more about this and in chapter 4 you will also go a bit further than we have here.</p>

@@ -36,6 +36,7 @@ random-forest
 boosted-trees
 lecture7
 linear-svms
+polynomial-svm
 lecture8
 multilayer-perceptron-mlp
 objective-functions-and-training

@@ -245,7 +245,7 @@ div.csl-indent {
 <li class="chapter" data-level="7" data-path="lecture7.html"><a href="lecture7.html"><i class="fa fa-check"></i><b>7</b> Support vector machines</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="lecture7.html"><a href="lecture7.html#linear-svms"><i class="fa fa-check"></i><b>7.1</b> Linear SVMs</a></li>
-<li class="chapter" data-level="" data-path="lecture7.html"><a href="lecture7.html#polynomial-svm"><i class="fa fa-check"></i>Polynomial SVM</a>
+<li class="chapter" data-level="7.2" data-path="lecture7.html"><a href="lecture7.html#polynomial-svm"><i class="fa fa-check"></i><b>7.2</b> Polynomial SVM</a>
 <ul>
 <li class="chapter" data-level="" data-path="lecture7.html"><a href="lecture7.html#data-camp-4"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
@@ -341,125 +341,125 @@ Depending on the task, minimizing  or  with respect to the parameters <span clas
 <div id="installing-keras-and-tensorflow" class="section level3" number="8.4.1">
 <h3><span class="header-section-number">8.4.1</span> Installing Keras and Tensorflow</h3>
 <p>First install tensorflow with the following commands</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="lecture8.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
-<span id="cb175-2"><a href="lecture8.html#cb175-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
-<span id="cb175-3"><a href="lecture8.html#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_tensorflow</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="lecture8.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
+<span id="cb176-2"><a href="lecture8.html#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
+<span id="cb176-3"><a href="lecture8.html#cb176-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_tensorflow</span>()</span></code></pre></div>
 <p>Then install keras with the following commands</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="lecture8.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.package</span>(<span class="st">&#39;keras&#39;</span>)</span>
-<span id="cb176-2"><a href="lecture8.html#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
-<span id="cb176-3"><a href="lecture8.html#cb176-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_keras</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="lecture8.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.package</span>(<span class="st">&#39;keras&#39;</span>)</span>
+<span id="cb177-2"><a href="lecture8.html#cb177-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
+<span id="cb177-3"><a href="lecture8.html#cb177-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_keras</span>()</span></code></pre></div>
 </div>
 <div id="importing-mnist" class="section level3" number="8.4.2">
 <h3><span class="header-section-number">8.4.2</span> Importing MNIST</h3>
 <p>We will use the famous MNIST data set as an example in this section (Ref. XX). The MNIST dataset contains 60000 handwritten digits for training the model, and 10000 for testing. The digits has a shape of 28x28 pixels in grey scale, that is, they only have one channel, describing the black/white intensity of the pixel value. Each picture/instance is associated with a label, that is a number from 0-9. The keras package contains a function for downloading the MNIST dataset from the source (Ref. XX)</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="lecture8.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
-<span id="cb177-2"><a href="lecture8.html#cb177-2" aria-hidden="true" tabindex="-1"></a>mnist <span class="ot">&lt;-</span> <span class="fu">dataset_mnist</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="lecture8.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
+<span id="cb178-2"><a href="lecture8.html#cb178-2" aria-hidden="true" tabindex="-1"></a>mnist <span class="ot">&lt;-</span> <span class="fu">dataset_mnist</span>()</span></code></pre></div>
 <p>To ensure that the predictions of the neural network model also performs well on new unseen instances, the data is often split into three independent sub-data sets: a training, a validation and a test data set. The training data set is directly used to optimize/train the parameters of the model. The validation data set is indirectly used to optimize the model, that is, we monitor the performance on the validation dataset after each epoch. An epoch is one pass in the optimization over the entire training dataset. During training, the model sees the same training data multiple times, however, the instances are usually randomly shuffled before a new epoch starts. We will come back to validation and testing of the neural network later in this section. The MNIST dataset are split into a test and train data set from source</p>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="lecture8.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb178-2"><a href="lecture8.html#cb178-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>x</span>
-<span id="cb178-3"><a href="lecture8.html#cb178-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>y</span>
-<span id="cb178-4"><a href="lecture8.html#cb178-4" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x</span>
-<span id="cb178-5"><a href="lecture8.html#cb178-5" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>y</span></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="lecture8.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb179-2"><a href="lecture8.html#cb179-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>x</span>
+<span id="cb179-3"><a href="lecture8.html#cb179-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>y</span>
+<span id="cb179-4"><a href="lecture8.html#cb179-4" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x</span>
+<span id="cb179-5"><a href="lecture8.html#cb179-5" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>y</span></code></pre></div>
 <p>We can check out some of the training data</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="lecture8.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking the dimension of the train/test data</span></span>
-<span id="cb179-2"><a href="lecture8.html#cb179-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb179-3"><a href="lecture8.html#cb179-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb179-4"><a href="lecture8.html#cb179-4" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the digits</span></span>
-<span id="cb179-5"><a href="lecture8.html#cb179-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>))</span>
-<span id="cb179-6"><a href="lecture8.html#cb179-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
-<span id="cb179-7"><a href="lecture8.html#cb179-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb179-8"><a href="lecture8.html#cb179-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>) { </span>
-<span id="cb179-9"><a href="lecture8.html#cb179-9" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> x_train[idx,,]</span>
-<span id="cb179-10"><a href="lecture8.html#cb179-10" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
-<span id="cb179-11"><a href="lecture8.html#cb179-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
-<span id="cb179-12"><a href="lecture8.html#cb179-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(y_train[idx]))</span>
-<span id="cb179-13"><a href="lecture8.html#cb179-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="lecture8.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking the dimension of the train/test data</span></span>
-<span id="cb180-2"><a href="lecture8.html#cb180-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(y_train)</span>
-<span id="cb180-3"><a href="lecture8.html#cb180-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
+<span id="cb180-2"><a href="lecture8.html#cb180-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb180-3"><a href="lecture8.html#cb180-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-4"><a href="lecture8.html#cb180-4" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the digits</span></span>
+<span id="cb180-5"><a href="lecture8.html#cb180-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>))</span>
+<span id="cb180-6"><a href="lecture8.html#cb180-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
+<span id="cb180-7"><a href="lecture8.html#cb180-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-8"><a href="lecture8.html#cb180-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>) { </span>
+<span id="cb180-9"><a href="lecture8.html#cb180-9" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> x_train[idx,,]</span>
+<span id="cb180-10"><a href="lecture8.html#cb180-10" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
+<span id="cb180-11"><a href="lecture8.html#cb180-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
+<span id="cb180-12"><a href="lecture8.html#cb180-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(y_train[idx]))</span>
+<span id="cb180-13"><a href="lecture8.html#cb180-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="lecture8.html#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking the dimension of the train/test data</span></span>
+<span id="cb181-2"><a href="lecture8.html#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(y_train)</span>
+<span id="cb181-3"><a href="lecture8.html#cb181-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
 <p>Here we see that the training dataset has a shape of <span class="math inline">\(60000 \times 28 \times28\)</span>. This means that there are <span class="math inline">\(60000\)</span> instances, or pictures of handwritten digits, where each of the pictures has <span class="math inline">\(28 \times 28\)</span> dimension in the horizontal and vertical direction. The dimension of the y_train variable represents the class or label of the x_train variable.</p>
 </div>
 <div id="preprocessing" class="section level3" number="8.4.3">
 <h3><span class="header-section-number">8.4.3</span> Preprocessing</h3>
 <p>Pre-processing is the step where we transform, scale, removes, imputes etc. the data before we feed it to the deep learning model. Removing erroneous data, or impute NA values may be of crucial importance to get the algorithm run at all. Transforming or scaling the data helps improve the so called conditioning problem. Conditioning of a problem say something about the sensitivity of the solution to changes in the problem data. To create an easier problem to optimize, we pre-process the MNIST-data before we are feeding it to the neural network model. Here we reshape and scale the data.</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="lecture8.html#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape</span></span>
-<span id="cb181-2"><a href="lecture8.html#cb181-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_train, <span class="fu">c</span>(<span class="fu">nrow</span>(x_train), <span class="dv">784</span>))</span>
-<span id="cb181-3"><a href="lecture8.html#cb181-3" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_test, <span class="fu">c</span>(<span class="fu">nrow</span>(x_test), <span class="dv">784</span>))</span>
-<span id="cb181-4"><a href="lecture8.html#cb181-4" aria-hidden="true" tabindex="-1"></a><span class="co"># rescale</span></span>
-<span id="cb181-5"><a href="lecture8.html#cb181-5" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> x_train <span class="sc">/</span> <span class="dv">255</span></span>
-<span id="cb181-6"><a href="lecture8.html#cb181-6" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> x_test <span class="sc">/</span> <span class="dv">255</span></span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="lecture8.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape</span></span>
+<span id="cb182-2"><a href="lecture8.html#cb182-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_train, <span class="fu">c</span>(<span class="fu">nrow</span>(x_train), <span class="dv">784</span>))</span>
+<span id="cb182-3"><a href="lecture8.html#cb182-3" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_test, <span class="fu">c</span>(<span class="fu">nrow</span>(x_test), <span class="dv">784</span>))</span>
+<span id="cb182-4"><a href="lecture8.html#cb182-4" aria-hidden="true" tabindex="-1"></a><span class="co"># rescale</span></span>
+<span id="cb182-5"><a href="lecture8.html#cb182-5" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> x_train <span class="sc">/</span> <span class="dv">255</span></span>
+<span id="cb182-6"><a href="lecture8.html#cb182-6" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> x_test <span class="sc">/</span> <span class="dv">255</span></span></code></pre></div>
 <p>We also need to convert the y_train and y_test to categorical variables. Instead of having a vector with a number from 0-9, we convert it to a binary representation. That is, each label is represented by a vector of length 10 with one element is 1 and the rest 0. The element that is 1 represent the label of the digit.</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="lecture8.html#cb182-1" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_train, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
-<span id="cb182-2"><a href="lecture8.html#cb182-2" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_test, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
-<span id="cb182-3"><a href="lecture8.html#cb182-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb182-4"><a href="lecture8.html#cb182-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="lecture8.html#cb183-1" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_train, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
+<span id="cb183-2"><a href="lecture8.html#cb183-2" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_test, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
+<span id="cb183-3"><a href="lecture8.html#cb183-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb183-4"><a href="lecture8.html#cb183-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
 </div>
 <div id="mlp-model" class="section level3" number="8.4.4">
 <h3><span class="header-section-number">8.4.4</span> MLP model</h3>
 <p>In this example we want to create a so called dense neural network, or MLP. That is, each node are influenced from all of the nodes in the previous layer. This is contrast to e.g. convolutional neural networks that uses convolutions to reduce the connectivity between layers, thus reducing the connections.</p>
 <p>We construct a dense neural network. After reshaping the input, the network has a shape of <span class="math inline">\(28 \times 28 = 784\)</span> per instance. This is our input shape. This shape has to be specified in the model, as shown below. The first layer has <span class="math inline">\(256\)</span> nodes, and we use the rectified linear unit as activations function. The next layer is a so called dropout layer. This layer drops randomly a proportion of the nodes out during a forward and backward pass. This will help avoiding overfitting, i.e. it is a form of regularization of the network. The next hidden layer has <span class="math inline">\(128\)</span> nodes, and also ReLU activation function. The last layer of the network is the output. The output in this case, is to classify the label of the digit. There are 10 possible classes, 0-9 and we thus use a softmax activation function, with 10 units.</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="lecture8.html#cb183-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>() </span>
-<span id="cb183-2"><a href="lecture8.html#cb183-2" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> </span>
-<span id="cb183-3"><a href="lecture8.html#cb183-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">256</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb183-4"><a href="lecture8.html#cb183-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.4</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb183-5"><a href="lecture8.html#cb183-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">128</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb183-6"><a href="lecture8.html#cb183-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb183-7"><a href="lecture8.html#cb183-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">10</span>, <span class="at">activation =</span> <span class="st">&#39;softmax&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="lecture8.html#cb184-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>() </span>
+<span id="cb184-2"><a href="lecture8.html#cb184-2" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> </span>
+<span id="cb184-3"><a href="lecture8.html#cb184-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">256</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb184-4"><a href="lecture8.html#cb184-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb184-5"><a href="lecture8.html#cb184-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">128</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb184-6"><a href="lecture8.html#cb184-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb184-7"><a href="lecture8.html#cb184-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">10</span>, <span class="at">activation =</span> <span class="st">&#39;softmax&#39;</span>)</span></code></pre></div>
 <p>First we construct a sequential model object. Then we can use the pipe syntax to specify the layers of the neural network. We can use the summary function to show a nice overview of the neural network model.</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="lecture8.html#cb184-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="lecture8.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
 </div>
 <div id="compiling-and-training-the-model" class="section level3" number="8.4.5">
 <h3><span class="header-section-number">8.4.5</span> Compiling and training the model</h3>
 <p>We now have a model, the next step is to compile it. Durring compiling we also have to specify the loss function, optimizer and metrics for evaluations and validation.</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="lecture8.html#cb185-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">compile</span>(</span>
-<span id="cb185-2"><a href="lecture8.html#cb185-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,</span>
-<span id="cb185-3"><a href="lecture8.html#cb185-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</span>
-<span id="cb185-4"><a href="lecture8.html#cb185-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="st">&#39;accuracy&#39;</span></span>
-<span id="cb185-5"><a href="lecture8.html#cb185-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="lecture8.html#cb186-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">compile</span>(</span>
+<span id="cb186-2"><a href="lecture8.html#cb186-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,</span>
+<span id="cb186-3"><a href="lecture8.html#cb186-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</span>
+<span id="cb186-4"><a href="lecture8.html#cb186-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="st">&#39;accuracy&#39;</span></span>
+<span id="cb186-5"><a href="lecture8.html#cb186-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Since we want to classify the digits, we have chosen the loss to be categorical cross entropy. We use the adam-algorithm during optimization and we also specify that we want to return the accuaracy of the classification during training and validation.</p>
 <p>After the compilation, we can call the fit() function to train our model. The fit function take x_train and y_train as inputs. We also have to specify how many epoch the model should be trained on (how many times we will see the entire data set), the batch size (how many/large the splits of the training data set) and how large proportion of the data should be used as online validation data. Test data are set aside for evaluation the model when it has finished training.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="lecture8.html#cb186-1" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">fit</span>(</span>
-<span id="cb186-2"><a href="lecture8.html#cb186-2" aria-hidden="true" tabindex="-1"></a>  x_train, y_train, </span>
-<span id="cb186-3"><a href="lecture8.html#cb186-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">30</span>,</span>
-<span id="cb186-4"><a href="lecture8.html#cb186-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">batch_size =</span> <span class="dv">128</span>, </span>
-<span id="cb186-5"><a href="lecture8.html#cb186-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_split =</span> <span class="fl">0.2</span></span>
-<span id="cb186-6"><a href="lecture8.html#cb186-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="lecture8.html#cb187-1" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">fit</span>(</span>
+<span id="cb187-2"><a href="lecture8.html#cb187-2" aria-hidden="true" tabindex="-1"></a>  x_train, y_train, </span>
+<span id="cb187-3"><a href="lecture8.html#cb187-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">30</span>,</span>
+<span id="cb187-4"><a href="lecture8.html#cb187-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">batch_size =</span> <span class="dv">128</span>, </span>
+<span id="cb187-5"><a href="lecture8.html#cb187-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_split =</span> <span class="fl">0.2</span></span>
+<span id="cb187-6"><a href="lecture8.html#cb187-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>It is possible to specify specific validation data if that is desirable. Batch size, epochs, size of the neural network, e.g. number of layers nodes, type of network (e.g. cnn, rnns) are so called hyper parameters. This is parameters that are not optimized in the network itself, but has to be specified manually. Theses hyper parameters are important and there are different strategies for optimize them. Hyper parameter search could be done with traditional grid search, but also more sophisticated approaches such as Bayesian hyper optimization (Ref. XX).</p>
 <p>We have plotted the loss and accuaracy calculated after each training epoch. It can be observed that the loss after approx 10-15 epochs, is significantly lower than the validation loss. This is an indication that the model starts to overfit.</p>
 </div>
 <div id="evaluating-the-model" class="section level3" number="8.4.6">
 <h3><span class="header-section-number">8.4.6</span> Evaluating the model</h3>
 <p>To evaluate the trained model on the test data, we can use the pipe syntax together with the evaluate function</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="lecture8.html#cb187-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">evaluate</span>(x_test, y_test)</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="lecture8.html#cb188-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">evaluate</span>(x_test, y_test)</span></code></pre></div>
 <p>The trained model performes pretty well on the test data set. It has an accuaracy of approximatley 0.98, that is 98 <span class="math inline">\(\%\)</span> of the data in the test data set is classified correctly. Lets<br />
 ### Predicting
 We can also predict the most probable class for each of the instances. For this we can use the predict function. (Litt mer her…)</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="lecture8.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model %&gt;% predict(x_test) %&gt;% k_argmax()</span></span>
-<span id="cb188-2"><a href="lecture8.html#cb188-2" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">predict</span>(x_test)</span>
-<span id="cb188-3"><a href="lecture8.html#cb188-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(prediction[1710,], )</span></span>
-<span id="cb188-4"><a href="lecture8.html#cb188-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(prediction)</span>
-<span id="cb188-5"><a href="lecture8.html#cb188-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-6"><a href="lecture8.html#cb188-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Lets find one of the most uncertain predictions to view how it looks like</span></span>
-<span id="cb188-7"><a href="lecture8.html#cb188-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-8"><a href="lecture8.html#cb188-8" aria-hidden="true" tabindex="-1"></a><span class="co">#We find the most probable predictions in the test data set</span></span>
-<span id="cb188-9"><a href="lecture8.html#cb188-9" aria-hidden="true" tabindex="-1"></a>largest <span class="ot">&lt;-</span> <span class="fu">apply</span>(prediction,<span class="dv">1</span>,max,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
-<span id="cb188-10"><a href="lecture8.html#cb188-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-11"><a href="lecture8.html#cb188-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Then we choose the predictions which has the lowest confident </span></span>
-<span id="cb188-12"><a href="lecture8.html#cb188-12" aria-hidden="true" tabindex="-1"></a>less_confident <span class="ot">&lt;-</span> <span class="fu">sort</span>(largest,<span class="at">index.return =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>ix[<span class="dv">1</span><span class="sc">:</span><span class="dv">36</span>]</span>
-<span id="cb188-13"><a href="lecture8.html#cb188-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-14"><a href="lecture8.html#cb188-14" aria-hidden="true" tabindex="-1"></a><span class="co">#We find out what the model predicts these less_confident predictions are</span></span>
-<span id="cb188-15"><a href="lecture8.html#cb188-15" aria-hidden="true" tabindex="-1"></a>pred_class <span class="ot">&lt;-</span> prediction <span class="sc">%&gt;%</span> <span class="fu">k_argmax</span>() </span>
-<span id="cb188-16"><a href="lecture8.html#cb188-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-17"><a href="lecture8.html#cb188-17" aria-hidden="true" tabindex="-1"></a><span class="co">#and plot the digits</span></span>
-<span id="cb188-18"><a href="lecture8.html#cb188-18" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
-<span id="cb188-19"><a href="lecture8.html#cb188-19" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
-<span id="cb188-20"><a href="lecture8.html#cb188-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-21"><a href="lecture8.html#cb188-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> less_confident) { </span>
-<span id="cb188-22"><a href="lecture8.html#cb188-22" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x[idx,,]</span>
-<span id="cb188-23"><a href="lecture8.html#cb188-23" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
-<span id="cb188-24"><a href="lecture8.html#cb188-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
-<span id="cb188-25"><a href="lecture8.html#cb188-25" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(mnist<span class="sc">$</span>test<span class="sc">$</span>y[idx]))</span>
-<span id="cb188-26"><a href="lecture8.html#cb188-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="lecture8.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model %&gt;% predict(x_test) %&gt;% k_argmax()</span></span>
+<span id="cb189-2"><a href="lecture8.html#cb189-2" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">predict</span>(x_test)</span>
+<span id="cb189-3"><a href="lecture8.html#cb189-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(prediction[1710,], )</span></span>
+<span id="cb189-4"><a href="lecture8.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(prediction)</span>
+<span id="cb189-5"><a href="lecture8.html#cb189-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-6"><a href="lecture8.html#cb189-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Lets find one of the most uncertain predictions to view how it looks like</span></span>
+<span id="cb189-7"><a href="lecture8.html#cb189-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-8"><a href="lecture8.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="co">#We find the most probable predictions in the test data set</span></span>
+<span id="cb189-9"><a href="lecture8.html#cb189-9" aria-hidden="true" tabindex="-1"></a>largest <span class="ot">&lt;-</span> <span class="fu">apply</span>(prediction,<span class="dv">1</span>,max,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb189-10"><a href="lecture8.html#cb189-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-11"><a href="lecture8.html#cb189-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Then we choose the predictions which has the lowest confident </span></span>
+<span id="cb189-12"><a href="lecture8.html#cb189-12" aria-hidden="true" tabindex="-1"></a>less_confident <span class="ot">&lt;-</span> <span class="fu">sort</span>(largest,<span class="at">index.return =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>ix[<span class="dv">1</span><span class="sc">:</span><span class="dv">36</span>]</span>
+<span id="cb189-13"><a href="lecture8.html#cb189-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-14"><a href="lecture8.html#cb189-14" aria-hidden="true" tabindex="-1"></a><span class="co">#We find out what the model predicts these less_confident predictions are</span></span>
+<span id="cb189-15"><a href="lecture8.html#cb189-15" aria-hidden="true" tabindex="-1"></a>pred_class <span class="ot">&lt;-</span> prediction <span class="sc">%&gt;%</span> <span class="fu">k_argmax</span>() </span>
+<span id="cb189-16"><a href="lecture8.html#cb189-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-17"><a href="lecture8.html#cb189-17" aria-hidden="true" tabindex="-1"></a><span class="co">#and plot the digits</span></span>
+<span id="cb189-18"><a href="lecture8.html#cb189-18" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb189-19"><a href="lecture8.html#cb189-19" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
+<span id="cb189-20"><a href="lecture8.html#cb189-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-21"><a href="lecture8.html#cb189-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> less_confident) { </span>
+<span id="cb189-22"><a href="lecture8.html#cb189-22" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x[idx,,]</span>
+<span id="cb189-23"><a href="lecture8.html#cb189-23" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
+<span id="cb189-24"><a href="lecture8.html#cb189-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
+<span id="cb189-25"><a href="lecture8.html#cb189-25" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(mnist<span class="sc">$</span>test<span class="sc">$</span>y[idx]))</span>
+<span id="cb189-26"><a href="lecture8.html#cb189-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 
 </div>
 </div>

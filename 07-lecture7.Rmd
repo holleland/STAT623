@@ -152,7 +152,7 @@ ggplot(df_train, aes(x=x1,y=x2,col = y)) +
 
 Here you see that the margin is much narrower. Increasing the cost like this for linear support vector machines can be useful in situations where the decision boundary is known to be linear. We will now consider a situation where the decision boundary is non-linear - in fact a circle. 
 
-## Polynomial SVM {-}
+## Polynomial SVM
 
 To generate circles for plotting, we introduce the function *circle*. This creates a tibble data frame with *npoints* rows containing x1 and x2 coordinates for a circle of radius r. 
 
@@ -168,7 +168,7 @@ circle <- function(x1_center, x2_center, r, npoints = 100){
 
 We generate the data and plot it with the decision boundary being a circle of radius 0.7. 
 
-```{r, echo = FALSE}
+```{r}
 radius <- .7
 set.seed(54321)
 # generate data: 
