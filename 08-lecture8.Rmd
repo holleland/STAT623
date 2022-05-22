@@ -35,19 +35,19 @@ and in regression problems the Mean Squared Error (MSE)
 $$\mathcal{C}_2^{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}}(\mathbf{X},\mathbf{Y}) =              \frac{1}{N}\sum\limits_{i=1}^{N}(\mathbf{y}^{(i)} - \widehat{\mathbf{y}}^{(i)})^2 = - \log p(\mathbf{Y}|\mathbf{f}^\mathbf{\omega}(\mathbf{X})),$$
 
 Minimization of the negative cross entropy and the MSE is well known to be equivalent to minimize the negative log likelihood of the parameter estimation @{tishby1989consistent} for neural networks. 
-Depending on the task, minimizing \cref{cross_entropy} or \cref{MSE} with respect to the parameters $\omega = \{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}\}$ maximizes the likelihood of these parameters. The choice of the cost function is not restricted to those given above, and depend on the data, the model structure and what one wants to predict with the model.
+Depending on the task, minimizing the cross entropy or the MSE with respect to the parameters $\omega = \{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}\}$ maximizes the likelihood of these parameters. The choice of the cost function is not restricted to those given above, and depend on the data, the model structure and what one wants to predict with the model.
 
-One of the key problems in deep learning is a phenomenon called over-fitting (See also [Lecture 3](#lecture2)). Over-fitting occurs if the optimized model performs poorly on new unseen data, i.e. it does not generalize well. To address this problem, regularization is added to the cost function. 
+One of the key problems in deep learning is a phenomenon called over-fitting (See also [Lecture 2](#lecture2)). Over-fitting occurs if the optimized model performs poorly on new unseen data, i.e. it does not generalize well. To address this problem, regularization is added to the cost function. 
 
 Regularization is a general technique, where the goal is to make an ill posed problem well-posed. Over-fitting is basically one example of an ill-posed problem. For optimization problems, you could add a penalizing functional: L2 or L1 norm for the parameters; or use dropout @{srivastava2014dropout}.
 
-Regularization in neural networks work by penalizing the cost function, e.g. forcing the weights to become small. The idea behind a specific regularization term could be to minimize the weights of the ANN to generate a simpler model that helps against over-fitting. $L2$ regularization multiplied with some penalizing factor $\lambda_i$ is one of the most common regularization techniques. The cost function with regularization is called the objective function. Adding $L2$ regularization to equation \cref{cross_entropy} or \cref{MSE} result in the objective function
+Regularization in neural networks work by penalizing the cost function, e.g. forcing the weights to become small. The idea behind a specific regularization term could be to minimize the weights of the ANN to generate a simpler model that helps against over-fitting. $L2$ regularization multiplied with some penalizing factor $\lambda_i$ is one of the most common regularization techniques. The cost function with regularization is called the objective function. Adding $L2$ regularization to the cross entropy or MSE result in the objective function
 
 $$\mathcal{L}(\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}) = \mathcal{C}^{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}}(\mathbf{X},\mathbf{Y}) + \lambda_1||\mathbf{W}_1||^2 + \lambda_2||\mathbf{W}_2||^2 + \lambda_3||\mathbf{b}||^2$$
 
 Another common way of regularizing the cost function is through dropout, which is a stochastic regularization technique. In the example later we will utelize dropout as regularization. 
 
-Minimizing the objective in \eqref{NN_cost_function} with respect to the weights $\mathbf{\omega}$ with an objective function and a gradient descent optimization method has proven to give good results in a wide range of applications.
+Minimizing the objective function with respect to the weights $\mathbf{\omega}$ with a gradient descent optimization method has proven to give good results in a wide range of applications.
 
 The gradient descent method  @{curry1944method} updates the parameter $\mathbf{\omega}$ using the entire data set
 
@@ -64,7 +64,7 @@ To find the correct learning rate is difficult, hence, several methods has been 
 The use of back-propagation together with a stochastic gradient descent method, increase in available data and hardware have been the successes of deep learning during the past decade. 
 
 ## Validation of trained models
-To validate and ensure that the predictions of the deep learning model also performs well on new unseen instances, the data is split into three independent sub-data sets: a training, a validation and a test data set. The training data set is directly used to optimize the parameters of the model. The validation data set is indirectly used to optimize the model, that is, we monitor the performance on the validation dataset after each epoch. An epoch is one pass in the optimization over the entire training dataset. During training, the model sees the same training data multiple times, however, the instances are usually randomly shuffled before a new epoch starts. \\
+To validate and ensure that the predictions of the deep learning model also performs well on new unseen instances, the data is split into three independent sub-data sets: a training, a validation and a test data set. The training data set is directly used to optimize the parameters of the model. The validation data set is indirectly used to optimize the model, that is, we monitor the performance on the validation dataset after each epoch. An epoch is one pass in the optimization over the entire training dataset. During training, the model sees the same training data multiple times, however, the instances are usually randomly shuffled before a new epoch starts.
 
 After each epoch, we predict with this temporally model on the validation data set. Usually we put criteria on the performance on the validation data set for when to stop the optimization. We can use a so called early stopping regime, where the model stops training if it does not see improvement on the validation score after a certain number of epochs without improvement.
 
@@ -75,8 +75,7 @@ The purpose of the test data set is to validate on new unseen data that has not 
 In this section we will show you how to implement a Feed Forward Neural Network with dropout as regularization with the low level API for tensorflow called Keras. A lot of the development within deep learning is concentrated around the python programming language. Keras is also a tool that is originally developed in python, but also available in R. Lets start by installing tensorflow: 
 
 ### Installing Keras and Tensorflow
-For people who use Windows you must install miniconda first.
-You can do this through the reticulate package (The reticulate package provides a comprehensive set of tools for interoperability between Python and R.). You can install reticulate and subsequently miniconda with the following commands:
+For people who use Windows you must install miniconda first. You can do this through the reticulate package (The reticulate package provides a comprehensive set of tools for interoperability between Python and R.). You can install reticulate and subsequently miniconda with the following commands:
 
 ```{r, echo =TRUE, eval=FALSE}
 install.packages("reticulate")
@@ -104,7 +103,7 @@ install_keras()
 ### Importing MNIST
 We will use the famous MNIST data set @{deng2012mnist} as an example in this section. The MNIST dataset contains 60000 handwritten digits for training the model, and 10000 for testing. The digits has a shape of 28x28 pixels in grey scale, that is, they only have one channel, describing the black/white intensity of the pixel value. Each picture/instance is associated with a label, that is a number from 0-9. The keras package contains a function for downloading the MNIST dataset from  the source. 
 
-```{r "Downloading data", echo =TRUE}
+```{r "Downloading data", echo =TRUE, results="hide"}
 library(keras)
 mnist <- dataset_mnist()
 ```
@@ -216,12 +215,14 @@ We have plotted the loss and accuaracy calculated after each training epoch. It 
 
 ### Evaluating the model
 To evaluate the trained model on the test data, we can use the pipe syntax together with the evaluate function
+
 ```{r Evaluating, echo=TRUE, cache=TRUE}
 model %>% evaluate(x_test, y_test)
 ```
-The trained model performes pretty well on the test data set. It has an accuaracy of approximatley 0.98, that is 98 $\%$ of the data in the test data set is classified correctly. Lets  
-### Predicting 
-We can also predict the most probable class for each of the instances. For this we can use the predict function. (Litt mer her...)
+The trained model perform pretty well on the test data set. It has an accuracy of approximatley 0.98, that is 98 $\%$ of the data in the test data set is classified correctly.
+
+### Predicting with the model
+We can also predict the most probable class for each of the instances. For this we can use the predict function.
 
 ```{r Predicting, echo=TRUE, cache=TRUE}
 #model %>% predict(x_test) %>% k_argmax()
@@ -253,8 +254,9 @@ for (idx in less_confident) {
 
 ```
 
-### Data camp {-}
+By visual inspection of the plot it`s understandable that the classifier has difficulties (at least some of them) with determine the correct class label of the pictures. 
 
+### Data camp {-}
 We highly recommend the data camp course [Introduction to TensorFlow in R](https://campus.datacamp.com/courses/introduction-to-tensorflow-in-r/introducing-tensorflow-in-r?ex=1) chapters 1-3.
 
 

@@ -48,4 +48,5 @@ pre-processing
 feed-forward-neural-network-model
 compiling-and-training-the-model
 evaluating-the-model
+predicting-with-the-model
 lecture9
