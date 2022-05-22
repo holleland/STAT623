@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title> 8 Artificial Neural networks | Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content=" 8 Artificial Neural networks | Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -32,7 +31,6 @@
   
 <link rel="prev" href="lecture7.html"/>
 <link rel="next" href="lecture9.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -50,8 +48,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -252,17 +251,18 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8" data-path="lecture8.html"><a href="lecture8.html"><i class="fa fa-check"></i><b>8</b> Artificial Neural networks</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#multilayer-perceptron-mlp"><i class="fa fa-check"></i><b>8.1</b> Multilayer Perceptron (MLP)</a></li>
+<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-networks"><i class="fa fa-check"></i><b>8.1</b> Feed Forward Neural Networks</a></li>
 <li class="chapter" data-level="8.2" data-path="lecture8.html"><a href="lecture8.html#objective-functions-and-training"><i class="fa fa-check"></i><b>8.2</b> Objective functions and training</a></li>
 <li class="chapter" data-level="8.3" data-path="lecture8.html"><a href="lecture8.html#validation-of-trained-models"><i class="fa fa-check"></i><b>8.3</b> Validation of trained models</a></li>
-<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-mlp-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of MLP in Keras</a>
+<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-feed-forward-neural-network-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of Feed Forward Neural Network in Keras</a>
 <ul>
 <li class="chapter" data-level="8.4.1" data-path="lecture8.html"><a href="lecture8.html#installing-keras-and-tensorflow"><i class="fa fa-check"></i><b>8.4.1</b> Installing Keras and Tensorflow</a></li>
 <li class="chapter" data-level="8.4.2" data-path="lecture8.html"><a href="lecture8.html#importing-mnist"><i class="fa fa-check"></i><b>8.4.2</b> Importing MNIST</a></li>
-<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#preprocessing"><i class="fa fa-check"></i><b>8.4.3</b> Preprocessing</a></li>
-<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#mlp-model"><i class="fa fa-check"></i><b>8.4.4</b> MLP model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#pre-processing"><i class="fa fa-check"></i><b>8.4.3</b> Pre-processing</a></li>
+<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-network-model"><i class="fa fa-check"></i><b>8.4.4</b> Feed Forward Neural Network model</a></li>
 <li class="chapter" data-level="8.4.5" data-path="lecture8.html"><a href="lecture8.html#compiling-and-training-the-model"><i class="fa fa-check"></i><b>8.4.5</b> Compiling and training the model</a></li>
 <li class="chapter" data-level="8.4.6" data-path="lecture8.html"><a href="lecture8.html#evaluating-the-model"><i class="fa fa-check"></i><b>8.4.6</b> Evaluating the model</a></li>
+<li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
@@ -287,181 +287,277 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lecture8" class="section level1" number="8">
-<h1><span class="header-section-number"> 8</span> Artificial Neural networks</h1>
-<p>This section describes the basics theory and classical optimization of an artificial neural network. This includes defining a 2-layer feed forward neural network, cost and objective functions, regularization and the manner in which a network can be trained to produce desired output. The section will be limited to so-called supervised learning, i.e. where know the true state of an output. The main references for this chapter are the textbook “Deep Learning” by @{goodfellow2016deep}.</p>
-<div id="multilayer-perceptron-mlp" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> Multilayer Perceptron (MLP)</h2>
-<p>Let <span class="math inline">\(\mathbf{X}^{(i)}\)</span> be an instance of data which is input to a deep learning model, with associated target values <span class="math inline">\(\mathbf{y}^{(i)}\)</span>. A target value can be a class or as we will use later the data <span class="math inline">\(\mathbf{X}^{(i)}\)</span> itself. All the instances of <span class="math inline">\(\mathbf{X}^{(i)},\)</span> <span class="math inline">\(i=1, \ldots N,\)</span> constitute the data set <span class="math inline">\(\mathbf{X}^{(i)}\)</span>, and all the target values <span class="math inline">\(\mathbf{y}^{(i)},\)</span> <span class="math inline">\(i=1, \ldots N,\)</span> comprise the data set <span class="math inline">\(\mathbf{Y}.\)</span> \</p>
-<p>A feed forward neural network is a hierarchical model that consists of nodes or computational units divided into subsequent layers. For each node, a non-linear activation function is applied. The nodes between each layer are connected, so that the input to a node is totally dependent on the output from the nodes of the previous layer. The model is called a  if there are multiple hidden layers; see . The simplest deep learning model has at least one hidden layer: an input layer and an output layer. This hierarchical structure makes it possible to formulate the deep learning model as a linear system of equations. \</p>
+<div id="lecture8" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number"> 8</span> Artificial Neural networks<a href="lecture8.html#lecture8" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This section describes the basics theory and classical optimization of an artificial neural network. This includes defining a 2-layer feed forward neural network, cost and objective functions, regularization and the manner in which a network can be trained to produce desired output. The section will be limited to so-called supervised learning, i.e. where know the true state of an output. The main references for this chapter are the textbook “Deep Learning” by <span class="citation">Goodfellow et al. (<a href="#ref-goodfellow2016deep" role="doc-biblioref">2016</a>)</span>.</p>
+<div id="feed-forward-neural-networks" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Feed Forward Neural Networks<a href="lecture8.html#feed-forward-neural-networks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let <span class="math inline">\(\mathbf{X}^{(i)}\)</span> be an instance of data which is input to a deep learning model, with associated target values <span class="math inline">\(\mathbf{y}^{(i)}\)</span>. A target value can be a class or as we will use later the data <span class="math inline">\(\mathbf{X}^{(i)}\)</span> itself. All the instances of <span class="math inline">\(\mathbf{X}^{(i)},\)</span> <span class="math inline">\(i=1, \ldots N,\)</span> constitute the data set <span class="math inline">\(\mathbf{X}^{(i)}\)</span>, and all the target values <span class="math inline">\(\mathbf{y}^{(i)},\)</span> <span class="math inline">\(i=1, \ldots N,\)</span> comprise the data set $.</p>
+<p>A feed forward neural network is a hierarchical model that consists of nodes or computational units divided into subsequent layers. For each node, a non-linear activation function is applied. The nodes between each layer are connected, so that the input to a node is totally dependent on the output from the nodes of the previous layer. The model is called a if there are multiple hidden layers; see . The simplest deep learning model has at least one hidden layer: an input layer and an output layer. This hierarchical structure makes it possible to formulate the deep learning model as a linear system of equations.</p>
 <div class="figure">
-<img src="_bookdown_files/STAT623_compendium_files/figure-html/neuralnet_fig.png" id="fig:NN_model" alt="" />
+<img src="ppt/neuralnet_fig.png" id="fig:NN_model" alt="" />
 <p class="caption">Illustration of a deep neural network with three hidden layers</p>
 </div>
-<p>The model input to a neural network is here defined as vector <span class="math inline">\(\mathbf{x}^{(i)}\)</span> with <span class="math inline">\(Q\)</span> elements. The input is transformed linearly by <span class="math inline">\(\mathbf{W}_1\)</span> and <span class="math inline">\(\mathbf{b}\)</span> such that <span class="math inline">\(f(\mathbf{x}^{(i)}) = \mathbf{W}_1 \mathbf{x}^{(i)} + \mathbf{b}\)</span>. <span class="math inline">\(\mathbf{W}_1\)</span> transforms the input to a vector of <span class="math inline">\(K\)</span> elements and is often called the weight matrix, while the translation <span class="math inline">\(\mathbf{b}\)</span> is referred to as the bias. The bias can be interpreted as a threshold for when the neuron activates. \</p>
-<p>A nonlinear activation function is applied element wise to the transformed data. The activation function is typically given as a rectified linear unit (ReLU) @{nair2010rectified} (legg inn Relu equation!!) or <span class="math inline">\(\tanh\)</span> function. This activation introduces non-linearity to the other linear operations. The superposition of the linear and nonlinear transformation is in combination with the activation function and is what we refer to as a hidden layer. \</p>
+<p>The model input to a neural network is here defined as vector <span class="math inline">\(\mathbf{x}^{(i)}\)</span> with <span class="math inline">\(Q\)</span> elements. The input is transformed linearly by <span class="math inline">\(\mathbf{W}_1\)</span> and <span class="math inline">\(\mathbf{b}\)</span> such that <span class="math inline">\(f(\mathbf{x}^{(i)}) = \mathbf{W}_1 \mathbf{x}^{(i)} + \mathbf{b}\)</span>. <span class="math inline">\(\mathbf{W}_1\)</span> transforms the input to a vector of <span class="math inline">\(K\)</span> elements and is often called the weight matrix, while the translation <span class="math inline">\(\mathbf{b}\)</span> is referred to as the bias. The bias can be interpreted as a threshold for when the neuron activates.</p>
+<p>A nonlinear activation function is applied element wise to the transformed data. The activation function is typically given as a rectified linear unit (ReLU) <span class="citation">Nair and Hinton (<a href="#ref-nair2010rectified" role="doc-biblioref">2010</a>)</span> <span class="math inline">\(Relu(z) = max(0, z)\)</span> or <span class="math inline">\(\tanh\)</span> function. This activation introduces non-linearity to the other linear operations. The superposition of the linear and nonlinear transformation is in combination with the activation function and is what we refer to as a hidden layer.</p>
 <p>Applying another linear transformation <span class="math inline">\(\mathbf{W}_2\)</span> to the hidden layer results in this case to the model output or output layer. The size of the output layer is a row vector with <span class="math inline">\(D\)</span> elements. Generally, many transformations and activations can be applied consecutively which will result in a more complex hierarchical model. A generalization to a network with several hidden layers is straightforward; to make this clear we here limit the notation to a single hidden layer. We note that <span class="math inline">\(\mathbf{x}^{(i)}\)</span> is vector of size <span class="math inline">\(Q\)</span>, <span class="math inline">\(\mathbf{W}_1\)</span> is a <span class="math inline">\(K \times Q\)</span> matrix that transforms the input to <span class="math inline">\(K\)</span> elements, <span class="math inline">\(\mathbf{W}_2\)</span> is a <span class="math inline">\(D \times K\)</span> matrix, transforming the vector into <span class="math inline">\(D\)</span> elements and <span class="math inline">\(\mathbf{b}\)</span> consists of <span class="math inline">\(K\)</span> elements. We write this as linear system of equations transformed with the activation function <span class="math inline">\(\sigma\)</span></p>
 <p><span class="math display">\[\widehat{\mathbf{y}}^{(i)} = \mathbf{W}_2 (\sigma(\mathbf{W}_1 \mathbf{x}^{(i)} + \mathbf{b})) := \mathbf{f}^{\omega}, \qquad \omega = \{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}\}\]</span>
-Depending on how the output layer is defined, we can use the network for classification or regression tasks. For classification purposes, the number of nodes in the output layer equals the number of classes, and typically transformed with a softmax function @{<a href="mailto:goodfellow2016@softmax" class="email">goodfellow2016@softmax</a>}. The softmax function is a generalization of the logistic map that normalizes the output relative to the different classes (Legg inn softmax equation !!). In regression problems we want to estimate relations between variables; we want to predict a continuous output based on some input (variables). To use a linear activation function on the output layer will serve this purpose.<br />
-</p>
-<p>It has been shown that ANN is a universal approximation @{hornik1989multilayer}; thus, our goal is to find the weights of the given network to best approximate the map from the input to the output. This means that we want to estimate the weights of the ANN <span class="math inline">\(\mathbf{\omega}\)</span>, given the input data <span class="math inline">\(\mathbf{x}^{(i)}\)</span>, the target <span class="math inline">\(\mathbf{y}^{(i)}\)</span> such that the predictions <span class="math inline">\(\widehat{\mathbf{y}}^{(i)}\)</span> is minimized towards the true target values <span class="math inline">\(\mathbf{y}^{(i)}\)</span>. This is a typical optimization problem, which can be minimized with an objective function and optimization procedure.</p>
+Depending on how the output layer is defined, we can use the network for classification or regression tasks. For classification purposes, the number of nodes in the output layer equals the number of classes, and typically transformed with a softmax function <span class="citation">Goodfellow, Bengio, and Courville (<a href="#ref-goodfellow2016@softmax" role="doc-biblioref">2016</a>)</span>. The softmax function is a generalization of the logistic map that normalizes the output relative to the different classes:</p>
+<p><span class="math display">\[ \sigma(z_i) = \frac{e^{z_{i}}}{\sum_{j=1}^K e^{z_{j}}} \ \ \ for\ i=1,2,\dots,K \]</span></p>
+<p>In regression problems we want to estimate relations between variables; we want to predict a continuous output based on some input (variables). To use a linear activation function on the output layer will serve this purpose.</p>
+<p>It has been shown that ANN is a universal approximation <span class="citation">Hornik, Stinchcombe, and White (<a href="#ref-hornik1989multilayer" role="doc-biblioref">1989</a>)</span>; thus, our goal is to find the weights of the given network to best approximate the map from the input to the output. This means that we want to estimate the weights of the ANN <span class="math inline">\(\mathbf{\omega}\)</span>, given the input data <span class="math inline">\(\mathbf{x}^{(i)}\)</span>, the target <span class="math inline">\(\mathbf{y}^{(i)}\)</span> such that the predictions <span class="math inline">\(\widehat{\mathbf{y}}^{(i)}\)</span> is minimized towards the true target values <span class="math inline">\(\mathbf{y}^{(i)}\)</span>. This is a typical optimization problem, which can be minimized with an objective function and optimization procedure.</p>
 </div>
-<div id="objective-functions-and-training" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> Objective functions and training</h2>
+<div id="objective-functions-and-training" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Objective functions and training<a href="lecture8.html#objective-functions-and-training" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>An objective function for use in deep learning typically contains two terms: cost function and regularization. The cost function takes the predicted and the true values as input. Depending on the task and what one wants to minimize, the cost function maximizes a likelihood. In classification problems this is can be the negative cross entropy</p>
 <p><span class="math display">\[\mathcal{C}_1^{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}}(\mathbf{X},\mathbf{Y}) = -             \frac{1}{N}\sum\limits_{j=1}^{N}\mathbf{y}^{(i)}_j\log(\widehat{\mathbf{y}}^{(i)}_j) = -\log p(\mathbf{Y}|\mathbf{f}^{\mathbf{\omega}}(\mathbf{X})),\]</span>
 and in regression problems the Mean Squared Error (MSE)</p>
 <p><span class="math display">\[\mathcal{C}_2^{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}}(\mathbf{X},\mathbf{Y}) =              \frac{1}{N}\sum\limits_{i=1}^{N}(\mathbf{y}^{(i)} - \widehat{\mathbf{y}}^{(i)})^2 = - \log p(\mathbf{Y}|\mathbf{f}^\mathbf{\omega}(\mathbf{X})),\]</span></p>
-<p>Minimization of the negative cross entropy and the MSE is well known to be equivalent to minimize the negative log likelihood of the parameter estimation @{tishby1989consistent} for neural networks.
-Depending on the task, minimizing  or  with respect to the parameters <span class="math inline">\(\omega = \{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}\}\)</span> maximizes the likelihood of these parameters. The choice of the cost function is not restricted to those given above, and depend on the data, the model structure and what one wants to predict with the model.\</p>
-<p>One of the key problems in deep learning is a phenomenon called over-fitting (<span style="color:blue">some <em>blue</em> Ref to Section </span>). Over-fitting occurs if the optimized model performs poorly on new unseen data, i.e. it does not generalize well. To address this problem, regularization is added to the cost function. \</p>
-<p>Regularization is a general technique, where the goal is to make an ill posed problem well-posed (Ref. her kanskje?). Over-fitting is basically one example of an ill-posed problem. For optimization problems, you could add a penalizing functional: L2 or L1 norm for the parameters; or use dropout (Ref. XX). \</p>
-<p>Regularization in neural networks work by penalizing the cost function, e.g. forcing the weights to become small. The idea behind a specific regularization term could be to minimize the weights of the ANN to generate a simpler model that helps against over-fitting. <span class="math inline">\(L2\)</span> regularization multiplied with some penalizing factor <span class="math inline">\(\lambda_i\)</span> is one of the most common regularization techniques. The cost function with regularization is called the objective function. Adding <span class="math inline">\(L2\)</span> regularization to equation  or  result in the objective function</p>
+<p>Minimization of the negative cross entropy and the MSE is well known to be equivalent to minimize the negative log likelihood of the parameter estimation <span class="citation">Tishby, Levin, and Solla (<a href="#ref-tishby1989consistent" role="doc-biblioref">1989</a>)</span> for neural networks.
+Depending on the task, minimizing or with respect to the parameters <span class="math inline">\(\omega = \{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}\}\)</span> maximizes the likelihood of these parameters. The choice of the cost function is not restricted to those given above, and depend on the data, the model structure and what one wants to predict with the model.</p>
+<p>One of the key problems in deep learning is a phenomenon called over-fitting (See also <a href="lecture2.html#lecture2">Lecture 3</a>). Over-fitting occurs if the optimized model performs poorly on new unseen data, i.e. it does not generalize well. To address this problem, regularization is added to the cost function.</p>
+<p>Regularization is a general technique, where the goal is to make an ill posed problem well-posed. Over-fitting is basically one example of an ill-posed problem. For optimization problems, you could add a penalizing functional: L2 or L1 norm for the parameters; or use dropout <span class="citation">Srivastava et al. (<a href="#ref-srivastava2014dropout" role="doc-biblioref">2014</a>)</span>.</p>
+<p>Regularization in neural networks work by penalizing the cost function, e.g. forcing the weights to become small. The idea behind a specific regularization term could be to minimize the weights of the ANN to generate a simpler model that helps against over-fitting. <span class="math inline">\(L2\)</span> regularization multiplied with some penalizing factor <span class="math inline">\(\lambda_i\)</span> is one of the most common regularization techniques. The cost function with regularization is called the objective function. Adding <span class="math inline">\(L2\)</span> regularization to equation or result in the objective function</p>
 <p><span class="math display">\[\mathcal{L}(\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}) = \mathcal{C}^{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}}(\mathbf{X},\mathbf{Y}) + \lambda_1||\mathbf{W}_1||^2 + \lambda_2||\mathbf{W}_2||^2 + \lambda_3||\mathbf{b}||^2\]</span></p>
-<p>Another common way of regularizing the cost function is through dropout, which is a stochastic regularization technique. In the example later we will utelize dropout as regularization. \</p>
-<p>Minimizing the objective in  with respect to the weights <span class="math inline">\(\mathbf{\omega}\)</span> with an objective function and a gradient descent optimization method has proven to give good results in a wide range of applications. \</p>
-<p>The gradient descent method @{curry1944method} updates the parameter <span class="math inline">\(\mathbf{\omega}\)</span> using the entire data set</p>
+<p>Another common way of regularizing the cost function is through dropout, which is a stochastic regularization technique. In the example later we will utelize dropout as regularization.</p>
+<p>Minimizing the objective in <span class="math inline">\(\eqref{NN_cost_function}\)</span> with respect to the weights <span class="math inline">\(\mathbf{\omega}\)</span> with an objective function and a gradient descent optimization method has proven to give good results in a wide range of applications.</p>
+<p>The gradient descent method <span class="citation">Curry (<a href="#ref-curry1944method" role="doc-biblioref">1944</a>)</span> updates the parameter <span class="math inline">\(\mathbf{\omega}\)</span> using the entire data set</p>
 <p><span class="math display">\[\mathbf{\omega}_t = \mathbf{\omega}_{t-1} - \eta \nabla \mathcal{L}(\mathbf{\omega}_{t-1}). \]</span></p>
-<p>Here <span class="math inline">\(\omega_t\)</span> represents the current configuration of the weights, while <span class="math inline">\(\omega_{t-1}\)</span> represents the previous one. The parameter <span class="math inline">\(\eta\)</span> is referred to as the learning rate, i.e. how large the step in the negative gradient direction the update of the weights should be. Too small steps can lead to poor convergence, while to large steps can lead to overshooting, i.e. missing local/global minimums. Usually it is too expensive to calculate the gradient over the entire dataset. This is solved by a technique called stochastic gradient descent @{robbins1951stochastic}. Stochastic gradient descent performs a parameter update for each training example. A natural extension and a more cost-efficient approach is the mini-batch gradient descent approach. In mini-batch optimization, the gradient is approximated by calculating the mean of the gradients on sub-sets or batches of the entire data set,</p>
+<p>Here <span class="math inline">\(\omega_t\)</span> represents the current configuration of the weights, while <span class="math inline">\(\omega_{t-1}\)</span> represents the previous one. The parameter <span class="math inline">\(\eta\)</span> is referred to as the learning rate, i.e. how large the step in the negative gradient direction the update of the weights should be. Too small steps can lead to poor convergence, while to large steps can lead to overshooting, i.e. missing local/global minimums. Usually it is too expensive to calculate the gradient over the entire dataset. This is solved by a technique called stochastic gradient descent <span class="citation">Robbins and Monro (<a href="#ref-robbins1951stochastic" role="doc-biblioref">1951</a>)</span>. Stochastic gradient descent performs a parameter update for each training example. A natural extension and a more cost-efficient approach is the mini-batch gradient descent approach. In mini-batch optimization, the gradient is approximated by calculating the mean of the gradients on sub-sets or batches of the entire data set,</p>
 <p><span class="math display">\[\mathbf{\omega}_t =  \mathbf{\omega}_{t-1} - \frac{\eta}{n}\sum\limits_{i=1}^{n}\nabla \mathcal{L}_i(\mathbf{\omega}_{t-1}).\]</span></p>
-<p>The mini-batch gradient descent iterative process can be implemented in the neural network with the back-propagation algorithm @{rumelhart1988learning}. In back-propagation, the weights are updated through a forward and backward pass. In the forward pass, we predict with the current weight configuration and compare towards the target values. In the backward pass, we use the chain rule successively from the output to the input to calculate the gradient of <span class="math inline">\(\omega\)</span>. Based on the gradient direction and the learning rate, the configuration of the weights is updated.<br />
-</p>
-<p>To find the correct learning rate is difficult, hence, several methods has been developed to adjust the learning rate adaptively. One of the disadvantages of the vanilla gradient descent approach to the ANN optimization problem, is that it has a fixed leaning rate <span class="math inline">\(\eta.\)</span> In line with the development of ANN, methods dedicated to deep learning and adaptive adjustment of the learning rate have been developed. Besides SGD with momentum @{sutskever2013importance}, the two most used optimization methods for ANNs are ADAM @{kingma2014adam} and Root Mean Square Propagation (RMSProp) @{tieleman2012lecture}. RMSProp adaptively adjusts the learning rate of the gradients based on a running average for each of the individual parameters. The ADAM-algorithm individually adjusts the weights in terms of both the running average, but also with respect to the running variance. \</p>
+<p>The mini-batch gradient descent iterative process can be implemented in the neural network with the back-propagation algorithm <span class="citation">Rumelhart et al. (<a href="#ref-rumelhart1988learning" role="doc-biblioref">1988</a>)</span>. In back-propagation, the weights are updated through a forward and backward pass. In the forward pass, we predict with the current weight configuration and compare towards the target values. In the backward pass, we use the chain rule successively from the output to the input to calculate the gradient of <span class="math inline">\(\omega\)</span>. Based on the gradient direction and the learning rate, the configuration of the weights is updated.</p>
+<p>To find the correct learning rate is difficult, hence, several methods has been developed to adjust the learning rate adaptively. One of the disadvantages of the vanilla gradient descent approach to the ANN optimization problem, is that it has a fixed leaning rate <span class="math inline">\(\eta.\)</span> In line with the development of ANN, methods dedicated to deep learning and adaptive adjustment of the learning rate have been developed. Besides SGD with momentum <span class="citation">Sutskever et al. (<a href="#ref-sutskever2013importance" role="doc-biblioref">2013</a>)</span>, the two most used optimization methods for ANNs are ADAM <span class="citation">Kingma and Ba (<a href="#ref-kingma2014adam" role="doc-biblioref">2014</a>)</span> and Root Mean Square Propagation (RMSProp) <span class="citation">Tieleman and Hinton (<a href="#ref-tieleman2012lecture" role="doc-biblioref">2012</a>)</span>. RMSProp adaptively adjusts the learning rate of the gradients based on a running average for each of the individual parameters. The ADAM-algorithm individually adjusts the weights in terms of both the running average, but also with respect to the running variance.</p>
 <p>The use of back-propagation together with a stochastic gradient descent method, increase in available data and hardware have been the successes of deep learning during the past decade.</p>
 </div>
-<div id="validation-of-trained-models" class="section level2" number="8.3">
-<h2><span class="header-section-number">8.3</span> Validation of trained models</h2>
+<div id="validation-of-trained-models" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Validation of trained models<a href="lecture8.html#validation-of-trained-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>To validate and ensure that the predictions of the deep learning model also performs well on new unseen instances, the data is split into three independent sub-data sets: a training, a validation and a test data set. The training data set is directly used to optimize the parameters of the model. The validation data set is indirectly used to optimize the model, that is, we monitor the performance on the validation dataset after each epoch. An epoch is one pass in the optimization over the entire training dataset. During training, the model sees the same training data multiple times, however, the instances are usually randomly shuffled before a new epoch starts. \</p>
-<p>After each epoch, we predict with this temporally model on the validation data set. Usually we put criteria on the performance on the validation data set for when to stop the optimization. We can use a so called early stopping regime, where the model stops training if it does not see improvement on the validation score after a certain number of epochs without improvement. \</p>
-<p>The purpose of the test data set is to validate on new unseen data that has not been part of the training or the continuous validation of the model. Lets look at an example of how to implement a classifier on the mnist data in keras  </p>
+<p>After each epoch, we predict with this temporally model on the validation data set. Usually we put criteria on the performance on the validation data set for when to stop the optimization. We can use a so called early stopping regime, where the model stops training if it does not see improvement on the validation score after a certain number of epochs without improvement.</p>
+<p>The purpose of the test data set is to validate on new unseen data that has not been part of the training or the continuous validation of the model. Lets look at an example of how to implement a classifier on the mnist data set in keras.</p>
 </div>
-<div id="implementation-of-mlp-in-keras" class="section level2" number="8.4">
-<h2><span class="header-section-number">8.4</span> Implementation of MLP in Keras</h2>
-<p>In this section we will show you how to implement a MLP with dropout as regularization with the low level API for tensorflow called Keras. A lot of the development within deep learning is concentrated around the python programming language. Keras is also a tool that is originally developed in keras, but also available in R. Lets start by installing tensorflow:</p>
-<div id="installing-keras-and-tensorflow" class="section level3" number="8.4.1">
-<h3><span class="header-section-number">8.4.1</span> Installing Keras and Tensorflow</h3>
-<p>First install tensorflow with the following commands</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="lecture8.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
-<span id="cb176-2"><a href="lecture8.html#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
-<span id="cb176-3"><a href="lecture8.html#cb176-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_tensorflow</span>()</span></code></pre></div>
-<p>Then install keras with the following commands</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="lecture8.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.package</span>(<span class="st">&#39;keras&#39;</span>)</span>
-<span id="cb177-2"><a href="lecture8.html#cb177-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
-<span id="cb177-3"><a href="lecture8.html#cb177-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_keras</span>()</span></code></pre></div>
+<div id="implementation-of-feed-forward-neural-network-in-keras" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Implementation of Feed Forward Neural Network in Keras<a href="lecture8.html#implementation-of-feed-forward-neural-network-in-keras" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this section we will show you how to implement a Feed Forward Neural Network with dropout as regularization with the low level API for tensorflow called Keras. A lot of the development within deep learning is concentrated around the python programming language. Keras is also a tool that is originally developed in python, but also available in R. Lets start by installing tensorflow:</p>
+<div id="installing-keras-and-tensorflow" class="section level3 hasAnchor" number="8.4.1">
+<h3><span class="header-section-number">8.4.1</span> Installing Keras and Tensorflow<a href="lecture8.html#installing-keras-and-tensorflow" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For people who use Windows you must install miniconda first.
+You can do this through the reticulate package (The reticulate package provides a comprehensive set of tools for interoperability between Python and R.). You can install reticulate and subsequently miniconda with the following commands:</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="lecture8.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;reticulate&quot;</span>)</span>
+<span id="cb180-2"><a href="lecture8.html#cb180-2" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">install_miniconda</span>()</span></code></pre></div>
+<p>If you have a linux or mac operating system, you should be able to run the subsequent commands directly.
+This is because you have python already installed on your computer. You can now install tensorflow with
+the following commands:</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="lecture8.html#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
+<span id="cb181-2"><a href="lecture8.html#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&#39;tensorflow&#39;</span>)</span>
+<span id="cb181-3"><a href="lecture8.html#cb181-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_tensorflow</span>()</span></code></pre></div>
+<p>Then install keras with the following commands:</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="lecture8.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.package</span>(<span class="st">&#39;keras&#39;</span>)</span>
+<span id="cb182-2"><a href="lecture8.html#cb182-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
+<span id="cb182-3"><a href="lecture8.html#cb182-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_keras</span>()</span></code></pre></div>
 </div>
-<div id="importing-mnist" class="section level3" number="8.4.2">
-<h3><span class="header-section-number">8.4.2</span> Importing MNIST</h3>
-<p>We will use the famous MNIST data set as an example in this section (Ref. XX). The MNIST dataset contains 60000 handwritten digits for training the model, and 10000 for testing. The digits has a shape of 28x28 pixels in grey scale, that is, they only have one channel, describing the black/white intensity of the pixel value. Each picture/instance is associated with a label, that is a number from 0-9. The keras package contains a function for downloading the MNIST dataset from the source (Ref. XX)</p>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="lecture8.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span>
-<span id="cb178-2"><a href="lecture8.html#cb178-2" aria-hidden="true" tabindex="-1"></a>mnist <span class="ot">&lt;-</span> <span class="fu">dataset_mnist</span>()</span></code></pre></div>
+<div id="importing-mnist" class="section level3 hasAnchor" number="8.4.2">
+<h3><span class="header-section-number">8.4.2</span> Importing MNIST<a href="lecture8.html#importing-mnist" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will use the famous MNIST data set <span class="citation">Deng (<a href="#ref-deng2012mnist" role="doc-biblioref">2012</a>)</span> as an example in this section. The MNIST dataset contains 60000 handwritten digits for training the model, and 10000 for testing. The digits has a shape of 28x28 pixels in grey scale, that is, they only have one channel, describing the black/white intensity of the pixel value. Each picture/instance is associated with a label, that is a number from 0-9. The keras package contains a function for downloading the MNIST dataset from the source.</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="lecture8.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;keras&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:yardstick&#39;:
+## 
+##     get_weights</code></pre>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="lecture8.html#cb186-1" aria-hidden="true" tabindex="-1"></a>mnist <span class="ot">&lt;-</span> <span class="fu">dataset_mnist</span>()</span></code></pre></div>
+<pre><code>## Loaded Tensorflow version 2.8.0</code></pre>
 <p>To ensure that the predictions of the neural network model also performs well on new unseen instances, the data is often split into three independent sub-data sets: a training, a validation and a test data set. The training data set is directly used to optimize/train the parameters of the model. The validation data set is indirectly used to optimize the model, that is, we monitor the performance on the validation dataset after each epoch. An epoch is one pass in the optimization over the entire training dataset. During training, the model sees the same training data multiple times, however, the instances are usually randomly shuffled before a new epoch starts. We will come back to validation and testing of the neural network later in this section. The MNIST dataset are split into a test and train data set from source</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="lecture8.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb179-2"><a href="lecture8.html#cb179-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>x</span>
-<span id="cb179-3"><a href="lecture8.html#cb179-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>y</span>
-<span id="cb179-4"><a href="lecture8.html#cb179-4" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x</span>
-<span id="cb179-5"><a href="lecture8.html#cb179-5" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>y</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="lecture8.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb188-2"><a href="lecture8.html#cb188-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>x</span>
+<span id="cb188-3"><a href="lecture8.html#cb188-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>y</span>
+<span id="cb188-4"><a href="lecture8.html#cb188-4" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x</span>
+<span id="cb188-5"><a href="lecture8.html#cb188-5" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>y</span></code></pre></div>
 <p>We can check out some of the training data</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="lecture8.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking the dimension of the train/test data</span></span>
-<span id="cb180-2"><a href="lecture8.html#cb180-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb180-3"><a href="lecture8.html#cb180-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb180-4"><a href="lecture8.html#cb180-4" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the digits</span></span>
-<span id="cb180-5"><a href="lecture8.html#cb180-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>))</span>
-<span id="cb180-6"><a href="lecture8.html#cb180-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
-<span id="cb180-7"><a href="lecture8.html#cb180-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb180-8"><a href="lecture8.html#cb180-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>) { </span>
-<span id="cb180-9"><a href="lecture8.html#cb180-9" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> x_train[idx,,]</span>
-<span id="cb180-10"><a href="lecture8.html#cb180-10" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
-<span id="cb180-11"><a href="lecture8.html#cb180-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
-<span id="cb180-12"><a href="lecture8.html#cb180-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(y_train[idx]))</span>
-<span id="cb180-13"><a href="lecture8.html#cb180-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="lecture8.html#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking the dimension of the train/test data</span></span>
-<span id="cb181-2"><a href="lecture8.html#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(y_train)</span>
-<span id="cb181-3"><a href="lecture8.html#cb181-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="lecture8.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking the dimension of the train/test data</span></span>
+<span id="cb189-2"><a href="lecture8.html#cb189-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb189-3"><a href="lecture8.html#cb189-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-4"><a href="lecture8.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the digits</span></span>
+<span id="cb189-5"><a href="lecture8.html#cb189-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">5</span>))</span>
+<span id="cb189-6"><a href="lecture8.html#cb189-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
+<span id="cb189-7"><a href="lecture8.html#cb189-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-8"><a href="lecture8.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>) { </span>
+<span id="cb189-9"><a href="lecture8.html#cb189-9" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> x_train[idx,,]</span>
+<span id="cb189-10"><a href="lecture8.html#cb189-10" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
+<span id="cb189-11"><a href="lecture8.html#cb189-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
+<span id="cb189-12"><a href="lecture8.html#cb189-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(y_train[idx]))</span>
+<span id="cb189-13"><a href="lecture8.html#cb189-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/dim%20check%20x_train-1.png" width="672" /></p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="lecture8.html#cb190-1" aria-hidden="true" tabindex="-1"></a><span class="co">#checking the dimension of the train/test data</span></span>
+<span id="cb190-2"><a href="lecture8.html#cb190-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(y_train)</span></code></pre></div>
+<pre><code>## [1] 60000</code></pre>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="lecture8.html#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
+<pre><code>## [1] 5 0 4 1 9 2</code></pre>
 <p>Here we see that the training dataset has a shape of <span class="math inline">\(60000 \times 28 \times28\)</span>. This means that there are <span class="math inline">\(60000\)</span> instances, or pictures of handwritten digits, where each of the pictures has <span class="math inline">\(28 \times 28\)</span> dimension in the horizontal and vertical direction. The dimension of the y_train variable represents the class or label of the x_train variable.</p>
 </div>
-<div id="preprocessing" class="section level3" number="8.4.3">
-<h3><span class="header-section-number">8.4.3</span> Preprocessing</h3>
+<div id="pre-processing" class="section level3 hasAnchor" number="8.4.3">
+<h3><span class="header-section-number">8.4.3</span> Pre-processing<a href="lecture8.html#pre-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Pre-processing is the step where we transform, scale, removes, imputes etc. the data before we feed it to the deep learning model. Removing erroneous data, or impute NA values may be of crucial importance to get the algorithm run at all. Transforming or scaling the data helps improve the so called conditioning problem. Conditioning of a problem say something about the sensitivity of the solution to changes in the problem data. To create an easier problem to optimize, we pre-process the MNIST-data before we are feeding it to the neural network model. Here we reshape and scale the data.</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="lecture8.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape</span></span>
-<span id="cb182-2"><a href="lecture8.html#cb182-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_train, <span class="fu">c</span>(<span class="fu">nrow</span>(x_train), <span class="dv">784</span>))</span>
-<span id="cb182-3"><a href="lecture8.html#cb182-3" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_test, <span class="fu">c</span>(<span class="fu">nrow</span>(x_test), <span class="dv">784</span>))</span>
-<span id="cb182-4"><a href="lecture8.html#cb182-4" aria-hidden="true" tabindex="-1"></a><span class="co"># rescale</span></span>
-<span id="cb182-5"><a href="lecture8.html#cb182-5" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> x_train <span class="sc">/</span> <span class="dv">255</span></span>
-<span id="cb182-6"><a href="lecture8.html#cb182-6" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> x_test <span class="sc">/</span> <span class="dv">255</span></span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="lecture8.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape</span></span>
+<span id="cb194-2"><a href="lecture8.html#cb194-2" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_train, <span class="fu">c</span>(<span class="fu">nrow</span>(x_train), <span class="dv">784</span>))</span>
+<span id="cb194-3"><a href="lecture8.html#cb194-3" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> <span class="fu">array_reshape</span>(x_test, <span class="fu">c</span>(<span class="fu">nrow</span>(x_test), <span class="dv">784</span>))</span>
+<span id="cb194-4"><a href="lecture8.html#cb194-4" aria-hidden="true" tabindex="-1"></a><span class="co"># rescale</span></span>
+<span id="cb194-5"><a href="lecture8.html#cb194-5" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> x_train <span class="sc">/</span> <span class="dv">255</span></span>
+<span id="cb194-6"><a href="lecture8.html#cb194-6" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> x_test <span class="sc">/</span> <span class="dv">255</span></span></code></pre></div>
 <p>We also need to convert the y_train and y_test to categorical variables. Instead of having a vector with a number from 0-9, we convert it to a binary representation. That is, each label is represented by a vector of length 10 with one element is 1 and the rest 0. The element that is 1 represent the label of the digit.</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="lecture8.html#cb183-1" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_train, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
-<span id="cb183-2"><a href="lecture8.html#cb183-2" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_test, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
-<span id="cb183-3"><a href="lecture8.html#cb183-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb183-4"><a href="lecture8.html#cb183-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="lecture8.html#cb195-1" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_train, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
+<span id="cb195-2"><a href="lecture8.html#cb195-2" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_test, <span class="at">num_classes =</span> <span class="cn">NULL</span>)</span>
+<span id="cb195-3"><a href="lecture8.html#cb195-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb195-4"><a href="lecture8.html#cb195-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(y_train)</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+## [1,]    0    0    0    0    0    1    0    0    0     0
+## [2,]    1    0    0    0    0    0    0    0    0     0
+## [3,]    0    0    0    0    1    0    0    0    0     0
+## [4,]    0    1    0    0    0    0    0    0    0     0
+## [5,]    0    0    0    0    0    0    0    0    0     1
+## [6,]    0    0    1    0    0    0    0    0    0     0</code></pre>
 </div>
-<div id="mlp-model" class="section level3" number="8.4.4">
-<h3><span class="header-section-number">8.4.4</span> MLP model</h3>
-<p>In this example we want to create a so called dense neural network, or MLP. That is, each node are influenced from all of the nodes in the previous layer. This is contrast to e.g. convolutional neural networks that uses convolutions to reduce the connectivity between layers, thus reducing the connections.</p>
+<div id="feed-forward-neural-network-model" class="section level3 hasAnchor" number="8.4.4">
+<h3><span class="header-section-number">8.4.4</span> Feed Forward Neural Network model<a href="lecture8.html#feed-forward-neural-network-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this example we want to create a so called dense neural network, or feed forward neural network. That is, each node are influenced from all of the nodes in the previous layer. This is contrast to e.g. convolutional neural networks that uses convolutions to reduce the connectivity between layers, thus reducing the connections.</p>
 <p>We construct a dense neural network. After reshaping the input, the network has a shape of <span class="math inline">\(28 \times 28 = 784\)</span> per instance. This is our input shape. This shape has to be specified in the model, as shown below. The first layer has <span class="math inline">\(256\)</span> nodes, and we use the rectified linear unit as activations function. The next layer is a so called dropout layer. This layer drops randomly a proportion of the nodes out during a forward and backward pass. This will help avoiding overfitting, i.e. it is a form of regularization of the network. The next hidden layer has <span class="math inline">\(128\)</span> nodes, and also ReLU activation function. The last layer of the network is the output. The output in this case, is to classify the label of the digit. There are 10 possible classes, 0-9 and we thus use a softmax activation function, with 10 units.</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="lecture8.html#cb184-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>() </span>
-<span id="cb184-2"><a href="lecture8.html#cb184-2" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> </span>
-<span id="cb184-3"><a href="lecture8.html#cb184-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">256</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb184-4"><a href="lecture8.html#cb184-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.4</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb184-5"><a href="lecture8.html#cb184-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">128</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb184-6"><a href="lecture8.html#cb184-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb184-7"><a href="lecture8.html#cb184-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">10</span>, <span class="at">activation =</span> <span class="st">&#39;softmax&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="lecture8.html#cb197-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>() </span>
+<span id="cb197-2"><a href="lecture8.html#cb197-2" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> </span>
+<span id="cb197-3"><a href="lecture8.html#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">256</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb197-4"><a href="lecture8.html#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb197-5"><a href="lecture8.html#cb197-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">128</span>, <span class="at">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb197-6"><a href="lecture8.html#cb197-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dropout</span>(<span class="at">rate =</span> <span class="fl">0.3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb197-7"><a href="lecture8.html#cb197-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">10</span>, <span class="at">activation =</span> <span class="st">&#39;softmax&#39;</span>)</span></code></pre></div>
 <p>First we construct a sequential model object. Then we can use the pipe syntax to specify the layers of the neural network. We can use the summary function to show a nice overview of the neural network model.</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="lecture8.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="lecture8.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
+<pre><code>## Model: &quot;sequential&quot;
+## _______________________________________________________________________________________________________________________________________
+##  Layer (type)                                               Output Shape                                          Param #              
+## =======================================================================================================================================
+##  dense_2 (Dense)                                            (None, 256)                                           200960               
+##                                                                                                                                        
+##  dropout_1 (Dropout)                                        (None, 256)                                           0                    
+##                                                                                                                                        
+##  dense_1 (Dense)                                            (None, 128)                                           32896                
+##                                                                                                                                        
+##  dropout (Dropout)                                          (None, 128)                                           0                    
+##                                                                                                                                        
+##  dense (Dense)                                              (None, 10)                                            1290                 
+##                                                                                                                                        
+## =======================================================================================================================================
+## Total params: 235,146
+## Trainable params: 235,146
+## Non-trainable params: 0
+## _______________________________________________________________________________________________________________________________________</code></pre>
 </div>
-<div id="compiling-and-training-the-model" class="section level3" number="8.4.5">
-<h3><span class="header-section-number">8.4.5</span> Compiling and training the model</h3>
+<div id="compiling-and-training-the-model" class="section level3 hasAnchor" number="8.4.5">
+<h3><span class="header-section-number">8.4.5</span> Compiling and training the model<a href="lecture8.html#compiling-and-training-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We now have a model, the next step is to compile it. Durring compiling we also have to specify the loss function, optimizer and metrics for evaluations and validation.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="lecture8.html#cb186-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">compile</span>(</span>
-<span id="cb186-2"><a href="lecture8.html#cb186-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,</span>
-<span id="cb186-3"><a href="lecture8.html#cb186-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</span>
-<span id="cb186-4"><a href="lecture8.html#cb186-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="st">&#39;accuracy&#39;</span></span>
-<span id="cb186-5"><a href="lecture8.html#cb186-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="lecture8.html#cb200-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">compile</span>(</span>
+<span id="cb200-2"><a href="lecture8.html#cb200-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,</span>
+<span id="cb200-3"><a href="lecture8.html#cb200-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</span>
+<span id="cb200-4"><a href="lecture8.html#cb200-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="st">&#39;accuracy&#39;</span></span>
+<span id="cb200-5"><a href="lecture8.html#cb200-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Since we want to classify the digits, we have chosen the loss to be categorical cross entropy. We use the adam-algorithm during optimization and we also specify that we want to return the accuaracy of the classification during training and validation.</p>
 <p>After the compilation, we can call the fit() function to train our model. The fit function take x_train and y_train as inputs. We also have to specify how many epoch the model should be trained on (how many times we will see the entire data set), the batch size (how many/large the splits of the training data set) and how large proportion of the data should be used as online validation data. Test data are set aside for evaluation the model when it has finished training.</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="lecture8.html#cb187-1" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">fit</span>(</span>
-<span id="cb187-2"><a href="lecture8.html#cb187-2" aria-hidden="true" tabindex="-1"></a>  x_train, y_train, </span>
-<span id="cb187-3"><a href="lecture8.html#cb187-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">30</span>,</span>
-<span id="cb187-4"><a href="lecture8.html#cb187-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">batch_size =</span> <span class="dv">128</span>, </span>
-<span id="cb187-5"><a href="lecture8.html#cb187-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_split =</span> <span class="fl">0.2</span></span>
-<span id="cb187-6"><a href="lecture8.html#cb187-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p>It is possible to specify specific validation data if that is desirable. Batch size, epochs, size of the neural network, e.g. number of layers nodes, type of network (e.g. cnn, rnns) are so called hyper parameters. This is parameters that are not optimized in the network itself, but has to be specified manually. Theses hyper parameters are important and there are different strategies for optimize them. Hyper parameter search could be done with traditional grid search, but also more sophisticated approaches such as Bayesian hyper optimization (Ref. XX).</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="lecture8.html#cb201-1" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">fit</span>(</span>
+<span id="cb201-2"><a href="lecture8.html#cb201-2" aria-hidden="true" tabindex="-1"></a>  x_train, y_train, </span>
+<span id="cb201-3"><a href="lecture8.html#cb201-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">30</span>,</span>
+<span id="cb201-4"><a href="lecture8.html#cb201-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">batch_size =</span> <span class="dv">128</span>, </span>
+<span id="cb201-5"><a href="lecture8.html#cb201-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_split =</span> <span class="fl">0.2</span></span>
+<span id="cb201-6"><a href="lecture8.html#cb201-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>It is possible to specify specific validation data if that is desirable. Batch size, epochs, size of the neural network, e.g. number of layers nodes, type of network (e.g. cnn, rnns) are so called hyper parameters. This is parameters that are not optimized in the network itself, but has to be specified manually. Theses hyper parameters are important and there are different strategies for optimize them. Hyper parameter search could be done with traditional grid search, but also more sophisticated approaches such as Bayesian hyper optimization.</p>
+<div class="figure">
+<img src="ppt/validation_plot_nn.png" alt="Loss and accuarracy after each training epoch." width="1024" />
+<p class="caption">
+(#fig:Validation_plot)Loss and accuarracy after each training epoch.
+</p>
+</div>
 <p>We have plotted the loss and accuaracy calculated after each training epoch. It can be observed that the loss after approx 10-15 epochs, is significantly lower than the validation loss. This is an indication that the model starts to overfit.</p>
 </div>
-<div id="evaluating-the-model" class="section level3" number="8.4.6">
-<h3><span class="header-section-number">8.4.6</span> Evaluating the model</h3>
+<div id="evaluating-the-model" class="section level3 hasAnchor" number="8.4.6">
+<h3><span class="header-section-number">8.4.6</span> Evaluating the model<a href="lecture8.html#evaluating-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To evaluate the trained model on the test data, we can use the pipe syntax together with the evaluate function</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="lecture8.html#cb188-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">evaluate</span>(x_test, y_test)</span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="lecture8.html#cb202-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">evaluate</span>(x_test, y_test)</span></code></pre></div>
+<pre><code>##      loss  accuracy 
+## 0.0749504 0.9825000</code></pre>
 <p>The trained model performes pretty well on the test data set. It has an accuaracy of approximatley 0.98, that is 98 <span class="math inline">\(\%\)</span> of the data in the test data set is classified correctly. Lets<br />
 ### Predicting
 We can also predict the most probable class for each of the instances. For this we can use the predict function. (Litt mer her…)</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="lecture8.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model %&gt;% predict(x_test) %&gt;% k_argmax()</span></span>
-<span id="cb189-2"><a href="lecture8.html#cb189-2" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">predict</span>(x_test)</span>
-<span id="cb189-3"><a href="lecture8.html#cb189-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(prediction[1710,], )</span></span>
-<span id="cb189-4"><a href="lecture8.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(prediction)</span>
-<span id="cb189-5"><a href="lecture8.html#cb189-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-6"><a href="lecture8.html#cb189-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Lets find one of the most uncertain predictions to view how it looks like</span></span>
-<span id="cb189-7"><a href="lecture8.html#cb189-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-8"><a href="lecture8.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="co">#We find the most probable predictions in the test data set</span></span>
-<span id="cb189-9"><a href="lecture8.html#cb189-9" aria-hidden="true" tabindex="-1"></a>largest <span class="ot">&lt;-</span> <span class="fu">apply</span>(prediction,<span class="dv">1</span>,max,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
-<span id="cb189-10"><a href="lecture8.html#cb189-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-11"><a href="lecture8.html#cb189-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Then we choose the predictions which has the lowest confident </span></span>
-<span id="cb189-12"><a href="lecture8.html#cb189-12" aria-hidden="true" tabindex="-1"></a>less_confident <span class="ot">&lt;-</span> <span class="fu">sort</span>(largest,<span class="at">index.return =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>ix[<span class="dv">1</span><span class="sc">:</span><span class="dv">36</span>]</span>
-<span id="cb189-13"><a href="lecture8.html#cb189-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-14"><a href="lecture8.html#cb189-14" aria-hidden="true" tabindex="-1"></a><span class="co">#We find out what the model predicts these less_confident predictions are</span></span>
-<span id="cb189-15"><a href="lecture8.html#cb189-15" aria-hidden="true" tabindex="-1"></a>pred_class <span class="ot">&lt;-</span> prediction <span class="sc">%&gt;%</span> <span class="fu">k_argmax</span>() </span>
-<span id="cb189-16"><a href="lecture8.html#cb189-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-17"><a href="lecture8.html#cb189-17" aria-hidden="true" tabindex="-1"></a><span class="co">#and plot the digits</span></span>
-<span id="cb189-18"><a href="lecture8.html#cb189-18" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
-<span id="cb189-19"><a href="lecture8.html#cb189-19" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
-<span id="cb189-20"><a href="lecture8.html#cb189-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-21"><a href="lecture8.html#cb189-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> less_confident) { </span>
-<span id="cb189-22"><a href="lecture8.html#cb189-22" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x[idx,,]</span>
-<span id="cb189-23"><a href="lecture8.html#cb189-23" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
-<span id="cb189-24"><a href="lecture8.html#cb189-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
-<span id="cb189-25"><a href="lecture8.html#cb189-25" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(mnist<span class="sc">$</span>test<span class="sc">$</span>y[idx]))</span>
-<span id="cb189-26"><a href="lecture8.html#cb189-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="lecture8.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model %&gt;% predict(x_test) %&gt;% k_argmax()</span></span>
+<span id="cb204-2"><a href="lecture8.html#cb204-2" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">predict</span>(x_test)</span>
+<span id="cb204-3"><a href="lecture8.html#cb204-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(prediction[1710,], )</span></span>
+<span id="cb204-4"><a href="lecture8.html#cb204-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(prediction)</span></code></pre></div>
+<pre><code>## [1] 10000    10</code></pre>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="lecture8.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Lets find one of the most uncertain predictions to view how it looks like</span></span>
+<span id="cb206-2"><a href="lecture8.html#cb206-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-3"><a href="lecture8.html#cb206-3" aria-hidden="true" tabindex="-1"></a><span class="co">#We find the most probable predictions in the test data set</span></span>
+<span id="cb206-4"><a href="lecture8.html#cb206-4" aria-hidden="true" tabindex="-1"></a>largest <span class="ot">&lt;-</span> <span class="fu">apply</span>(prediction,<span class="dv">1</span>,max,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb206-5"><a href="lecture8.html#cb206-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-6"><a href="lecture8.html#cb206-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Then we choose the predictions which has the lowest confident </span></span>
+<span id="cb206-7"><a href="lecture8.html#cb206-7" aria-hidden="true" tabindex="-1"></a>less_confident <span class="ot">&lt;-</span> <span class="fu">sort</span>(largest,<span class="at">index.return =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>ix[<span class="dv">1</span><span class="sc">:</span><span class="dv">36</span>]</span>
+<span id="cb206-8"><a href="lecture8.html#cb206-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-9"><a href="lecture8.html#cb206-9" aria-hidden="true" tabindex="-1"></a><span class="co">#We find out what the model predicts these less_confident predictions are</span></span>
+<span id="cb206-10"><a href="lecture8.html#cb206-10" aria-hidden="true" tabindex="-1"></a>pred_class <span class="ot">&lt;-</span> prediction <span class="sc">%&gt;%</span> <span class="fu">k_argmax</span>() </span>
+<span id="cb206-11"><a href="lecture8.html#cb206-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-12"><a href="lecture8.html#cb206-12" aria-hidden="true" tabindex="-1"></a><span class="co">#and plot the digits</span></span>
+<span id="cb206-13"><a href="lecture8.html#cb206-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb206-14"><a href="lecture8.html#cb206-14" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="at">xaxs=</span><span class="st">&#39;i&#39;</span>, <span class="at">yaxs=</span><span class="st">&#39;i&#39;</span>)</span>
+<span id="cb206-15"><a href="lecture8.html#cb206-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-16"><a href="lecture8.html#cb206-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (idx <span class="cf">in</span> less_confident) { </span>
+<span id="cb206-17"><a href="lecture8.html#cb206-17" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x[idx,,]</span>
+<span id="cb206-18"><a href="lecture8.html#cb206-18" aria-hidden="true" tabindex="-1"></a>    im <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(im, <span class="dv">2</span>, rev)) </span>
+<span id="cb206-19"><a href="lecture8.html#cb206-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">image</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>, im, <span class="at">col=</span><span class="fu">gray</span>((<span class="dv">0</span><span class="sc">:</span><span class="dv">255</span>)<span class="sc">/</span><span class="dv">255</span>), </span>
+<span id="cb206-20"><a href="lecture8.html#cb206-20" aria-hidden="true" tabindex="-1"></a>          <span class="at">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="at">main=</span><span class="fu">paste</span>(mnist<span class="sc">$</span>test<span class="sc">$</span>y[idx]))</span>
+<span id="cb206-21"><a href="lecture8.html#cb206-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/Predicting-1.png" width="672" /></p>
+</div>
+<div id="data-camp-5" class="section level3 unnumbered hasAnchor">
+<h3>Data camp<a href="lecture8.html#data-camp-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We highly recommend the data camp course <a href="https://campus.datacamp.com/courses/introduction-to-tensorflow-in-r/introducing-tensorflow-in-r?ex=1">Introduction to TensorFlow in R</a> chapters 1-3.</p>
 
 </div>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-curry1944method" class="csl-entry">
+Curry, Haskell B. 1944. <span>“The Method of Steepest Descent for Non-Linear Minimization Problems.”</span> <em>Quarterly of Applied Mathematics</em> 2 (3): 258–61.
+</div>
+<div id="ref-deng2012mnist" class="csl-entry">
+Deng, Li. 2012. <span>“The Mnist Database of Handwritten Digit Images for Machine Learning Research.”</span> <em>IEEE Signal Processing Magazine</em> 29 (6): 141–42.
+</div>
+<div id="ref-goodfellow2016@softmax" class="csl-entry">
+Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. <em>6.2.2.3 Softmax Units for Multinoulli Output Distributions.</em> MIT press.
+</div>
+<div id="ref-goodfellow2016deep" class="csl-entry">
+Goodfellow, Ian, Yoshua Bengio, Aaron Courville, and Yoshua Bengio. 2016. <em>Deep Learning</em>. Vol. 1. MIT press Cambridge.
+</div>
+<div id="ref-hornik1989multilayer" class="csl-entry">
+Hornik, Kurt, Maxwell Stinchcombe, and Halbert White. 1989. <span>“Multilayer Feedforward Networks Are Universal Approximators.”</span> <em>Neural Networks</em> 2 (5): 359–66.
+</div>
+<div id="ref-kingma2014adam" class="csl-entry">
+Kingma, Diederik P, and Jimmy Ba. 2014. <span>“Adam: A Method for Stochastic Optimization.”</span> <em>arXiv Preprint arXiv:1412.6980</em>.
+</div>
+<div id="ref-nair2010rectified" class="csl-entry">
+Nair, Vinod, and Geoffrey E Hinton. 2010. <span>“Rectified Linear Units Improve Restricted Boltzmann Machines.”</span> In <em>Proceedings of the 27th International Conference on Machine Learning (ICML-10)</em>, 807–14.
+</div>
+<div id="ref-robbins1951stochastic" class="csl-entry">
+Robbins, Herbert, and Sutton Monro. 1951. <span>“A Stochastic Approximation Method.”</span> <em>The Annals of Mathematical Statistics</em>, 400–407.
+</div>
+<div id="ref-rumelhart1988learning" class="csl-entry">
+Rumelhart, David E, Geoffrey E Hinton, Ronald J Williams, et al. 1988. <span>“Learning Representations by Back-Propagating Errors.”</span> <em>Cognitive Modeling</em> 5 (3): 1.
+</div>
+<div id="ref-srivastava2014dropout" class="csl-entry">
+Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. <span>“Dropout: A Simple Way to Prevent Neural Networks from Overfitting.”</span> <em>The Journal of Machine Learning Research</em> 15 (1): 1929–58.
+</div>
+<div id="ref-sutskever2013importance" class="csl-entry">
+Sutskever, Ilya, James Martens, George Dahl, and Geoffrey Hinton. 2013. <span>“On the Importance of Initialization and Momentum in Deep Learning.”</span> In <em>International Conference on Machine Learning</em>, 1139–47.
+</div>
+<div id="ref-tieleman2012lecture" class="csl-entry">
+Tieleman, Tijmen, and Geoffrey Hinton. 2012. <span>“Lecture 6.5-Rmsprop: Divide the Gradient by a Running Average of Its Recent Magnitude.”</span> <em>COURSERA: Neural Networks for Machine Learning</em> 4 (2): 26–31.
+</div>
+<div id="ref-tishby1989consistent" class="csl-entry">
+Tishby, Naftali, Esther Levin, and Sara A Solla. 1989. <span>“Consistent Inference of Probabilities in Layered Networks: Predictions and Generalization.”</span> In <em>International Joint Conference on Neural Networks</em>, 2:403–9.
 </div>
 </div>
             </section>

@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title> 6 Random forrest and boosting | Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content=" 6 Random forrest and boosting | Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -32,7 +31,6 @@
   
 <link rel="prev" href="lecture5.html"/>
 <link rel="next" href="lecture7.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -50,8 +48,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -252,17 +251,18 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8" data-path="lecture8.html"><a href="lecture8.html"><i class="fa fa-check"></i><b>8</b> Artificial Neural networks</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#multilayer-perceptron-mlp"><i class="fa fa-check"></i><b>8.1</b> Multilayer Perceptron (MLP)</a></li>
+<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-networks"><i class="fa fa-check"></i><b>8.1</b> Feed Forward Neural Networks</a></li>
 <li class="chapter" data-level="8.2" data-path="lecture8.html"><a href="lecture8.html#objective-functions-and-training"><i class="fa fa-check"></i><b>8.2</b> Objective functions and training</a></li>
 <li class="chapter" data-level="8.3" data-path="lecture8.html"><a href="lecture8.html#validation-of-trained-models"><i class="fa fa-check"></i><b>8.3</b> Validation of trained models</a></li>
-<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-mlp-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of MLP in Keras</a>
+<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-feed-forward-neural-network-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of Feed Forward Neural Network in Keras</a>
 <ul>
 <li class="chapter" data-level="8.4.1" data-path="lecture8.html"><a href="lecture8.html#installing-keras-and-tensorflow"><i class="fa fa-check"></i><b>8.4.1</b> Installing Keras and Tensorflow</a></li>
 <li class="chapter" data-level="8.4.2" data-path="lecture8.html"><a href="lecture8.html#importing-mnist"><i class="fa fa-check"></i><b>8.4.2</b> Importing MNIST</a></li>
-<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#preprocessing"><i class="fa fa-check"></i><b>8.4.3</b> Preprocessing</a></li>
-<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#mlp-model"><i class="fa fa-check"></i><b>8.4.4</b> MLP model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#pre-processing"><i class="fa fa-check"></i><b>8.4.3</b> Pre-processing</a></li>
+<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-network-model"><i class="fa fa-check"></i><b>8.4.4</b> Feed Forward Neural Network model</a></li>
 <li class="chapter" data-level="8.4.5" data-path="lecture8.html"><a href="lecture8.html#compiling-and-training-the-model"><i class="fa fa-check"></i><b>8.4.5</b> Compiling and training the model</a></li>
 <li class="chapter" data-level="8.4.6" data-path="lecture8.html"><a href="lecture8.html#evaluating-the-model"><i class="fa fa-check"></i><b>8.4.6</b> Evaluating the model</a></li>
+<li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
@@ -287,12 +287,12 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lecture6" class="section level1" number="6">
-<h1><span class="header-section-number"> 6</span> Random forrest and boosting</h1>
+<div id="lecture6" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number"> 6</span> Random forrest and boosting<a href="lecture6.html#lecture6" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this lecture we will continue where we left off in the previous lecture by considering the two methods Random forest and Boosted trees. Both bagging and boosting are general methods one can use for many predictive models and trees is first and foremost a convenient example of such procedures. This lecture is highly inspired by the data camp course <em>Machine learning with three based models in R</em> (see link at the buttom). For this lecture we have not made a video.</p>
 <p>Before we go into the new models, we will have a quick look at how one can automatically tune hyperparameters with the tidymodels R package.</p>
-<div id="hyperparameter-tuning" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> Hyperparameter tuning</h2>
+<div id="hyperparameter-tuning" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Hyperparameter tuning<a href="lecture6.html#hyperparameter-tuning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>All the models we have considered so far have hyperparameters one can tune - meaning finding the optimial set of hyperparameters. We have sticked to using standard values, but one can also use the <em>tune</em> <span class="citation">(<a href="#ref-tune2021" role="doc-biblioref">Kuhn 2021</a>)</span> package which is included in the tidymodels package. We will simply show you how it is done, but in principle you set up a set of candidate hyperparameters for the procedure to consider and then it fits set of model candidates and selects the best one.</p>
 <p>For this example we have already loaded the iris data and set up the test and training. We set up the model specification setting the hyperparameters <em>min_n</em> (minimum number of data points in a node for the node to be split further) and <em>tree_depth</em> (maximimum depth of the tree) to <em>tune()</em> indicating to the procedure that these will be tuned.</p>
 <div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="lecture6.html#cb99-1" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(<span class="at">min_n =</span> <span class="fu">tune</span>(),          <span class="co"># to be tuned</span></span>
@@ -301,9 +301,11 @@ div.csl-indent {
 <span id="cb99-4"><a href="lecture6.html#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>)</span></code></pre></div>
 <p>There are several ways of setting up the grid of model candidates, but we will consider the simplest here; namely the grid_regular. This allows you to simply specify how many grid points you want for each parameter, and it creates an equidistant grid. We use 4 for each, giving a <span class="math inline">\(4\times 4\)</span> grid.</p>
 <div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="lecture6.html#cb100-1" aria-hidden="true" tabindex="-1"></a>tree_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">parameters</span>(tree_spec),</span>
-<span id="cb100-2"><a href="lecture6.html#cb100-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="dv">4</span>)</span>
-<span id="cb100-3"><a href="lecture6.html#cb100-3" aria-hidden="true" tabindex="-1"></a>tree_grid</span></code></pre></div>
-<pre><code>## # A tibble: 16 x 2
+<span id="cb100-2"><a href="lecture6.html#cb100-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>## Warning: `parameters.model_spec()` was deprecated in tune 0.1.6.9003.
+## Please use `hardhat::extract_parameter_set_dials()` instead.</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="lecture6.html#cb102-1" aria-hidden="true" tabindex="-1"></a>tree_grid</span></code></pre></div>
+<pre><code>## # A tibble: 16 × 2
 ##    tree_depth min_n
 ##         &lt;int&gt; &lt;int&gt;
 ##  1          1     2
@@ -323,30 +325,30 @@ div.csl-indent {
 ## 15         10    40
 ## 16         15    40</code></pre>
 <p>Before we can start tuning, we need to set up the cross validation folds. We use 5 partitions for the cross validation.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="lecture6.html#cb102-1" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="lecture6.html#cb104-1" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p>Then we are ready to set up the tuning using the <em>tune_grid</em> function. It fits the model using each of the model candiates in the tuning grid and evaluates the model using cross validation for out-of-sample performance with a user-specified metric.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="lecture6.html#cb103-1" aria-hidden="true" tabindex="-1"></a>tune_results <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
-<span id="cb103-2"><a href="lecture6.html#cb103-2" aria-hidden="true" tabindex="-1"></a>  tree_spec,</span>
-<span id="cb103-3"><a href="lecture6.html#cb103-3" aria-hidden="true" tabindex="-1"></a>  Species <span class="sc">~</span> .,</span>
-<span id="cb103-4"><a href="lecture6.html#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> folds,</span>
-<span id="cb103-5"><a href="lecture6.html#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> tree_grid,</span>
-<span id="cb103-6"><a href="lecture6.html#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy)</span>
-<span id="cb103-7"><a href="lecture6.html#cb103-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="lecture6.html#cb105-1" aria-hidden="true" tabindex="-1"></a>tune_results <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
+<span id="cb105-2"><a href="lecture6.html#cb105-2" aria-hidden="true" tabindex="-1"></a>  tree_spec,</span>
+<span id="cb105-3"><a href="lecture6.html#cb105-3" aria-hidden="true" tabindex="-1"></a>  Species <span class="sc">~</span> .,</span>
+<span id="cb105-4"><a href="lecture6.html#cb105-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> folds,</span>
+<span id="cb105-5"><a href="lecture6.html#cb105-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> tree_grid,</span>
+<span id="cb105-6"><a href="lecture6.html#cb105-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy)</span>
+<span id="cb105-7"><a href="lecture6.html#cb105-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>We can visualize the tuning using the autoplot function:</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="lecture6.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tune_results)</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="lecture6.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tune_results)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/tuning4-1.png" width="672" /></p>
 <p>Selecting the best model is done in a few steps. First we extract the best model setup and create a new (final) model specification.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="lecture6.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Best hyperparameters:</span></span>
-<span id="cb105-2"><a href="lecture6.html#cb105-2" aria-hidden="true" tabindex="-1"></a>final_params <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_results)</span>
-<span id="cb105-3"><a href="lecture6.html#cb105-3" aria-hidden="true" tabindex="-1"></a>final_params</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 3
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="lecture6.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Best hyperparameters:</span></span>
+<span id="cb107-2"><a href="lecture6.html#cb107-2" aria-hidden="true" tabindex="-1"></a>final_params <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_results)</span>
+<span id="cb107-3"><a href="lecture6.html#cb107-3" aria-hidden="true" tabindex="-1"></a>final_params</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 3
 ##   tree_depth min_n .config              
 ##        &lt;int&gt; &lt;int&gt; &lt;chr&gt;                
 ## 1          5     2 Preprocessor1_Model02</code></pre>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="lecture6.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Best model spec:</span></span>
-<span id="cb107-2"><a href="lecture6.html#cb107-2" aria-hidden="true" tabindex="-1"></a>best_spec <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(tree_spec,</span>
-<span id="cb107-3"><a href="lecture6.html#cb107-3" aria-hidden="true" tabindex="-1"></a>                            final_params)</span>
-<span id="cb107-4"><a href="lecture6.html#cb107-4" aria-hidden="true" tabindex="-1"></a>best_spec</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="lecture6.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Best model spec:</span></span>
+<span id="cb109-2"><a href="lecture6.html#cb109-2" aria-hidden="true" tabindex="-1"></a>best_spec <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(tree_spec,</span>
+<span id="cb109-3"><a href="lecture6.html#cb109-3" aria-hidden="true" tabindex="-1"></a>                            final_params)</span>
+<span id="cb109-4"><a href="lecture6.html#cb109-4" aria-hidden="true" tabindex="-1"></a>best_spec</span></code></pre></div>
 <pre><code>## Decision Tree Model Specification (classification)
 ## 
 ## Main Arguments:
@@ -356,8 +358,8 @@ div.csl-indent {
 ## Computational engine: rpart</code></pre>
 <p>It seems the best model (among our candidates) has tree_depth of 5 and min_n of 2.</p>
 </div>
-<div id="random-forest" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Random Forest</h2>
+<div id="random-forest" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Random Forest<a href="lecture6.html#random-forest" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Random forest is really a bagged tree with additional randomness added to it. That is, it is an ensemble method with trained trees on bootstrap samples. The additional randomness stems from using a random sub-sample of the available predictors in each tree in the ensemble. It may be non-intuitive that not using all predictors in each tree would provide the best prediction, but it is beneficial for the ensemble that the individual trees are less correlated.</p>
 <p>They are</p>
 <ul>
@@ -373,9 +375,9 @@ div.csl-indent {
 </ul>
 <p>Increasing the number of trees can be one way of improving the model performance.</p>
 <p>There are also different options for algorithms to be used for the node split. If you use the <em>ranger</em> implementation the options are impurity or permutation. This is set in the set_engine call. We will not go into the details here, but use the impurity option as default.</p>
-<div id="example-4" class="section level3 unnumbered">
-<h3>Example</h3>
-<p>In this lecture, we will move away from the Iris data set and consider the problem of predicting the sex of abalones. The data is produced by <span class="citation"><a href="#ref-nash1994" role="doc-biblioref">Nash et al.</a> (<a href="#ref-nash1994" role="doc-biblioref">1994</a>)</span> and downloaded <a href="https://archive.ics.uci.edu/ml/datasets/abalone">here</a>. Here you will also find the following explanation of the columns of the data:
+<div id="example-4" class="section level3 unnumbered hasAnchor">
+<h3>Example<a href="lecture6.html#example-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this lecture, we will move away from the Iris data set and consider the problem of predicting the sex of abalones. The data is produced by <span class="citation">Nash et al. (<a href="#ref-nash1994" role="doc-biblioref">1994</a>)</span> and downloaded <a href="https://archive.ics.uci.edu/ml/datasets/abalone">here</a>. Here you will also find the following explanation of the columns of the data:
 Name / Data Type / Measurement Unit / Description</p>
 <ul>
 <li>Sex / nominal / – / M, F, and I (infant)</li>
@@ -389,8 +391,8 @@ Name / Data Type / Measurement Unit / Description</p>
 <li>Rings / integer / – / +1.5 gives the age in years</li>
 </ul>
 <p>We load the data and call it <em>df</em>. Here are the first 6 rows:</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="lecture6.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 9
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="lecture6.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 9
 ##   Sex   Length Diameter Height `Whole weight` `Shucked weight` `Viscera weight` `Shell weight` Rings
 ##   &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;
 ## 1 M      0.455    0.365  0.095          0.514           0.224            0.101           0.15     15
@@ -400,17 +402,17 @@ Name / Data Type / Measurement Unit / Description</p>
 ## 5 I      0.33     0.255  0.08           0.205           0.0895           0.0395          0.055     7
 ## 6 I      0.425    0.3    0.095          0.352           0.141            0.0775          0.12      8</code></pre>
 <p>We set up the test-train split:</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="lecture6.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1991</span>)</span>
-<span id="cb111-2"><a href="lecture6.html#cb111-2" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">strata =</span> Sex)</span>
-<span id="cb111-3"><a href="lecture6.html#cb111-3" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
-<span id="cb111-4"><a href="lecture6.html#cb111-4" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="lecture6.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1991</span>)</span>
+<span id="cb113-2"><a href="lecture6.html#cb113-2" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">strata =</span> Sex)</span>
+<span id="cb113-3"><a href="lecture6.html#cb113-3" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
+<span id="cb113-4"><a href="lecture6.html#cb113-4" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span></code></pre></div>
 <p>Now, let us specify a random forest model. We will now tune the min_n hyperparameter and fix the others to 50 trees and an mtry of 6.</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="lecture6.html#cb112-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">trees =</span> <span class="dv">50</span>,</span>
-<span id="cb112-2"><a href="lecture6.html#cb112-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">min_n =</span> <span class="fu">tune</span>(),</span>
-<span id="cb112-3"><a href="lecture6.html#cb112-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mtry =</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb112-4"><a href="lecture6.html#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;ranger&quot;</span>, <span class="at">importance =</span> <span class="st">&quot;impurity&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb112-5"><a href="lecture6.html#cb112-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>)</span>
-<span id="cb112-6"><a href="lecture6.html#cb112-6" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="lecture6.html#cb114-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">trees =</span> <span class="dv">50</span>,</span>
+<span id="cb114-2"><a href="lecture6.html#cb114-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">min_n =</span> <span class="fu">tune</span>(),</span>
+<span id="cb114-3"><a href="lecture6.html#cb114-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mtry =</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb114-4"><a href="lecture6.html#cb114-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;ranger&quot;</span>, <span class="at">importance =</span> <span class="st">&quot;impurity&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb114-5"><a href="lecture6.html#cb114-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>)</span>
+<span id="cb114-6"><a href="lecture6.html#cb114-6" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code></pre></div>
 <pre><code>## Random Forest Model Specification (classification)
 ## 
 ## Main Arguments:
@@ -423,44 +425,45 @@ Name / Data Type / Measurement Unit / Description</p>
 ## 
 ## Computational engine: ranger</code></pre>
 <p>To set up the tuning, we use 10-fold cross validation and use 5 levels for the grid. Then we tune the models using all avaliable predictors to best predict the sex of the abalones. We use accuracy as our metric of performance.</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="lecture6.html#cb114-1" aria-hidden="true" tabindex="-1"></a>df_fold <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">10</span>)</span>
-<span id="cb114-2"><a href="lecture6.html#cb114-2" aria-hidden="true" tabindex="-1"></a>param_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">parameters</span>(rf_spec), <span class="at">levels =</span> <span class="dv">5</span>)</span>
-<span id="cb114-3"><a href="lecture6.html#cb114-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb114-4"><a href="lecture6.html#cb114-4" aria-hidden="true" tabindex="-1"></a>tuning <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
-<span id="cb114-5"><a href="lecture6.html#cb114-5" aria-hidden="true" tabindex="-1"></a>  rf_spec,</span>
-<span id="cb114-6"><a href="lecture6.html#cb114-6" aria-hidden="true" tabindex="-1"></a>  Sex <span class="sc">~</span> .,</span>
-<span id="cb114-7"><a href="lecture6.html#cb114-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> df_fold,</span>
-<span id="cb114-8"><a href="lecture6.html#cb114-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> param_grid,</span>
-<span id="cb114-9"><a href="lecture6.html#cb114-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy)</span>
-<span id="cb114-10"><a href="lecture6.html#cb114-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb114-11"><a href="lecture6.html#cb114-11" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tuning)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="lecture6.html#cb116-1" aria-hidden="true" tabindex="-1"></a>df_fold <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">10</span>)</span>
+<span id="cb116-2"><a href="lecture6.html#cb116-2" aria-hidden="true" tabindex="-1"></a>param_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">parameters</span>(rf_spec), <span class="at">levels =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## Warning: `parameters.model_spec()` was deprecated in tune 0.1.6.9003.
+## Please use `hardhat::extract_parameter_set_dials()` instead.</code></pre>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="lecture6.html#cb118-1" aria-hidden="true" tabindex="-1"></a>tuning <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
+<span id="cb118-2"><a href="lecture6.html#cb118-2" aria-hidden="true" tabindex="-1"></a>  rf_spec,</span>
+<span id="cb118-3"><a href="lecture6.html#cb118-3" aria-hidden="true" tabindex="-1"></a>  Sex <span class="sc">~</span> .,</span>
+<span id="cb118-4"><a href="lecture6.html#cb118-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> df_fold,</span>
+<span id="cb118-5"><a href="lecture6.html#cb118-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> param_grid,</span>
+<span id="cb118-6"><a href="lecture6.html#cb118-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy)</span>
+<span id="cb118-7"><a href="lecture6.html#cb118-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb118-8"><a href="lecture6.html#cb118-8" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tuning)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/cvFOLDS-1.png" width="672" /></p>
 <p>It seems a small minimum sample size for splitting is beneficial and choose the best among our candidate models:</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="lecture6.html#cb115-1" aria-hidden="true" tabindex="-1"></a>par_best <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tuning)</span>
-<span id="cb115-2"><a href="lecture6.html#cb115-2" aria-hidden="true" tabindex="-1"></a>rf_spec_final <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(rf_spec,</span>
-<span id="cb115-3"><a href="lecture6.html#cb115-3" aria-hidden="true" tabindex="-1"></a>                                par_best)</span>
-<span id="cb115-4"><a href="lecture6.html#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fit final model:</span></span>
-<span id="cb115-5"><a href="lecture6.html#cb115-5" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> rf_spec_final <span class="sc">%&gt;%</span></span>
-<span id="cb115-6"><a href="lecture6.html#cb115-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., <span class="at">data =</span> df_train)</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="lecture6.html#cb119-1" aria-hidden="true" tabindex="-1"></a>par_best <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tuning)</span>
+<span id="cb119-2"><a href="lecture6.html#cb119-2" aria-hidden="true" tabindex="-1"></a>rf_spec_final <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(rf_spec,</span>
+<span id="cb119-3"><a href="lecture6.html#cb119-3" aria-hidden="true" tabindex="-1"></a>                                par_best)</span>
+<span id="cb119-4"><a href="lecture6.html#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fit final model:</span></span>
+<span id="cb119-5"><a href="lecture6.html#cb119-5" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> rf_spec_final <span class="sc">%&gt;%</span></span>
+<span id="cb119-6"><a href="lecture6.html#cb119-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., <span class="at">data =</span> df_train)</span></code></pre></div>
 <p>An interesting function to be aware of is the vip function in the vip package <span class="citation">(<a href="#ref-vipPackage" role="doc-biblioref">Greenwell and Boehmke 2020</a>)</span>, which produces a variable of importance plot.</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="lecture6.html#cb116-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">%&gt;%</span> vip<span class="sc">::</span><span class="fu">vip</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="lecture6.html#cb120-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">%&gt;%</span> vip<span class="sc">::</span><span class="fu">vip</span>()</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>From this plot, it seems the Viscera weight is the most important variable.</p>
 <p>Let’s measure the out-of-sample performance on our test set:</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="lecture6.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(rf_fit, <span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span> </span>
-<span id="cb117-2"><a href="lecture6.html#cb117-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb117-3"><a href="lecture6.html#cb117-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> Sex, <span class="at">estimate =</span> .pred_class) <span class="sc">%&gt;%</span></span>
-<span id="cb117-4"><a href="lecture6.html#cb117-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb117-5"><a href="lecture6.html#cb117-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.estimate) </span></code></pre></div>
-<pre><code>## # A tibble: 1 x 1
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="lecture6.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(rf_fit, <span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-2"><a href="lecture6.html#cb121-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
+<span id="cb121-3"><a href="lecture6.html#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> Sex, <span class="at">estimate =</span> .pred_class) <span class="sc">%&gt;%</span></span>
+<span id="cb121-4"><a href="lecture6.html#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb121-5"><a href="lecture6.html#cb121-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.estimate) </span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
 ##   .estimate
 ##       &lt;dbl&gt;
 ## 1     0.565</code></pre>
 <p>It seems to be close to the in-sample performance.</p>
 </div>
 </div>
-<div id="boosted-trees" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> Boosted trees</h2>
+<div id="boosted-trees" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Boosted trees<a href="lecture6.html#boosted-trees" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For bagged threes and random forest, the different trees in the ensemble are independent. This is a computation benefit, because it makes it possible to fit multiple models in the ensemble in parallel. The idea behind boosting, or in our case boosted trees, is that the second model in the ensemble learns from the mistakes of first model, and so on. This means we can no longer estimate the models in parallel, but intuitively it is smarter to allow the models to learn from their colleuges mistakes - even if it takes a bit longer to estimate. This is why boosted trees very often outperformed bagged trees or random forest.</p>
 <p>There are several boosting algorithms. One of the is called AdaBoost (<strong>Ada</strong>ptive <strong>Boost</strong>ing). The idea behind this algorithm is that you change the weight of wrongly classified training instances in the next ensemble traning - making them <em>more important</em> for the algorithm to <em>get right</em> in the next tree. The final ensemble prediction is a weighted sum of the preceding models. The AdaBoost algorithm has been further developed by adding a technique called gradient descent and is the called gradient boosting. Instead of changing the weights of the observations, gradient boosting uses a loss function that is optimized using gradient descent.</p>
 <p>Boosted methods has been shown to be among the best-performing machine learning models and it turns out that it is a good option for unbalanced data, but be aware - it is <strong>prone to overfitting!</strong> In random forest, adding too many trees will not overfit the model, it will just not improve anymore, while boosted trees will in the asymptote try to “correct all preceding tree’s mistakes” and thus overfit to the data. Training can also slow and there are quite many hyperparameters to select or tune.</p>
@@ -476,39 +479,39 @@ Name / Data Type / Measurement Unit / Description</p>
 <li>stop_iter: The number of iterations without improvement before stopping</li>
 </ul>
 <p>Let us fit a boosted tree to predict the sex of abalones. You are by now very familiar with tidymodels, but we start by specifying the model spec. We will not tune hyperparameters now, but stick to the defaults.</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="lecture6.html#cb119-1" aria-hidden="true" tabindex="-1"></a>boost_spec <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>()   <span class="sc">%&gt;%</span></span>
-<span id="cb119-2"><a href="lecture6.html#cb119-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb119-3"><a href="lecture6.html#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;xgboost&quot;</span>)</span>
-<span id="cb119-4"><a href="lecture6.html#cb119-4" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> boost_spec <span class="sc">%&gt;%</span></span>
-<span id="cb119-5"><a href="lecture6.html#cb119-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., df_train)</span>
-<span id="cb119-6"><a href="lecture6.html#cb119-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb119-7"><a href="lecture6.html#cb119-7" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb119-8"><a href="lecture6.html#cb119-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Sex, .pred_class) <span class="sc">%&gt;%</span></span>
-<span id="cb119-9"><a href="lecture6.html#cb119-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="lecture6.html#cb123-1" aria-hidden="true" tabindex="-1"></a>boost_spec <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>()   <span class="sc">%&gt;%</span></span>
+<span id="cb123-2"><a href="lecture6.html#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb123-3"><a href="lecture6.html#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;xgboost&quot;</span>)</span>
+<span id="cb123-4"><a href="lecture6.html#cb123-4" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> boost_spec <span class="sc">%&gt;%</span></span>
+<span id="cb123-5"><a href="lecture6.html#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., df_train)</span>
+<span id="cb123-6"><a href="lecture6.html#cb123-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-7"><a href="lecture6.html#cb123-7" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
+<span id="cb123-8"><a href="lecture6.html#cb123-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Sex, .pred_class) <span class="sc">%&gt;%</span></span>
+<span id="cb123-9"><a href="lecture6.html#cb123-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
 <pre><code>##           Truth
 ## Prediction   F   I   M
 ##          F 119  27 118
 ##          I  39 267  74
 ##          M 169  42 190</code></pre>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="lecture6.html#cb121-1" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb121-2"><a href="lecture6.html#cb121-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Sex, .pred_class) <span class="sc">%&gt;%</span></span>
-<span id="cb121-3"><a href="lecture6.html#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 3
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="lecture6.html#cb125-1" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
+<span id="cb125-2"><a href="lecture6.html#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Sex, .pred_class) <span class="sc">%&gt;%</span></span>
+<span id="cb125-3"><a href="lecture6.html#cb125-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
 ## 1 accuracy multiclass     0.551
 ## 2 kap      multiclass     0.324</code></pre>
 <p>The accuracy is very similar to that of the random forest performance on this example (using the same number of trees and min_n).</p>
 <p>Let’s tune the hyperparameters learn_rate, tree_depth and sample_size using random tuning grid (with 8 candidate models).</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="lecture6.html#cb123-1" aria-hidden="true" tabindex="-1"></a>boost_spec <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(</span>
-<span id="cb123-2"><a href="lecture6.html#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">trees =</span> <span class="dv">500</span>,</span>
-<span id="cb123-3"><a href="lecture6.html#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fu">tune</span>(),</span>
-<span id="cb123-4"><a href="lecture6.html#cb123-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>(),</span>
-<span id="cb123-5"><a href="lecture6.html#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_size =</span> <span class="fu">tune</span>()</span>
-<span id="cb123-6"><a href="lecture6.html#cb123-6" aria-hidden="true" tabindex="-1"></a>)   <span class="sc">%&gt;%</span></span>
-<span id="cb123-7"><a href="lecture6.html#cb123-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb123-8"><a href="lecture6.html#cb123-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;xgboost&quot;</span>)</span>
-<span id="cb123-9"><a href="lecture6.html#cb123-9" aria-hidden="true" tabindex="-1"></a>boost_spec</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="lecture6.html#cb127-1" aria-hidden="true" tabindex="-1"></a>boost_spec <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(</span>
+<span id="cb127-2"><a href="lecture6.html#cb127-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">trees =</span> <span class="dv">500</span>,</span>
+<span id="cb127-3"><a href="lecture6.html#cb127-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fu">tune</span>(),</span>
+<span id="cb127-4"><a href="lecture6.html#cb127-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>(),</span>
+<span id="cb127-5"><a href="lecture6.html#cb127-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_size =</span> <span class="fu">tune</span>()</span>
+<span id="cb127-6"><a href="lecture6.html#cb127-6" aria-hidden="true" tabindex="-1"></a>)   <span class="sc">%&gt;%</span></span>
+<span id="cb127-7"><a href="lecture6.html#cb127-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb127-8"><a href="lecture6.html#cb127-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;xgboost&quot;</span>)</span>
+<span id="cb127-9"><a href="lecture6.html#cb127-9" aria-hidden="true" tabindex="-1"></a>boost_spec</span></code></pre></div>
 <pre><code>## Boosted Tree Model Specification (classification)
 ## 
 ## Main Arguments:
@@ -518,10 +521,10 @@ Name / Data Type / Measurement Unit / Description</p>
 ##   sample_size = tune()
 ## 
 ## Computational engine: xgboost</code></pre>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="lecture6.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- Random tuning grid --:</span></span>
-<span id="cb125-2"><a href="lecture6.html#cb125-2" aria-hidden="true" tabindex="-1"></a>tunegrid_boost <span class="ot">&lt;-</span> <span class="fu">grid_random</span>(<span class="fu">parameters</span>(boost_spec),</span>
-<span id="cb125-3"><a href="lecture6.html#cb125-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">size =</span> <span class="dv">8</span>)</span>
-<span id="cb125-4"><a href="lecture6.html#cb125-4" aria-hidden="true" tabindex="-1"></a>tunegrid_boost</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="lecture6.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- Random tuning grid --:</span></span>
+<span id="cb129-2"><a href="lecture6.html#cb129-2" aria-hidden="true" tabindex="-1"></a>tunegrid_boost <span class="ot">&lt;-</span> <span class="fu">grid_random</span>(<span class="fu">parameters</span>(boost_spec),</span>
+<span id="cb129-3"><a href="lecture6.html#cb129-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb129-4"><a href="lecture6.html#cb129-4" aria-hidden="true" tabindex="-1"></a>tunegrid_boost</span></code></pre></div>
 <pre><code>## # A tibble: 8 x 3
 ##   tree_depth   learn_rate sample_size
 ##        &lt;int&gt;        &lt;dbl&gt;       &lt;dbl&gt;
@@ -533,53 +536,53 @@ Name / Data Type / Measurement Unit / Description</p>
 ## 6          4 0.000383           0.679
 ## 7          8 0.0000000113       0.673
 ## 8         13 0.000000175        0.284</code></pre>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="lecture6.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tuning:</span></span>
-<span id="cb127-2"><a href="lecture6.html#cb127-2" aria-hidden="true" tabindex="-1"></a>tune_results <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
-<span id="cb127-3"><a href="lecture6.html#cb127-3" aria-hidden="true" tabindex="-1"></a>  boost_spec,</span>
-<span id="cb127-4"><a href="lecture6.html#cb127-4" aria-hidden="true" tabindex="-1"></a>  Sex <span class="sc">~</span> . ,</span>
-<span id="cb127-5"><a href="lecture6.html#cb127-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">6</span>),</span>
-<span id="cb127-6"><a href="lecture6.html#cb127-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> tunegrid_boost,</span>
-<span id="cb127-7"><a href="lecture6.html#cb127-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy)</span>
-<span id="cb127-8"><a href="lecture6.html#cb127-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb127-9"><a href="lecture6.html#cb127-9" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tune_results)</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="lecture6.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tuning:</span></span>
+<span id="cb131-2"><a href="lecture6.html#cb131-2" aria-hidden="true" tabindex="-1"></a>tune_results <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
+<span id="cb131-3"><a href="lecture6.html#cb131-3" aria-hidden="true" tabindex="-1"></a>  boost_spec,</span>
+<span id="cb131-4"><a href="lecture6.html#cb131-4" aria-hidden="true" tabindex="-1"></a>  Sex <span class="sc">~</span> . ,</span>
+<span id="cb131-5"><a href="lecture6.html#cb131-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">6</span>),</span>
+<span id="cb131-6"><a href="lecture6.html#cb131-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> tunegrid_boost,</span>
+<span id="cb131-7"><a href="lecture6.html#cb131-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy)</span>
+<span id="cb131-8"><a href="lecture6.html#cb131-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb131-9"><a href="lecture6.html#cb131-9" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tune_results)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/boost_tuning-1.png" width="672" /></p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="lecture6.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select best configuration:</span></span>
-<span id="cb128-2"><a href="lecture6.html#cb128-2" aria-hidden="true" tabindex="-1"></a>best_par <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_results)</span>
-<span id="cb128-3"><a href="lecture6.html#cb128-3" aria-hidden="true" tabindex="-1"></a>final_spec <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(boost_spec,</span>
-<span id="cb128-4"><a href="lecture6.html#cb128-4" aria-hidden="true" tabindex="-1"></a>                             best_par)</span>
-<span id="cb128-5"><a href="lecture6.html#cb128-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-6"><a href="lecture6.html#cb128-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the best model:</span></span>
-<span id="cb128-7"><a href="lecture6.html#cb128-7" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> final_spec <span class="sc">%&gt;%</span></span>
-<span id="cb128-8"><a href="lecture6.html#cb128-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., df_train)</span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="lecture6.html#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select best configuration:</span></span>
+<span id="cb132-2"><a href="lecture6.html#cb132-2" aria-hidden="true" tabindex="-1"></a>best_par <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_results)</span>
+<span id="cb132-3"><a href="lecture6.html#cb132-3" aria-hidden="true" tabindex="-1"></a>final_spec <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(boost_spec,</span>
+<span id="cb132-4"><a href="lecture6.html#cb132-4" aria-hidden="true" tabindex="-1"></a>                             best_par)</span>
+<span id="cb132-5"><a href="lecture6.html#cb132-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-6"><a href="lecture6.html#cb132-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the best model:</span></span>
+<span id="cb132-7"><a href="lecture6.html#cb132-7" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> final_spec <span class="sc">%&gt;%</span></span>
+<span id="cb132-8"><a href="lecture6.html#cb132-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., df_train)</span></code></pre></div>
 <pre><code>## [20:00:45] WARNING: amalgamation/../src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;multi:softprob&#39; was changed from &#39;merror&#39; to &#39;mlogloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.</code></pre>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="lecture6.html#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate out-of-sample performance on test set:</span></span>
-<span id="cb130-2"><a href="lecture6.html#cb130-2" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span></span>
-<span id="cb130-3"><a href="lecture6.html#cb130-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb130-4"><a href="lecture6.html#cb130-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb130-5"><a href="lecture6.html#cb130-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="lecture6.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate out-of-sample performance on test set:</span></span>
+<span id="cb134-2"><a href="lecture6.html#cb134-2" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span></span>
+<span id="cb134-3"><a href="lecture6.html#cb134-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
+<span id="cb134-4"><a href="lecture6.html#cb134-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
+<span id="cb134-5"><a href="lecture6.html#cb134-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> <span class="st">&quot;Sex&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
 ## 1 accuracy multiclass     0.558
 ## 2 kap      multiclass     0.331</code></pre>
 <p>We see we go from 0.551 accuracy to 0.558 - so very slight improvement.</p>
-<div id="iris-data" class="section level3 unnumbered">
-<h3>Iris data</h3>
+<div id="iris-data" class="section level3 unnumbered hasAnchor">
+<h3>Iris data<a href="lecture6.html#iris-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For the sake of continuity, let’s us also see if the boosted tree can manage to correctly predict the last three iris flowers:</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="lecture6.html#cb132-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris)</span>
-<span id="cb132-2"><a href="lecture6.html#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">999</span>)</span>
-<span id="cb132-3"><a href="lecture6.html#cb132-3" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">strata =</span> Species)</span>
-<span id="cb132-4"><a href="lecture6.html#cb132-4" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
-<span id="cb132-5"><a href="lecture6.html#cb132-5" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span>
-<span id="cb132-6"><a href="lecture6.html#cb132-6" aria-hidden="true" tabindex="-1"></a>boost_spec <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(</span>
-<span id="cb132-7"><a href="lecture6.html#cb132-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">trees =</span> <span class="dv">500</span>,</span>
-<span id="cb132-8"><a href="lecture6.html#cb132-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fu">tune</span>(),</span>
-<span id="cb132-9"><a href="lecture6.html#cb132-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>(),</span>
-<span id="cb132-10"><a href="lecture6.html#cb132-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_size =</span> <span class="fu">tune</span>()</span>
-<span id="cb132-11"><a href="lecture6.html#cb132-11" aria-hidden="true" tabindex="-1"></a>)   <span class="sc">%&gt;%</span></span>
-<span id="cb132-12"><a href="lecture6.html#cb132-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb132-13"><a href="lecture6.html#cb132-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;xgboost&quot;</span>)</span>
-<span id="cb132-14"><a href="lecture6.html#cb132-14" aria-hidden="true" tabindex="-1"></a>boost_spec</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="lecture6.html#cb136-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris)</span>
+<span id="cb136-2"><a href="lecture6.html#cb136-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">999</span>)</span>
+<span id="cb136-3"><a href="lecture6.html#cb136-3" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df, <span class="at">strata =</span> Species)</span>
+<span id="cb136-4"><a href="lecture6.html#cb136-4" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
+<span id="cb136-5"><a href="lecture6.html#cb136-5" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span>
+<span id="cb136-6"><a href="lecture6.html#cb136-6" aria-hidden="true" tabindex="-1"></a>boost_spec <span class="ot">&lt;-</span> <span class="fu">boost_tree</span>(</span>
+<span id="cb136-7"><a href="lecture6.html#cb136-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">trees =</span> <span class="dv">500</span>,</span>
+<span id="cb136-8"><a href="lecture6.html#cb136-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fu">tune</span>(),</span>
+<span id="cb136-9"><a href="lecture6.html#cb136-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>(),</span>
+<span id="cb136-10"><a href="lecture6.html#cb136-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_size =</span> <span class="fu">tune</span>()</span>
+<span id="cb136-11"><a href="lecture6.html#cb136-11" aria-hidden="true" tabindex="-1"></a>)   <span class="sc">%&gt;%</span></span>
+<span id="cb136-12"><a href="lecture6.html#cb136-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb136-13"><a href="lecture6.html#cb136-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;xgboost&quot;</span>)</span>
+<span id="cb136-14"><a href="lecture6.html#cb136-14" aria-hidden="true" tabindex="-1"></a>boost_spec</span></code></pre></div>
 <pre><code>## Boosted Tree Model Specification (classification)
 ## 
 ## Main Arguments:
@@ -589,10 +592,10 @@ Name / Data Type / Measurement Unit / Description</p>
 ##   sample_size = tune()
 ## 
 ## Computational engine: xgboost</code></pre>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="lecture6.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- Random tuning grid --:</span></span>
-<span id="cb134-2"><a href="lecture6.html#cb134-2" aria-hidden="true" tabindex="-1"></a>tunegrid_boost <span class="ot">&lt;-</span> <span class="fu">grid_random</span>(<span class="fu">parameters</span>(boost_spec),</span>
-<span id="cb134-3"><a href="lecture6.html#cb134-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">size =</span> <span class="dv">8</span>)</span>
-<span id="cb134-4"><a href="lecture6.html#cb134-4" aria-hidden="true" tabindex="-1"></a>tunegrid_boost</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="lecture6.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- Random tuning grid --:</span></span>
+<span id="cb138-2"><a href="lecture6.html#cb138-2" aria-hidden="true" tabindex="-1"></a>tunegrid_boost <span class="ot">&lt;-</span> <span class="fu">grid_random</span>(<span class="fu">parameters</span>(boost_spec),</span>
+<span id="cb138-3"><a href="lecture6.html#cb138-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb138-4"><a href="lecture6.html#cb138-4" aria-hidden="true" tabindex="-1"></a>tunegrid_boost</span></code></pre></div>
 <pre><code>## # A tibble: 8 x 3
 ##   tree_depth learn_rate sample_size
 ##        &lt;int&gt;      &lt;dbl&gt;       &lt;dbl&gt;
@@ -604,28 +607,28 @@ Name / Data Type / Measurement Unit / Description</p>
 ## 6          6   4.75e- 7       0.298
 ## 7          3   9.69e-10       0.922
 ## 8          9   8.41e- 7       0.542</code></pre>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="lecture6.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tuning:</span></span>
-<span id="cb136-2"><a href="lecture6.html#cb136-2" aria-hidden="true" tabindex="-1"></a>tune_results <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
-<span id="cb136-3"><a href="lecture6.html#cb136-3" aria-hidden="true" tabindex="-1"></a>  boost_spec,</span>
-<span id="cb136-4"><a href="lecture6.html#cb136-4" aria-hidden="true" tabindex="-1"></a>  Species <span class="sc">~</span> .,</span>
-<span id="cb136-5"><a href="lecture6.html#cb136-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">6</span>),</span>
-<span id="cb136-6"><a href="lecture6.html#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> tunegrid_boost,</span>
-<span id="cb136-7"><a href="lecture6.html#cb136-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc)</span>
-<span id="cb136-8"><a href="lecture6.html#cb136-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb136-9"><a href="lecture6.html#cb136-9" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tune_results)</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="lecture6.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tuning:</span></span>
+<span id="cb140-2"><a href="lecture6.html#cb140-2" aria-hidden="true" tabindex="-1"></a>tune_results <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
+<span id="cb140-3"><a href="lecture6.html#cb140-3" aria-hidden="true" tabindex="-1"></a>  boost_spec,</span>
+<span id="cb140-4"><a href="lecture6.html#cb140-4" aria-hidden="true" tabindex="-1"></a>  Species <span class="sc">~</span> .,</span>
+<span id="cb140-5"><a href="lecture6.html#cb140-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">6</span>),</span>
+<span id="cb140-6"><a href="lecture6.html#cb140-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> tunegrid_boost,</span>
+<span id="cb140-7"><a href="lecture6.html#cb140-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc)</span>
+<span id="cb140-8"><a href="lecture6.html#cb140-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb140-9"><a href="lecture6.html#cb140-9" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tune_results)</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/boost_tuning_iris-1.png" width="672" /></p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="lecture6.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select best configuration:</span></span>
-<span id="cb137-2"><a href="lecture6.html#cb137-2" aria-hidden="true" tabindex="-1"></a>best_par <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_results)</span>
-<span id="cb137-3"><a href="lecture6.html#cb137-3" aria-hidden="true" tabindex="-1"></a>final_spec <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(boost_spec,</span>
-<span id="cb137-4"><a href="lecture6.html#cb137-4" aria-hidden="true" tabindex="-1"></a>                             best_par)</span>
-<span id="cb137-5"><a href="lecture6.html#cb137-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the best model:</span></span>
-<span id="cb137-6"><a href="lecture6.html#cb137-6" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> final_spec <span class="sc">%&gt;%</span></span>
-<span id="cb137-7"><a href="lecture6.html#cb137-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Species <span class="sc">~</span> ., df_train)</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="lecture6.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select best configuration:</span></span>
+<span id="cb141-2"><a href="lecture6.html#cb141-2" aria-hidden="true" tabindex="-1"></a>best_par <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_results)</span>
+<span id="cb141-3"><a href="lecture6.html#cb141-3" aria-hidden="true" tabindex="-1"></a>final_spec <span class="ot">&lt;-</span> <span class="fu">finalize_model</span>(boost_spec,</span>
+<span id="cb141-4"><a href="lecture6.html#cb141-4" aria-hidden="true" tabindex="-1"></a>                             best_par)</span>
+<span id="cb141-5"><a href="lecture6.html#cb141-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the best model:</span></span>
+<span id="cb141-6"><a href="lecture6.html#cb141-6" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="ot">&lt;-</span> final_spec <span class="sc">%&gt;%</span></span>
+<span id="cb141-7"><a href="lecture6.html#cb141-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Species <span class="sc">~</span> ., df_train)</span></code></pre></div>
 <pre><code>## [20:27:46] WARNING: amalgamation/../src/learner.cc:1115: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective &#39;multi:softprob&#39; was changed from &#39;merror&#39; to &#39;mlogloss&#39;. Explicitly set eval_metric if you&#39;d like to restore the old behavior.</code></pre>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="lecture6.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate out-of-sample performance on test set:</span></span>
-<span id="cb139-2"><a href="lecture6.html#cb139-2" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb139-3"><a href="lecture6.html#cb139-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
-<span id="cb139-4"><a href="lecture6.html#cb139-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> <span class="st">&quot;Species&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="lecture6.html#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate out-of-sample performance on test set:</span></span>
+<span id="cb143-2"><a href="lecture6.html#cb143-2" aria-hidden="true" tabindex="-1"></a>boost_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span></span>
+<span id="cb143-3"><a href="lecture6.html#cb143-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
+<span id="cb143-4"><a href="lecture6.html#cb143-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> <span class="st">&quot;Species&quot;</span>, <span class="at">estimate =</span> <span class="st">&quot;.pred_class&quot;</span>)</span></code></pre></div>
 <pre><code>##             Truth
 ## Prediction   setosa versicolor virginica
 ##   setosa         13          0         0
@@ -633,14 +636,14 @@ Name / Data Type / Measurement Unit / Description</p>
 ##   virginica       0          0        11</code></pre>
 <p>Same as for the other methods - should have used another example data from the start!</p>
 </div>
-<div id="data-camp-3" class="section level3 unnumbered">
-<h3>Data camp</h3>
+<div id="data-camp-3" class="section level3 unnumbered hasAnchor">
+<h3>Data camp<a href="lecture6.html#data-camp-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We highly recommend the data camp course <a href="https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r">Machine Learning with Tree-Based Models in R</a> chapters 3-4.</p>
 
 </div>
 </div>
 </div>
-<h3>References</h3>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-vipPackage" class="csl-entry">
 Greenwell, Brandon M., and Bradley C. Boehmke. 2020. <span>“Variable Importance Plots—an Introduction to the Vip Package.”</span> <em>The R Journal</em> 12 (1): 343–66. <a href="https://doi.org/10.32614/RJ-2020-013">https://doi.org/10.32614/RJ-2020-013</a>.

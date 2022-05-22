@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title> 9 Feature selection/Explainable AI | Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content=" 9 Feature selection/Explainable AI | Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -32,7 +31,6 @@
   
 <link rel="prev" href="lecture8.html"/>
 <link rel="next" href="references.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -50,8 +48,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -252,17 +251,18 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8" data-path="lecture8.html"><a href="lecture8.html"><i class="fa fa-check"></i><b>8</b> Artificial Neural networks</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#multilayer-perceptron-mlp"><i class="fa fa-check"></i><b>8.1</b> Multilayer Perceptron (MLP)</a></li>
+<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-networks"><i class="fa fa-check"></i><b>8.1</b> Feed Forward Neural Networks</a></li>
 <li class="chapter" data-level="8.2" data-path="lecture8.html"><a href="lecture8.html#objective-functions-and-training"><i class="fa fa-check"></i><b>8.2</b> Objective functions and training</a></li>
 <li class="chapter" data-level="8.3" data-path="lecture8.html"><a href="lecture8.html#validation-of-trained-models"><i class="fa fa-check"></i><b>8.3</b> Validation of trained models</a></li>
-<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-mlp-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of MLP in Keras</a>
+<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-feed-forward-neural-network-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of Feed Forward Neural Network in Keras</a>
 <ul>
 <li class="chapter" data-level="8.4.1" data-path="lecture8.html"><a href="lecture8.html#installing-keras-and-tensorflow"><i class="fa fa-check"></i><b>8.4.1</b> Installing Keras and Tensorflow</a></li>
 <li class="chapter" data-level="8.4.2" data-path="lecture8.html"><a href="lecture8.html#importing-mnist"><i class="fa fa-check"></i><b>8.4.2</b> Importing MNIST</a></li>
-<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#preprocessing"><i class="fa fa-check"></i><b>8.4.3</b> Preprocessing</a></li>
-<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#mlp-model"><i class="fa fa-check"></i><b>8.4.4</b> MLP model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#pre-processing"><i class="fa fa-check"></i><b>8.4.3</b> Pre-processing</a></li>
+<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-network-model"><i class="fa fa-check"></i><b>8.4.4</b> Feed Forward Neural Network model</a></li>
 <li class="chapter" data-level="8.4.5" data-path="lecture8.html"><a href="lecture8.html#compiling-and-training-the-model"><i class="fa fa-check"></i><b>8.4.5</b> Compiling and training the model</a></li>
 <li class="chapter" data-level="8.4.6" data-path="lecture8.html"><a href="lecture8.html#evaluating-the-model"><i class="fa fa-check"></i><b>8.4.6</b> Evaluating the model</a></li>
+<li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
@@ -287,8 +287,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lecture9" class="section level1" number="9">
-<h1><span class="header-section-number"> 9</span> Feature selection/Explainable AI</h1>
+<div id="lecture9" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number"> 9</span> Feature selection/Explainable AI<a href="lecture9.html#lecture9" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
 </div>
             </section>

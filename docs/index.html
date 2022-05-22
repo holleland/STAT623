@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -32,7 +31,6 @@
   
 
 <link rel="next" href="lecture1.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -50,8 +48,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -252,17 +251,18 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8" data-path="lecture8.html"><a href="lecture8.html"><i class="fa fa-check"></i><b>8</b> Artificial Neural networks</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#multilayer-perceptron-mlp"><i class="fa fa-check"></i><b>8.1</b> Multilayer Perceptron (MLP)</a></li>
+<li class="chapter" data-level="8.1" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-networks"><i class="fa fa-check"></i><b>8.1</b> Feed Forward Neural Networks</a></li>
 <li class="chapter" data-level="8.2" data-path="lecture8.html"><a href="lecture8.html#objective-functions-and-training"><i class="fa fa-check"></i><b>8.2</b> Objective functions and training</a></li>
 <li class="chapter" data-level="8.3" data-path="lecture8.html"><a href="lecture8.html#validation-of-trained-models"><i class="fa fa-check"></i><b>8.3</b> Validation of trained models</a></li>
-<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-mlp-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of MLP in Keras</a>
+<li class="chapter" data-level="8.4" data-path="lecture8.html"><a href="lecture8.html#implementation-of-feed-forward-neural-network-in-keras"><i class="fa fa-check"></i><b>8.4</b> Implementation of Feed Forward Neural Network in Keras</a>
 <ul>
 <li class="chapter" data-level="8.4.1" data-path="lecture8.html"><a href="lecture8.html#installing-keras-and-tensorflow"><i class="fa fa-check"></i><b>8.4.1</b> Installing Keras and Tensorflow</a></li>
 <li class="chapter" data-level="8.4.2" data-path="lecture8.html"><a href="lecture8.html#importing-mnist"><i class="fa fa-check"></i><b>8.4.2</b> Importing MNIST</a></li>
-<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#preprocessing"><i class="fa fa-check"></i><b>8.4.3</b> Preprocessing</a></li>
-<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#mlp-model"><i class="fa fa-check"></i><b>8.4.4</b> MLP model</a></li>
+<li class="chapter" data-level="8.4.3" data-path="lecture8.html"><a href="lecture8.html#pre-processing"><i class="fa fa-check"></i><b>8.4.3</b> Pre-processing</a></li>
+<li class="chapter" data-level="8.4.4" data-path="lecture8.html"><a href="lecture8.html#feed-forward-neural-network-model"><i class="fa fa-check"></i><b>8.4.4</b> Feed Forward Neural Network model</a></li>
 <li class="chapter" data-level="8.4.5" data-path="lecture8.html"><a href="lecture8.html#compiling-and-training-the-model"><i class="fa fa-check"></i><b>8.4.5</b> Compiling and training the model</a></li>
 <li class="chapter" data-level="8.4.6" data-path="lecture8.html"><a href="lecture8.html#evaluating-the-model"><i class="fa fa-check"></i><b>8.4.6</b> Evaluating the model</a></li>
+<li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
@@ -291,36 +291,36 @@ div.csl-indent {
 <h1 class="title">Data science with R: Applied Predictive Modelling</h1>
 <h2 class="subtitle"><em>Compendium for STAT623</em></h2>
 <p class="author"><em>Sondre Hølleland and Kristian Gundersen</em></p>
-<p class="date"><em>2022-05-16 06:24:50</em></p>
+<p class="date"><em>2022-05-22 18:15:38</em></p>
 </div>
-<div id="course-overview" class="section level1 unnumbered">
-<h1>Course overview</h1>
-<div id="learning-outcomes-and-objectives" class="section level2 unnumbered">
-<h2>Learning outcomes and objectives</h2>
+<div id="course-overview" class="section level1 unnumbered hasAnchor">
+<h1>Course overview<a href="index.html#course-overview" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="learning-outcomes-and-objectives" class="section level2 unnumbered hasAnchor">
+<h2>Learning outcomes and objectives<a href="index.html#learning-outcomes-and-objectives" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The course presents various advanced methods within data science for predictive modelling and the use of R. Methods for regression, including non-linear regression and generalized additive models, and methods for classification, including trees, boosting and Support Vector Machines, will be examined. The course will focus on practical use in r, without going into details of the mathematical theory of the methods.</p>
 <p>On completion of the course the student should have the following learning outcomes:</p>
-<div id="knowledge" class="section level4 unnumbered">
-<h4>Knowledge</h4>
+<div id="knowledge" class="section level4 unnumbered hasAnchor">
+<h4>Knowledge<a href="index.html#knowledge" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <ul>
 <li>Knows the basic ideas underpinning carious methods in data science/predictive modelling</li>
 </ul>
 </div>
-<div id="skills" class="section level4 unnumbered">
-<h4>Skills</h4>
+<div id="skills" class="section level4 unnumbered hasAnchor">
+<h4>Skills<a href="index.html#skills" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <ul>
 <li>Can implement various models within data science/predictive modelling in R</li>
 <li>Use data science methods on real data sets and perform predictions</li>
 </ul>
 </div>
-<div id="general-competence" class="section level4 unnumbered">
-<h4>General competence</h4>
+<div id="general-competence" class="section level4 unnumbered hasAnchor">
+<h4>General competence<a href="index.html#general-competence" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <ul>
 <li>Have an overview of how data science methods can be used to analyze larger data sets</li>
 </ul>
 </div>
 </div>
-<div id="lecture-overview" class="section level2 unnumbered">
-<h2>Lecture overview</h2>
+<div id="lecture-overview" class="section level2 unnumbered hasAnchor">
+<h2>Lecture overview<a href="index.html#lecture-overview" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <table>
 <colgroup>
 <col width="7%" />
@@ -394,13 +394,13 @@ div.csl-indent {
 </tbody>
 </table>
 </div>
-<div id="litterature" class="section level2 unnumbered">
-<h2>Litterature</h2>
-<p>We will use many different sources for teaching you applied predictive modelling. <span class="citation"><a href="#ref-kuhn2016" role="doc-biblioref">Kuhn and Johnson</a> (<a href="#ref-kuhn2016" role="doc-biblioref">2016</a>)</span> and <span class="citation"><a href="#ref-james2013" role="doc-biblioref">James et al.</a> (<a href="#ref-james2013" role="doc-biblioref">2013</a>)</span> are the main references.</p>
+<div id="litterature" class="section level2 unnumbered hasAnchor">
+<h2>Litterature<a href="index.html#litterature" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We will use many different sources for teaching you applied predictive modelling. <span class="citation">Kuhn and Johnson (<a href="#ref-kuhn2016" role="doc-biblioref">2016</a>)</span> and <span class="citation">James et al. (<a href="#ref-james2013" role="doc-biblioref">2013</a>)</span> are the main references.</p>
 
 </div>
 </div>
-<h3>References</h3>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-james2013" class="csl-entry">
 James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. 1st ed. Springer.
