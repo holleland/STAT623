@@ -4,18 +4,19 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title> 9 Feature selection/Explainable AI | Data science with R: Applied Predictive Modelling</title>
+  <title> 9 Feature selection | Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content=" 9 Feature selection/Explainable AI | Data science with R: Applied Predictive Modelling" />
+  <meta property="og:title" content=" 9 Feature selection | Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
+  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content=" 9 Feature selection/Explainable AI | Data science with R: Applied Predictive Modelling" />
+  <meta name="twitter:title" content=" 9 Feature selection | Data science with R: Applied Predictive Modelling" />
   
   <meta name="twitter:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -31,6 +32,7 @@
   
 <link rel="prev" href="lecture8.html"/>
 <link rel="next" href="references.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -48,9 +50,8 @@
 
 
 
-<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
-<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -266,7 +267,16 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
+<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#backward-feature-selection"><i class="fa fa-check"></i>Backward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#forward-feature-selection"><i class="fa fa-check"></i>Forward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#recursive-feature-elimination"><i class="fa fa-check"></i>Recursive feature elimination</a></li>
+<li class="chapter" data-level="9.1" data-path="lecture9.html"><a href="lecture9.html#example-5"><i class="fa fa-check"></i><b>9.1</b> Example</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#data-camp-6"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -288,9 +298,373 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lecture9" class="section level1 hasAnchor" number="9">
-<h1><span class="header-section-number"> 9</span> Feature selection/Explainable AI<a href="lecture9.html#lecture9" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="lecture9" class="section level1" number="9">
+<h1><span class="header-section-number"> 9</span> Feature selection</h1>
+<p>Feature selection is the process of reducing the number of predictors when developing a predictive model. The primary focus is on removing those predictors that are non-informative to the model. If a predictor does not influence your response variable it may improve the performance of your model to simply remove it. It may also reduce the computational cost of fitting the model to have fewer covariates to take into account.</p>
+<p>There are many ways of doing feature selection and there is no “best method.” In small cases, one could perhaps try all combinations of predictor permutations, but the number of models to test then will increase substantially with the number of columns in your data. If we have four predictors, there are four combinations with only 1 predictor, six combinations for 2 predictors, 4 with 3 and one with 4 predictors. In total 16, if we also add the model with no predictors. The general formula for this with <span class="math inline">\(p\)</span> predictors would be
+<span class="math display">\[\text{number of potential models} = \sum_{i=0}^p \binom{p}{i}=2^p,\]</span>
+where the last equality holds by the binomial theorem (see <a href="https://en.wikipedia.org/wiki/Binomial_theorem">wikipedia</a>). We can plot this for <span class="math inline">\(p = 0,\ldots, 12\)</span>, where <span class="math inline">\(p=0\)</span> corresponds to the intercept model.</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="lecture9.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb193-2"><a href="lecture9.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">p =</span><span class="dv">0</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">n =</span> <span class="dv">2</span><span class="sc">^</span>p) <span class="sc">%&gt;%</span></span>
+<span id="cb193-3"><a href="lecture9.html#cb193-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>p,<span class="at">y=</span>n)) <span class="sc">+</span> </span>
+<span id="cb193-4"><a href="lecture9.html#cb193-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb193-5"><a href="lecture9.html#cb193-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x=</span>p, <span class="at">y =</span> n, <span class="at">label =</span> n)) <span class="sc">+</span></span>
+<span id="cb193-6"><a href="lecture9.html#cb193-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">30</span>,<span class="dv">2</span>)) <span class="sc">+</span> </span>
+<span id="cb193-7"><a href="lecture9.html#cb193-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="st">&quot;Number of potential models&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb193-8"><a href="lecture9.html#cb193-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb193-9"><a href="lecture9.html#cb193-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb193-10"><a href="lecture9.html#cb193-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>If we increase <span class="math inline">\(p\)</span> to say 20, the number of potential models is <span class="math inline">\(1\,048\,576\)</span>. Therefore, we need a clever way of selecting features without having to test every combination. The rest of this lecture will be about different ways of selecting features to include in your model.</p>
+<div id="backward-feature-selection" class="section level2 unnumbered">
+<h2>Backward feature selection</h2>
+<p>Backward feature selection is a procedure where you start with a complicated model with all potential features included. When considering the features, there will be some that are <em>more important</em> than others in the model. Like an onion, you start peeling off the least important feature and fit a new model without it. Then evaluate the model and find the next <em>least important</em> feature. Finding the least important feature is usually done by fitting new models removing one feature at the time and then select remove the feature that is most beneficial with respect to the performance measure. If the removal of the feature lead to an improvement in the model fit, you continue peeling. If it decreased the model performance, you stop peeling and go back to the previous model. Due to this step-by-step procedure, it is often called backward stepwise feature selection.</p>
+<p>In classical statistical modeling, minimizing AIC is a standard way of doing model selection. It minimizes the prediction error, while punishing complex models with many features. In a simple generalized linear model, using AIC as measure of model performance, a standard backward model selection would be to fit the model with all features included, then fit models removing one feature at the time and calculate AIC for those candidates, select the one with the lowest AIC. Removing one parameter will make the model more parsimonious (less complex), but also decrease the flexibility of the model to fit the data better. AIC is then meant to balance these two opposing interest in a good way.</p>
+</div>
+<div id="forward-feature-selection" class="section level2 unnumbered">
+<h2>Forward feature selection</h2>
+<p>If backward feature selection means starting with a full model using all covariates available, then forward selection must mean starting with no features. This is in fact the case. Instead of starting with the full model and look for the least important feature as in backward feature selection, we start with a intercept-only model and in each iteration, we look for the single feature that will improve our model the most. This means we must run through all potential new features to be added, and select the one that improves the model performance measure the most. This is continued until no new feature candidates improve the model fit.</p>
+<p>In the figure below, we illustrate the difference between backward and forward selection. The red color means features selected and blue are not selected for the X-es. As you see the forward feature selection takes more steps, but also each step is more computational.</p>
+<p><img src="ppt/back-forward_feature_selection.png" width="1902" /></p>
+</div>
+<div id="recursive-feature-elimination" class="section level2 unnumbered">
+<h2>Recursive feature elimination</h2>
+<p>This is a greedy optimization algorithm which aims to find the best feature subset in terms of model performance. It creates models repeatedly by taking out the best and worst performing feature and continues with the ones that are left. The procedure is repeated until there is no features left. It then ranks the features based on their order of elimination. This will be illustrated in the exercises.</p>
+</div>
+<div id="example-5" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> Example</h2>
+<p>Let us now look at how this can be executed in R on a example. The <em>adult</em> dataset contains information on 48 842 adults and whether or not their income exceeds USD 50.000. The data is published by github user guru99-edu and downloaded from github. We will use a logistic regression model and do feature selection using backward and forward stepwise feature selection. The features are</p>
+<ul>
+<li>age</li>
+<li>workclass (e.g. private sector, local government, never-worked, etc.)</li>
+<li>education (highest level education level completed)</li>
+<li>educational.num (numeric version fo the above)</li>
+<li>gender</li>
+<li>marital status</li>
+<li>race</li>
+<li>hours.per.week</li>
+</ul>
+<p>For the sake of the example the details about the features is not so important, but it will be interesting to see if we end up selecting the same features using the different approaches.</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="lecture9.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb194-2"><a href="lecture9.html#cb194-2" aria-hidden="true" tabindex="-1"></a>data_adult <span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/guru99-edu/R-Programming/master/adult.csv&quot;</span>)</span>
+<span id="cb194-3"><a href="lecture9.html#cb194-3" aria-hidden="true" tabindex="-1"></a>data_adult <span class="ot">&lt;-</span> <span class="fu">mutate</span>(data_adult, </span>
+<span id="cb194-4"><a href="lecture9.html#cb194-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">workclass =</span> <span class="fu">factor</span>(workclass),</span>
+<span id="cb194-5"><a href="lecture9.html#cb194-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">education =</span> <span class="fu">factor</span>(education),</span>
+<span id="cb194-6"><a href="lecture9.html#cb194-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">marital.status =</span> <span class="fu">factor</span>(marital.status), </span>
+<span id="cb194-7"><a href="lecture9.html#cb194-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">race =</span> <span class="fu">factor</span>(race),</span>
+<span id="cb194-8"><a href="lecture9.html#cb194-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">gender =</span> <span class="fu">factor</span>(gender),</span>
+<span id="cb194-9"><a href="lecture9.html#cb194-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">income =</span> <span class="fu">factor</span>(income)) <span class="sc">%&gt;%</span></span>
+<span id="cb194-10"><a href="lecture9.html#cb194-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>x)</span>
+<span id="cb194-11"><a href="lecture9.html#cb194-11" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(data_adult)</span></code></pre></div>
+<pre><code>## Rows: 48,842
+## Columns: 9
+## $ age             &lt;int&gt; 25, 38, 28, 44, 18, 34, 29, 63, 24, 55, 65, 36, 26, 58, 48, 43, 20, 43, 37, 40, 34, 34, 72, 25,~
+## $ workclass       &lt;fct&gt; Private, Private, Local-gov, Private, ?, Private, ?, Self-emp-not-inc, Private, Private, Privat~
+## $ education       &lt;fct&gt; 11th, HS-grad, Assoc-acdm, Some-college, Some-college, 10th, HS-grad, Prof-school, Some-college~
+## $ educational.num &lt;int&gt; 7, 9, 12, 10, 10, 6, 9, 15, 10, 4, 9, 13, 9, 9, 9, 14, 10, 9, 9, 16, 13, 10, 4, 13, 13, 9, 9, 9~
+## $ marital.status  &lt;fct&gt; Never-married, Married-civ-spouse, Married-civ-spouse, Married-civ-spouse, Never-married, Never~
+## $ race            &lt;fct&gt; Black, White, White, Black, White, White, Black, White, White, White, White, White, White, Whit~
+## $ gender          &lt;fct&gt; Male, Male, Male, Male, Female, Male, Male, Male, Female, Male, Male, Male, Female, Male, Male,~
+## $ hours.per.week  &lt;int&gt; 40, 50, 40, 40, 30, 30, 40, 32, 40, 10, 40, 40, 39, 35, 48, 50, 25, 30, 20, 45, 47, 35, 6, 43, ~
+## $ income          &lt;fct&gt; &lt;=50K, &lt;=50K, &gt;50K, &gt;50K, &lt;=50K, &lt;=50K, &lt;=50K, &gt;50K, &lt;=50K, &lt;=50K, &gt;50K, &lt;=50K, &lt;=50K, &lt;=50K, &gt;~</code></pre>
+<p>We start by fitting a full logistic regression model with all covariates included:</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="lecture9.html#cb196-1" aria-hidden="true" tabindex="-1"></a>full_mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(income <span class="sc">~</span> ., <span class="at">data =</span> data_adult, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb196-2"><a href="lecture9.html#cb196-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(full_mod)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = income ~ ., family = binomial(link = &quot;logit&quot;), 
+##     data = data_adult)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7049  -0.5688  -0.2543  -0.0703   3.3515  
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                         -7.935941   0.236015 -33.625  &lt; 2e-16 ***
+## age                                  0.029900   0.001218  24.541  &lt; 2e-16 ***
+## workclassFederal-gov                 1.420617   0.104491  13.596  &lt; 2e-16 ***
+## workclassLocal-gov                   0.789196   0.092966   8.489  &lt; 2e-16 ***
+## workclassNever-worked               -7.849767  89.422236  -0.088  0.93005    
+## workclassPrivate                     0.891468   0.081278  10.968  &lt; 2e-16 ***
+## workclassSelf-emp-inc                1.307273   0.100092  13.061  &lt; 2e-16 ***
+## workclassSelf-emp-not-inc            0.293183   0.090353   3.245  0.00118 ** 
+## workclassState-gov                   0.599916   0.102549   5.850 4.92e-09 ***
+## workclassWithout-pay                -0.602072   0.800921  -0.752  0.45222    
+## education11th                        0.142405   0.163843   0.869  0.38476    
+## education12th                        0.550194   0.201383   2.732  0.00629 ** 
+## education1st-4th                    -1.077687   0.384596  -2.802  0.00508 ** 
+## education5th-6th                    -0.457775   0.235211  -1.946  0.05163 .  
+## education7th-8th                    -0.467006   0.180613  -2.586  0.00972 ** 
+## education9th                        -0.305767   0.204467  -1.495  0.13480    
+## educationAssoc-acdm                  1.900402   0.136195  13.954  &lt; 2e-16 ***
+## educationAssoc-voc                   1.717694   0.131599  13.052  &lt; 2e-16 ***
+## educationBachelors                   2.615693   0.121632  21.505  &lt; 2e-16 ***
+## educationDoctorate                   3.717102   0.162183  22.919  &lt; 2e-16 ***
+## educationHS-grad                     1.034718   0.120284   8.602  &lt; 2e-16 ***
+## educationMasters                     3.093768   0.128050  24.161  &lt; 2e-16 ***
+## educationPreschool                  -1.587742   1.024289  -1.550  0.12112    
+## educationProf-school                 3.759084   0.151998  24.731  &lt; 2e-16 ***
+## educationSome-college                1.547119   0.121455  12.738  &lt; 2e-16 ***
+## educational.num                            NA         NA      NA       NA    
+## marital.statusMarried-AF-spouse      2.335361   0.384067   6.081 1.20e-09 ***
+## marital.statusMarried-civ-spouse     2.102725   0.050028  42.031  &lt; 2e-16 ***
+## marital.statusMarried-spouse-absent  0.087831   0.157033   0.559  0.57594    
+## marital.statusNever-married         -0.471977   0.061285  -7.701 1.35e-14 ***
+## marital.statusSeparated             -0.106535   0.118860  -0.896  0.37009    
+## marital.statusWidowed               -0.077235   0.110240  -0.701  0.48355    
+## raceAsian-Pac-Islander               0.215697   0.179562   1.201  0.22966    
+## raceBlack                            0.214721   0.171228   1.254  0.20984    
+## raceOther                            0.133020   0.242955   0.548  0.58403    
+## raceWhite                            0.482408   0.163494   2.951  0.00317 ** 
+## genderMale                           0.108124   0.037490   2.884  0.00393 ** 
+## hours.per.week                       0.030386   0.001190  25.544  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 53751  on 48841  degrees of freedom
+## Residual deviance: 35554  on 48805  degrees of freedom
+## AIC: 35628
+## 
+## Number of Fisher Scoring iterations: 11</code></pre>
+<p>As you can see, there is lots of features that are <em>not statistically significant</em> by having a p-value above 5%, although this is not a big concern for us. We are searching for the model with the best prediction performance in terms of Akaike’s information criterion (AIC). We start by doing a downward feature selection with the <em>step</em> function included in the base R package <em>stats</em>. When only specifying the full model to the step function, it will perform backward stepwise feature selection by default.</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="lecture9.html#cb198-1" aria-hidden="true" tabindex="-1"></a>back_mod <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">step</span>(full_mod)</span></code></pre></div>
+<pre><code>## Start:  AIC=35628.5
+## income ~ age + workclass + education + educational.num + marital.status + 
+##     race + gender + hours.per.week
+## 
+## 
+## Step:  AIC=35628.5
+## income ~ age + workclass + education + marital.status + race + 
+##     gender + hours.per.week
+## 
+##                  Df Deviance   AIC
+## &lt;none&gt;                 35554 35628
+## - gender          1    35563 35635
+## - race            4    35601 35667
+## - workclass       8    36002 36060
+## - age             1    36164 36236
+## - hours.per.week  1    36226 36298
+## - education      15    40586 40630
+## - marital.status  6    41221 41283</code></pre>
+<p>Here you can follow the steps and see all the candidate models with what value of AIC they have. Here we actually stop after just one iteration - the only feature being removed is the educational.num. The best alternative in the final iteration is to do no changes in what features to include.
+The model we end up with can be printed by:</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="lecture9.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(back_mod)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = income ~ age + workclass + education + marital.status + 
+##     race + gender + hours.per.week, family = binomial(link = &quot;logit&quot;), 
+##     data = data_adult)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7049  -0.5688  -0.2543  -0.0703   3.3515  
+## 
+## Coefficients:
+##                                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                         -7.935941   0.236015 -33.625  &lt; 2e-16 ***
+## age                                  0.029900   0.001218  24.541  &lt; 2e-16 ***
+## workclassFederal-gov                 1.420617   0.104491  13.596  &lt; 2e-16 ***
+## workclassLocal-gov                   0.789196   0.092966   8.489  &lt; 2e-16 ***
+## workclassNever-worked               -7.849767  89.422236  -0.088  0.93005    
+## workclassPrivate                     0.891468   0.081278  10.968  &lt; 2e-16 ***
+## workclassSelf-emp-inc                1.307273   0.100092  13.061  &lt; 2e-16 ***
+## workclassSelf-emp-not-inc            0.293183   0.090353   3.245  0.00118 ** 
+## workclassState-gov                   0.599916   0.102549   5.850 4.92e-09 ***
+## workclassWithout-pay                -0.602072   0.800921  -0.752  0.45222    
+## education11th                        0.142405   0.163843   0.869  0.38476    
+## education12th                        0.550194   0.201383   2.732  0.00629 ** 
+## education1st-4th                    -1.077687   0.384596  -2.802  0.00508 ** 
+## education5th-6th                    -0.457775   0.235211  -1.946  0.05163 .  
+## education7th-8th                    -0.467006   0.180613  -2.586  0.00972 ** 
+## education9th                        -0.305767   0.204467  -1.495  0.13480    
+## educationAssoc-acdm                  1.900402   0.136195  13.954  &lt; 2e-16 ***
+## educationAssoc-voc                   1.717694   0.131599  13.052  &lt; 2e-16 ***
+## educationBachelors                   2.615693   0.121632  21.505  &lt; 2e-16 ***
+## educationDoctorate                   3.717102   0.162183  22.919  &lt; 2e-16 ***
+## educationHS-grad                     1.034718   0.120284   8.602  &lt; 2e-16 ***
+## educationMasters                     3.093768   0.128050  24.161  &lt; 2e-16 ***
+## educationPreschool                  -1.587742   1.024289  -1.550  0.12112    
+## educationProf-school                 3.759084   0.151998  24.731  &lt; 2e-16 ***
+## educationSome-college                1.547119   0.121455  12.738  &lt; 2e-16 ***
+## marital.statusMarried-AF-spouse      2.335361   0.384067   6.081 1.20e-09 ***
+## marital.statusMarried-civ-spouse     2.102725   0.050028  42.031  &lt; 2e-16 ***
+## marital.statusMarried-spouse-absent  0.087831   0.157033   0.559  0.57594    
+## marital.statusNever-married         -0.471977   0.061285  -7.701 1.35e-14 ***
+## marital.statusSeparated             -0.106535   0.118860  -0.896  0.37009    
+## marital.statusWidowed               -0.077235   0.110240  -0.701  0.48355    
+## raceAsian-Pac-Islander               0.215697   0.179562   1.201  0.22966    
+## raceBlack                            0.214721   0.171228   1.254  0.20984    
+## raceOther                            0.133020   0.242955   0.548  0.58403    
+## raceWhite                            0.482408   0.163494   2.951  0.00317 ** 
+## genderMale                           0.108124   0.037490   2.884  0.00393 ** 
+## hours.per.week                       0.030386   0.001190  25.544  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 53751  on 48841  degrees of freedom
+## Residual deviance: 35554  on 48805  degrees of freedom
+## AIC: 35628
+## 
+## Number of Fisher Scoring iterations: 11</code></pre>
+<p>As you can see from the output, we kept age, workclass, education, marital.status, race, gender, hours.per.week and intercept. Let’s see what the forward algorithm will end up with.</p>
+<p>To do the forward feature seleciton, we also need the intercept only model.</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="lecture9.html#cb202-1" aria-hidden="true" tabindex="-1"></a>interceptOnly_mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(income <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> data_adult, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb202-2"><a href="lecture9.html#cb202-2" aria-hidden="true" tabindex="-1"></a>forward_mod <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">step</span>(interceptOnly_mod, <span class="at">scope=</span><span class="fu">list</span>(<span class="at">lower=</span>interceptOnly_mod, <span class="at">upper=</span>full_mod), <span class="at">direction=</span><span class="st">&quot;forward&quot;</span>)</span></code></pre></div>
+<pre><code>## Start:  AIC=53752.68
+## income ~ 1
+## 
+##                   Df Deviance   AIC
+## + marital.status   6    43120 43134
+## + education       15    47517 47549
+## + educational.num  1    47775 47779
+## + hours.per.week   1    51160 51164
+## + age              1    51214 51218
+## + gender           1    51266 51270
+## + workclass        8    52242 52260
+## + race             4    53196 53206
+## &lt;none&gt;                  53751 53753
+## 
+## Step:  AIC=43134.15
+## income ~ marital.status
+## 
+##                   Df Deviance   AIC
+## + education       15    37334 37378
+## + educational.num  1    37478 37494
+## + hours.per.week   1    42025 42041
+## + workclass        8    42284 42314
+## + age              1    42687 42703
+## + race             4    42954 42976
+## + gender           1    43039 43055
+## &lt;none&gt;                  43120 43134
+## 
+## Step:  AIC=37377.94
+## income ~ marital.status + education
+## 
+##                  Df Deviance   AIC
+## + hours.per.week  1    36614 36660
+## + workclass       8    36843 36903
+## + age             1    36915 36961
+## + gender          1    37230 37276
+## + race            4    37264 37316
+## &lt;none&gt;                 37334 37378
+## 
+## Step:  AIC=36659.86
+## income ~ marital.status + education + hours.per.week
+## 
+##             Df Deviance   AIC
+## + age        1    36055 36103
+## + workclass  8    36249 36311
+## + race       4    36559 36613
+## + gender     1    36583 36631
+## &lt;none&gt;            36614 36660
+## 
+## Step:  AIC=36102.83
+## income ~ marital.status + education + hours.per.week + age
+## 
+##             Df Deviance   AIC
+## + workclass  8    35611 35675
+## + race       4    36013 36069
+## + gender     1    36041 36091
+## &lt;none&gt;            36055 36103
+## 
+## Step:  AIC=35675.15
+## income ~ marital.status + education + hours.per.week + age + 
+##     workclass
+## 
+##          Df Deviance   AIC
+## + race    4    35563 35635
+## + gender  1    35601 35667
+## &lt;none&gt;         35611 35675
+## 
+## Step:  AIC=35634.83
+## income ~ marital.status + education + hours.per.week + age + 
+##     workclass + race
+## 
+##          Df Deviance   AIC
+## + gender  1    35554 35628
+## &lt;none&gt;         35563 35635
+## 
+## Step:  AIC=35628.5
+## income ~ marital.status + education + hours.per.week + age + 
+##     workclass + race + gender
+## 
+##        Df Deviance   AIC
+## &lt;none&gt;       35554 35628</code></pre>
+<p>The model we end up with is</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="lecture9.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(forward_mod)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = income ~ marital.status + education + hours.per.week + 
+##     age + workclass + race + gender, family = binomial(link = &quot;logit&quot;), 
+##     data = data_adult)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7049  -0.5688  -0.2543  -0.0703   3.3515  
+## 
+## Coefficients:
+##                                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                         -7.935941   0.236015 -33.625  &lt; 2e-16 ***
+## marital.statusMarried-AF-spouse      2.335361   0.384067   6.081 1.20e-09 ***
+## marital.statusMarried-civ-spouse     2.102725   0.050028  42.031  &lt; 2e-16 ***
+## marital.statusMarried-spouse-absent  0.087831   0.157033   0.559  0.57594    
+## marital.statusNever-married         -0.471977   0.061285  -7.701 1.35e-14 ***
+## marital.statusSeparated             -0.106535   0.118860  -0.896  0.37009    
+## marital.statusWidowed               -0.077235   0.110240  -0.701  0.48355    
+## education11th                        0.142405   0.163843   0.869  0.38476    
+## education12th                        0.550194   0.201383   2.732  0.00629 ** 
+## education1st-4th                    -1.077687   0.384596  -2.802  0.00508 ** 
+## education5th-6th                    -0.457775   0.235211  -1.946  0.05163 .  
+## education7th-8th                    -0.467006   0.180613  -2.586  0.00972 ** 
+## education9th                        -0.305767   0.204467  -1.495  0.13480    
+## educationAssoc-acdm                  1.900402   0.136195  13.954  &lt; 2e-16 ***
+## educationAssoc-voc                   1.717694   0.131599  13.052  &lt; 2e-16 ***
+## educationBachelors                   2.615693   0.121632  21.505  &lt; 2e-16 ***
+## educationDoctorate                   3.717102   0.162183  22.919  &lt; 2e-16 ***
+## educationHS-grad                     1.034718   0.120284   8.602  &lt; 2e-16 ***
+## educationMasters                     3.093768   0.128050  24.161  &lt; 2e-16 ***
+## educationPreschool                  -1.587742   1.024289  -1.550  0.12112    
+## educationProf-school                 3.759084   0.151998  24.731  &lt; 2e-16 ***
+## educationSome-college                1.547119   0.121455  12.738  &lt; 2e-16 ***
+## hours.per.week                       0.030386   0.001190  25.544  &lt; 2e-16 ***
+## age                                  0.029900   0.001218  24.541  &lt; 2e-16 ***
+## workclassFederal-gov                 1.420617   0.104491  13.596  &lt; 2e-16 ***
+## workclassLocal-gov                   0.789196   0.092966   8.489  &lt; 2e-16 ***
+## workclassNever-worked               -7.849767  89.422236  -0.088  0.93005    
+## workclassPrivate                     0.891468   0.081278  10.968  &lt; 2e-16 ***
+## workclassSelf-emp-inc                1.307273   0.100092  13.061  &lt; 2e-16 ***
+## workclassSelf-emp-not-inc            0.293183   0.090353   3.245  0.00118 ** 
+## workclassState-gov                   0.599916   0.102549   5.850 4.92e-09 ***
+## workclassWithout-pay                -0.602072   0.800921  -0.752  0.45222    
+## raceAsian-Pac-Islander               0.215697   0.179562   1.201  0.22966    
+## raceBlack                            0.214721   0.171228   1.254  0.20984    
+## raceOther                            0.133020   0.242955   0.548  0.58403    
+## raceWhite                            0.482408   0.163494   2.951  0.00317 ** 
+## genderMale                           0.108124   0.037490   2.884  0.00393 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 53751  on 48841  degrees of freedom
+## Residual deviance: 35554  on 48805  degrees of freedom
+## AIC: 35628
+## 
+## Number of Fisher Scoring iterations: 11</code></pre>
+<p>The selected features are marital.status, education, hours.per.week, age, workclass, race, gender, and intercept - same as for the backward feature selection.</p>
+<p>In the exercises you will also learn about recursive feature elimination and how to implement this using the <em>caret</em> package.</p>
+<div id="data-camp-6" class="section level3 unnumbered">
+<h3>Data camp</h3>
+<p>We highly recommend the data camp course <a href="https://app.datacamp.com/learn/courses/supervised-learning-in-r-classification">Supervised Learning in R: Classification "</a> chapters 1-3.
+(ch 3, video on automatic feature selection).</p>
 
+</div>
+</div>
 </div>
             </section>
 

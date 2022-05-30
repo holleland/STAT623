@@ -6,10 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title> 2 Over-fitting and model tuning, selection and evaluation and multiple regression | Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content=" 2 Over-fitting and model tuning, selection and evaluation and multiple regression | Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
+  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -31,6 +32,7 @@
   
 <link rel="prev" href="lecture1.html"/>
 <link rel="next" href="lecture3.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -48,9 +50,8 @@
 
 
 
-<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
-<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -266,7 +267,16 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
+<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#backward-feature-selection"><i class="fa fa-check"></i>Backward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#forward-feature-selection"><i class="fa fa-check"></i>Forward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#recursive-feature-elimination"><i class="fa fa-check"></i>Recursive feature elimination</a></li>
+<li class="chapter" data-level="9.1" data-path="lecture9.html"><a href="lecture9.html#example-5"><i class="fa fa-check"></i><b>9.1</b> Example</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#data-camp-6"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -288,11 +298,11 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lecture2" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number"> 2</span> Over-fitting and model tuning, selection and evaluation and multiple regression<a href="lecture2.html#lecture2" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="lecture2" class="section level1" number="2">
+<h1><span class="header-section-number"> 2</span> Over-fitting and model tuning, selection and evaluation and multiple regression</h1>
 <p>In this lecture we will cover the terms <em>overfitting</em>, <em>training-</em>, <em>validation-</em> and <em>test</em> sets, <em>model selection</em> and <em>-evaluation</em>. These terms are part of the chargong of predictive modelling and is something we need to get familiar with before learning about specific models. Towards the end of this lecture, we will learn about multiple regression.</p>
-<div id="overfitting" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> Overfitting<a href="lecture2.html#overfitting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="overfitting" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Overfitting</h2>
 <p><strong>Overfitting</strong> is the phenomenon when you build a model that fits (almost) “perfectly” to the training set, but when applied to new data the performance is low. For the modeller there is a balance between choosing a model that has a good fit to the training data, but also generalize well to new data. The goal for the model should be to discover the underlying signal and not fit to all the noise.</p>
 <p>We will illustrate overfitting by an example with simulated data and GAM models (topic for the lecture <a href="lecture3.html#lecture3">Lecture 3</a>)</p>
 <!-- Could make this into a movie from here and out -->
@@ -379,8 +389,8 @@ div.csl-indent {
 <span id="cb16-4"><a href="lecture2.html#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred2, <span class="at">col =</span> <span class="st">&quot;fit2&quot;</span>))</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/plotoverfit-1.png" width="672" /></p>
 </div>
-<div id="training-validation-and-test-split" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Training, validation and test split<a href="lecture2.html#training-validation-and-test-split" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="training-validation-and-test-split" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Training, validation and test split</h2>
 <p>In order to evaluate a predictive model’s performance, we should test its predictive abilities on data the model has never seen before (during model fitting). Usually, you only have one dataset to start with, so it is common to split the original data into three subsets; a training set, a validation set and a test set.</p>
 <p><strong>The training set</strong> is the data used to “train” the model, meaning estimating its parameters. If your original data is split, this will typically be the biggest portion of the data. One should measure the model performance on the training data, but this should not be used solely for model selection. If your model has a very good fit to the training data, this can often lead to overfitting issues when applying the model to new data. This is one of the reasons for using a validation set.</p>
 <p><strong>The validation set</strong> is used for tackling overfitting and doing model selection. This is a smaller portion of the data not seen during training, which is key. We can therefore measure the models performance on these unseen data and if the model performs similarly as on the traning data, this means it generalizes well to new situations and overfitting is likely not a big issue. If the performance is high in training and low for validation, this is a sign of overfitting. If you are in a scenario where you have many different candidate models, either from different model families or the same model but with different setups, you can use the validation set to select “the best” model according to the performance criteria you have chosen.</p>
@@ -393,16 +403,16 @@ Figure2.1: Summary of the three-way data split.
 </div>
 <p>We will illustrate how this three-way split can be used on an example, after we have learned about multiple regression.</p>
 </div>
-<div id="multiple-regression" class="section level2 hasAnchor" number="2.3">
-<h2><span class="header-section-number">2.3</span> Multiple regression<a href="lecture2.html#multiple-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="multiple-regression" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Multiple regression</h2>
 <p>Multiple regression is an extension of simple linear regression, where more than one covariate is used to predict the value of the dependent variable (the <em>Y</em>). The form of the predictor is a linear combination of the set of explanatory variables, i.e.
 <span class="math display">\[\widehat Y_i = \beta_0 + \beta_1X_{i1}  + \ldots + \beta_p X_{ip},\quad i=1,\ldots,n,\]</span>
 where <span class="math inline">\(\widehat Y_i\)</span> is the predictor of observation <span class="math inline">\(i\)</span>, <span class="math inline">\(\beta_0, \ldots, \beta_p\)</span> are the parameters and <span class="math inline">\(X_{\cdot 1}, \ldots, X_{\cdot p}\)</span> are the vectors of explanatory variables. It is quite common to write the equation above on vector form. Define the vectors <span class="math inline">\(\widehat{\mathbf{Y}}=(\widehat Y_1, \ldots, \widehat Y_n)&#39;\)</span> and <span class="math inline">\(\boldsymbol{\beta} = (\beta_0, \ldots, \beta_p)&#39;\)</span>, and the <em>design matrix</em> <span class="math inline">\(\mathbb X = (\mathbf{1}, \mathbf X_{\cdot 1},\ldots, \mathbf X_{\cdot p})\)</span>. Then the equation above can be written as</p>
 <p><span class="math display">\[\widehat{\mathbf{Y}} = \mathbb X\,\boldsymbol\beta.\]</span></p>
 <p>The assumptions are that the residuals, <span class="math inline">\(Z_i = Y_i - \widehat Y_i\)</span>, <span class="math inline">\(i=1,\ldots, n\)</span> are independent and normally distributed. The explanatory variables should not be correlated. Parameters are estimated using maximum likelihood estimation. Note that we are using capital letters here. This is a statistical convention when we are talking about variables. Once we introduce observations, we switch to small letters for the same quantities.</p>
 <p>To learn more about multiple regression, take the datacamp course <a href="https://app.datacamp.com/learn/courses/multiple-and-logistic-regression-in-r"><em>Multiple and Logistic Regression in R</em></a>. For now you can focus on the multiple regression part. We will simply go on to illustrate usage by an example.</p>
-<div id="example" class="section level3 hasAnchor" number="2.3.1">
-<h3><span class="header-section-number">2.3.1</span> Example<a href="lecture2.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="example" class="section level3" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Example</h3>
 <p>In this example, we consider a dataset containing the impact of three advertising medias (youtube, facebook and newspaper) on sales for different companies. The advertising budgets and sales are in thousands of dollars and the advertising experiment has been repeated 200 times. We will use multiple regression to model the relationship between sales and the advertising budgets from the different medias. In the video below we walk you through the example, but you can also read it below.</p>
 <div style="padding:56.25% 0 0 0;position:relative;">
 <iframe src="https://player.vimeo.com/video/690634468?h=816a975dee&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;">
@@ -525,7 +535,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <span id="cb30-7"><a href="lecture2.html#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;models&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;pred&quot;</span>)  <span class="sc">%&gt;%</span></span>
 <span id="cb30-8"><a href="lecture2.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(models) <span class="sc">%&gt;%</span></span>
 <span id="cb30-9"><a href="lecture2.html#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((sales<span class="sc">-</span>pred)<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
-<pre><code>## # A tibble: 3 × 2
+<pre><code>## # A tibble: 3 x 2
 ##   models  RMSE
 ##   &lt;chr&gt;  &lt;dbl&gt;
 ## 1 mod1    1.16
@@ -540,7 +550,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <span id="cb32-6"><a href="lecture2.html#cb32-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
 <span id="cb32-7"><a href="lecture2.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;models&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;pred&quot;</span>) </span>
 <span id="cb32-8"><a href="lecture2.html#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(predictions)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 6
+<pre><code>## # A tibble: 6 x 6
 ##   youtube facebook newspaper sales models  pred
 ##     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;
 ## 1    240.     3.12      25.4  12.7 mod1    13.4
@@ -552,7 +562,7 @@ This model can be set up by different <em>formula</em> arguments in R. The diffe
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="lecture2.html#cb34-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="sc">%&gt;%</span></span>
 <span id="cb34-2"><a href="lecture2.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(models) <span class="sc">%&gt;%</span></span>
 <span id="cb34-3"><a href="lecture2.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((sales<span class="sc">-</span>pred)<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
-<pre><code>## # A tibble: 3 × 2
+<pre><code>## # A tibble: 3 x 2
 ##   models  RMSE
 ##   &lt;chr&gt;  &lt;dbl&gt;
 ## 1 mod1   0.957

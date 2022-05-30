@@ -46,7 +46,7 @@ Lectures <- data.frame(
               "Support vector machines",
               "Neural Networks",
               #"Unsupervised learning",
-              "Feature selection/Explainable AI"),
+              "Feature selection"),
   Exercises = c("Recap of R",
                 "Multiple regression",
                 "GAMs",

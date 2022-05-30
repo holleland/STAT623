@@ -6,10 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title> 5 Decision Trees and Bagged Trees | Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content=" 5 Decision Trees and Bagged Trees | Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
+  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -31,6 +32,7 @@
   
 <link rel="prev" href="lecture4.html"/>
 <link rel="next" href="lecture6.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -48,9 +50,8 @@
 
 
 
-<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
-<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -266,7 +267,16 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
+<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#backward-feature-selection"><i class="fa fa-check"></i>Backward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#forward-feature-selection"><i class="fa fa-check"></i>Forward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#recursive-feature-elimination"><i class="fa fa-check"></i>Recursive feature elimination</a></li>
+<li class="chapter" data-level="9.1" data-path="lecture9.html"><a href="lecture9.html#example-5"><i class="fa fa-check"></i><b>9.1</b> Example</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#data-camp-6"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -288,14 +298,14 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lecture5" class="section level1 hasAnchor" number="5">
-<h1><span class="header-section-number"> 5</span> Decision Trees and Bagged Trees<a href="lecture5.html#lecture5" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="lecture5" class="section level1" number="5">
+<h1><span class="header-section-number"> 5</span> Decision Trees and Bagged Trees</h1>
 <p>In this lecture we will learn about decision trees and bagged trees for classification or regression models. As in the previous lecture, we will use the tidymodels framework <span class="citation">(<a href="#ref-tidymodels" role="doc-biblioref">Kuhn and Wickham 2020</a>)</span>. If you have not installed <em>tidymodels</em>, this can be done by</p>
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="lecture5.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidymodels&quot;</span>)</span></code></pre></div>
 <p>This lecture is highly inspired by the data camp course <em>Machine learning with three based models in R</em> (see link at the buttom).</p>
 <p>We start with decision trees.</p>
-<div id="decision-trees" class="section level2 hasAnchor" number="5.1">
-<h2><span class="header-section-number">5.1</span> Decision trees<a href="lecture5.html#decision-trees" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="decision-trees" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Decision trees</h2>
 <p>A decision tree is a classifier that can be represented as a flow chart that looks like a tree. In each prediction, we start at the root asking a question deciding to which branch we should go for the prediction. As an example, say we want to predict whether or not a person likes computer games and make a decision tree for solving that problem. We have illustrated such a tree below. First you must ask: Is the person younger than 15 years old? If yes, predict that the person likes computer games. If the answer is no, is the person a boy? If yes, predict YES, he likes computer games, or if no, then NO, she does not like computer games.</p>
 <div class="figure">
 <img src="ppt/decisiontree_computergames.png" alt="A simple decision tree" width="1520" />
@@ -303,7 +313,7 @@ div.csl-indent {
 (#fig:decisiontree_computergames)A simple decision tree
 </p>
 </div>
-<p>In the illustration we have tried to make the decision tree “grow from the ground-up”, but it is most common to print them the other way around.</p>
+<p>In the illustration we have tried to make the decision tree “grow from the ground-up,” but it is most common to print them the other way around.</p>
 <p>The pros of decision trees are:</p>
 <ul>
 <li>Easy to explain and intuitive to understand</li>
@@ -364,7 +374,7 @@ div.csl-indent {
 <span id="cb87-2"><a href="lecture5.html#cb87-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">predict</span>(df_test) <span class="sc">%&gt;%</span>      <span class="co"># predict on the test set</span></span>
 <span id="cb87-3"><a href="lecture5.html#cb87-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span>    <span class="co"># bind columns (adding the truth and covariates) </span></span>
 <span id="cb87-4"><a href="lecture5.html#cb87-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metrics</span>(<span class="at">truth =</span> Species, <span class="at">estimate =</span> .pred_class) <span class="co"># calculate metrics</span></span></code></pre></div>
-<pre><code>## # A tibble: 2 × 3
+<pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
 ## 1 accuracy multiclass     0.949
@@ -381,8 +391,8 @@ div.csl-indent {
 ##   virginica       0          0        11</code></pre>
 <p>If you remember from the last lecture, this is the same result as we got using knn and naive bayes.</p>
 </div>
-<div id="bagged-trees" class="section level2 hasAnchor" number="5.2">
-<h2><span class="header-section-number">5.2</span> Bagged trees<a href="lecture5.html#bagged-trees" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="bagged-trees" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Bagged trees</h2>
 <p>Bagged threes is an ensemble method. This means, instead of fitting just one decision tree, we fit many, and aggregate the predictions from all of them to improve our final prediction. Bagging is short for bootstrap aggregation. Bootstrap is a method for resampling that we use on the training set to get many training sets with the same properties as the original one. We sample random rows of the training set with replacement to make these bootstrapped datasets and fit a decision tree to each of these.</p>
 <div class="figure">
 <img src="ppt/bootstrap_ensemble.png" alt="A bagged tree" width="1983" />
@@ -420,7 +430,7 @@ div.csl-indent {
 ## 
 ## Variable importance scores include:
 ## 
-## # A tibble: 4 × 4
+## # A tibble: 4 x 4
 ##   term         value std.error  used
 ##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
 ## 1 Petal.Length  66.8     0.320   100
@@ -433,7 +443,7 @@ div.csl-indent {
 <span id="cb95-2"><a href="lecture5.html#cb95-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">predict</span>(df_test) <span class="sc">%&gt;%</span>    </span>
 <span id="cb95-3"><a href="lecture5.html#cb95-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span>    </span>
 <span id="cb95-4"><a href="lecture5.html#cb95-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metrics</span>(<span class="at">truth =</span> Species, <span class="at">estimate =</span> .pred_class) </span></code></pre></div>
-<pre><code>## # A tibble: 2 × 3
+<pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
 ## 1 accuracy multiclass     0.949
@@ -450,14 +460,14 @@ div.csl-indent {
 ##   virginica       0          0        11</code></pre>
 <p>It seems this is the best we can do with the data that we have - same result as for knn, naive bayes and a simple decision tree.</p>
 <p>On data camp you will learn more about decision trees and bagged trees - also how to use them in a regression setting.</p>
-<div id="data-camp-2" class="section level3 unnumbered hasAnchor">
-<h3>Data camp<a href="lecture5.html#data-camp-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="data-camp-2" class="section level3 unnumbered">
+<h3>Data camp</h3>
 <p>We highly recommend the data camp course <a href="https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r">Machine Learning with Tree-Based Models in R</a> chapters 1-3.</p>
 
 </div>
 </div>
 </div>
-<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-tidymodels" class="csl-entry">
 Kuhn, Max, and Hadley Wickham. 2020. <em>Tidymodels: A Collection of Packages for Modeling and Machine Learning Using Tidyverse Principles.</em> <a href="https://www.tidymodels.org">https://www.tidymodels.org</a>.

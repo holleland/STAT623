@@ -1,13 +1,13 @@
 # Artificial Neural networks {#lecture8}
 ```{r "testupdate", eval = TRUE, echo = FALSE}
-knitr::opts_chunk$set(eval = TRUE) # TURN off running code in this chapter
+knitr::opts_chunk$set(eval = FALSE) # TURN off running code in this chapter
 ```
 This section describes the basics theory and classical optimization of an artificial neural network. This includes defining a 2-layer feed forward neural network, cost and objective functions, regularization and the manner in which a network can be trained to produce desired output. The section will be limited to so-called supervised learning, i.e. where know the true state of an output. The main references for this chapter are the textbook "Deep Learning" by @{goodfellow2016deep}.  
 
 ## Feed Forward Neural Networks
-Let $\mathbf{X}^{(i)}$ be an instance of data which is input to a deep learning model, with associated target values $\mathbf{y}^{(i)}$. A target value can be a class or as we will use later the data $\mathbf{X}^{(i)}$ itself. All the instances of $\mathbf{X}^{(i)},$ $i=1, \ldots N,$ constitute the data set $\mathbf{X}^{(i)}$, and all the target values $\mathbf{y}^{(i)},$ $i=1, \ldots N,$ comprise the data set $\mathbf{Y}.
+Let $\mathbf{X}^{(i)}$ be an instance of data which is input to a deep learning model, with associated target values $\mathbf{y}^{(i)}$. A target value can be a class or as we will use later the data $\mathbf{X}^{(i)}$ itself. All the instances of $\mathbf{X}^{(i)},$ $i=1, \ldots N,$ constitute the data set $\mathbf{X}^{(i)}$, and all the target values $\mathbf{y}^{(i)},$ $i=1, \ldots N,$ comprise the data set $\mathbf{Y}$.
 
-A feed forward neural network is a hierarchical model that consists of nodes or computational units divided into subsequent layers. For each node, a non-linear activation function is applied. The nodes between each layer are connected, so that the input to a node is totally dependent on the output from the nodes of the previous layer. The model is called a \textit{deep learning model} if there are multiple hidden layers; see \cref{fig:NN_model}. The simplest deep learning model has at least one hidden layer: an input layer and an output layer. This hierarchical structure makes it possible to formulate the deep learning model as a linear system of equations.
+A feed forward neural network is a hierarchical model that consists of nodes or computational units divided into subsequent layers. For each node, a non-linear activation function is applied. The nodes between each layer are connected, so that the input to a node is totally dependent on the output from the nodes of the previous layer. The model is called a *deep learning model* if there are multiple hidden layers; see \@ref(#fig:NN_model). The simplest deep learning model has at least one hidden layer: an input layer and an output layer. This hierarchical structure makes it possible to formulate the deep learning model as a linear system of equations.
 
 ![Illustration of a deep neural network with three hidden layers](ppt/neuralnet_fig.png){#fig:NN_model}
 
@@ -27,7 +27,7 @@ In regression problems we want to estimate relations between variables; we want 
 It has been shown that ANN is a universal approximation @{hornik1989multilayer}; thus, our goal is to find the weights of the given network to best approximate the map from the input to the output. This means that we want to estimate the weights of the ANN $\mathbf{\omega}$, given the input data $\mathbf{x}^{(i)}$, the target $\mathbf{y}^{(i)}$ such that the predictions $\widehat{\mathbf{y}}^{(i)}$ is minimized towards the true target values $\mathbf{y}^{(i)}$. This is a typical optimization problem, which can be minimized with an objective function and optimization procedure. 
 
 ## Objective functions and training
-An objective function for use in deep learning typically contains two terms: cost function and regularization. The cost function takes the predicted and the true values as input. Depending on the task and what one wants to minimize, the cost function maximizes a likelihood. In classification problems this is can be the negative cross entropy
+An objective function for use in deep learning typically contains two terms: cost function and regularization. The cost function takes the predicted and the true values as input. Depending on the task and what one wants to minimize, the cost function maximizes a likelihood. In classification problems this is often the negative cross entropy
 
 $$\mathcal{C}_1^{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}}(\mathbf{X},\mathbf{Y}) = -             \frac{1}{N}\sum\limits_{j=1}^{N}\mathbf{y}^{(i)}_j\log(\widehat{\mathbf{y}}^{(i)}_j) = -\log p(\mathbf{Y}|\mathbf{f}^{\mathbf{\omega}}(\mathbf{X})),$$
 and in regression problems the Mean Squared Error (MSE)
@@ -45,13 +45,9 @@ Regularization in neural networks work by penalizing the cost function, e.g. for
 
 $$\mathcal{L}(\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}) = \mathcal{C}^{\mathbf{W}_1, \mathbf{W}_2, \mathbf{b}}(\mathbf{X},\mathbf{Y}) + \lambda_1||\mathbf{W}_1||^2 + \lambda_2||\mathbf{W}_2||^2 + \lambda_3||\mathbf{b}||^2$$
 
-Another common way of regularizing the cost function is through dropout, which is a stochastic regularization technique. In the example later we will utelize dropout as regularization. 
+Another common way of regularizing the cost function is through dropout, which is a stochastic regularization technique. In the example later we will utilize dropout as regularization. Minimizing the objective function with respect to the weights $\mathbf{\omega}$ with a gradient descent optimization method has proven to give good results in a wide range of applications. The gradient descent method  @{curry1944method} updates the parameter $\mathbf{\omega}$ using the entire data set
 
-Minimizing the objective function with respect to the weights $\mathbf{\omega}$ with a gradient descent optimization method has proven to give good results in a wide range of applications.
-
-The gradient descent method  @{curry1944method} updates the parameter $\mathbf{\omega}$ using the entire data set
-
-  $$\mathbf{\omega}_t = \mathbf{\omega}_{t-1} - \eta \nabla \mathcal{L}(\mathbf{\omega}_{t-1}). $$
+$$\mathbf{\omega}_t = \mathbf{\omega}_{t-1} - \eta \nabla \mathcal{L}(\mathbf{\omega}_{t-1}). $$
   
 Here $\omega_t$ represents the current configuration of the weights, while $\omega_{t-1}$ represents the previous one. The parameter $\eta$ is referred to as the learning rate, i.e. how large the step in the negative gradient direction the update of the weights should be. Too small steps can lead to poor convergence, while to large steps can lead to overshooting, i.e. missing local/global minimums. Usually it is too expensive to calculate the gradient over the entire dataset. This is solved by a technique called stochastic gradient descent @{robbins1951stochastic}. Stochastic gradient descent performs a parameter update for each training example. A natural extension and a more cost-efficient approach is the mini-batch gradient descent approach. In mini-batch optimization, the gradient is approximated by calculating the mean of the gradients on sub-sets or batches of the entire data set,
 
@@ -59,7 +55,7 @@ $$\mathbf{\omega}_t =  \mathbf{\omega}_{t-1} - \frac{\eta}{n}\sum\limits_{i=1}^{
 
 The mini-batch gradient descent iterative process can be implemented in the neural network with the back-propagation algorithm @{rumelhart1988learning}. In back-propagation, the weights are updated through a forward and backward pass. In the forward pass, we predict with the current weight configuration and compare towards the target values. In the backward pass, we use the chain rule successively from the output to the input to calculate the gradient of $\omega$. Based on the gradient direction and the learning rate, the configuration of the weights is updated.
 
-To find the correct learning rate is difficult, hence, several methods has been developed to adjust the learning rate adaptively. One of the disadvantages of the vanilla gradient descent approach to the ANN optimization problem, is that it has a fixed leaning rate $\eta.$ In line with the development of ANN, methods dedicated to deep learning and adaptive adjustment of the learning rate have been developed. Besides SGD with momentum @{sutskever2013importance}, the two most used optimization methods for ANNs are ADAM @{kingma2014adam} and Root Mean Square Propagation (RMSProp) @{tieleman2012lecture}. RMSProp adaptively adjusts the learning rate of the gradients based on a running average for each of the individual parameters. The ADAM-algorithm individually adjusts the weights in terms of both the running average, but also with respect to the running variance.
+To find the correct learning rate is difficult, hence, several methods has been developed to adjust the learning rate adaptively. One of the disadvantages of the vanilla gradient descent approach to the ANN optimization problem, is that it has a fixed learning rate $\eta.$ In line with the development of ANN, methods dedicated to deep learning and adaptive adjustment of the learning rate have been developed. Besides SGD with momentum @{sutskever2013importance}, the two most used optimization methods for ANNs are ADAM @{kingma2014adam} and Root Mean Square Propagation (RMSProp) @{tieleman2012lecture}. RMSProp adaptively adjusts the learning rate of the gradients based on a running average for each of the individual parameters. The ADAM-algorithm individually adjusts the weights in terms of both the running average, but also with respect to the running variance.
 
 The use of back-propagation together with a stochastic gradient descent method, increase in available data and hardware have been the successes of deep learning during the past decade. 
 
@@ -72,7 +68,7 @@ The purpose of the test data set is to validate on new unseen data that has not 
 
 ## Implementation of Feed Forward Neural Network in Keras
 
-In this section we will show you how to implement a Feed Forward Neural Network with dropout as regularization with the low level API for tensorflow called Keras. A lot of the development within deep learning is concentrated around the python programming language. Keras is also a tool that is originally developed in python, but also available in R. Lets start by installing tensorflow: 
+In this section we will show you how to implement a Feed Forward Neural Network with dropout as regularization with the high level API for tensorflow called Keras. A lot of the development within deep learning is concentrated around the python programming language. Keras is also a tool that is originally developed in python, but also available in R. Lets start by installing tensorflow: 
 
 ### Installing Keras and Tensorflow
 For people who use Windows you must install miniconda first. You can do this through the reticulate package (The reticulate package provides a comprehensive set of tools for interoperability between Python and R.). You can install reticulate and subsequently miniconda with the following commands:
@@ -211,7 +207,7 @@ It is possible to specify specific validation data if that is desirable. Batch s
 knitr::include_graphics("ppt/validation_plot_nn.png")
 ```
 
-We have plotted the loss and accuaracy calculated after each training epoch. It can be observed that the loss after approx 10-15 epochs, is significantly lower than the validation loss. This is an indication that the model starts to overfit.     
+We have plotted the loss and accuracy calculated after each training epoch. It can be observed that the loss after approx 10-15 epochs, is significantly lower than the validation loss. This is an indication that the model starts to overfit.     
 
 ### Evaluating the model
 To evaluate the trained model on the test data, we can use the pipe syntax together with the evaluate function
@@ -229,18 +225,19 @@ We can also predict the most probable class for each of the instances. For this 
 prediction <- model %>% predict(x_test)
 #plot(prediction[1710,], )
 dim(prediction)
+```
 
-#Lets find one of the most uncertain predictions to view how it looks like
+Lets find someof the most uncertain predictions and plot them. We find the most probable predictions in the test data set, then we choose the predictions which has the lowest confident.
 
-#We find the most probable predictions in the test data set
+```{r uncertrain_preds, echo=TRUE, cache=TRUE}
 largest <- apply(prediction,1,max,na.rm=TRUE)
-
-#Then we choose the predictions which has the lowest confident 
 less_confident <- sort(largest,index.return = TRUE)$ix[1:36]
-
-#We find out what the model predicts these less_confident predictions are
 pred_class <- prediction %>% k_argmax() 
+```
 
+Lets plot some of predictions with lowest confident
+
+```{r, , echo=TRUE, cache=TRUE}
 #and plot the digits
 par(mfcol=c(6,6))
 par(mar=c(0, 0, 3, 0), xaxs='i', yaxs='i')

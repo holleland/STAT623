@@ -1,2 +1,108 @@
-# Feature selection/Explainable AI {#lecture9}
+# Feature selection {#lecture9}
+
+Feature selection is the process of reducing the number of predictors when developing a predictive model. The primary focus is on removing those predictors that are non-informative to the model. If a predictor does not influence your response variable it may improve the performance of your model to simply remove it. It may also reduce the computational cost of fitting the model to have fewer covariates to take into account. 
+
+There are many ways of doing feature selection and there is no "best method". In small cases, one could perhaps try all combinations of predictor permutations, but the number of models to test then will increase substantially with the number of columns in your data. If we have four predictors, there are four combinations with only 1 predictor, six combinations for 2 predictors, 4 with 3 and one with 4 predictors. In total 16, if we also add the model with no predictors. The general formula for this with $p$ predictors would be
+$$\text{number of potential models} = \sum_{i=0}^p \binom{p}{i}=2^p,$$
+where the last equality holds by the binomial theorem (see [wikipedia](https://en.wikipedia.org/wiki/Binomial_theorem)). We can plot this for $p = 0,\ldots, 12$, where $p=0$ corresponds to the intercept model.
+```{r}
+library(tidyverse)
+tibble(p =0:12, n = 2^p) %>%
+  ggplot(aes(x=p,y=n)) + 
+  geom_line() +
+  geom_text(aes(x=p, y = n, label = n)) +
+  scale_x_continuous(breaks = seq(0,30,2)) + 
+  scale_y_continuous(name = "Number of potential models") + 
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+``` 
+
+If we increase $p$ to say 20, the number of potential models is $1\,048\,576$. Therefore, we need a clever way of selecting features without having to test every combination. The rest of this lecture will be about different ways of selecting features to include in your model. 
+
+## Backward feature selection{-}
+Backward feature selection is a procedure where you start with a complicated model with all potential features included. When considering the features, there will be some that are *more important* than others in the model. Like an onion, you start peeling off the least important feature and fit a new model without it. Then evaluate the model and find the next *least important* feature. Finding the least important feature is usually done by fitting new models removing one feature at the time and then select remove the feature that is most beneficial with respect to the performance measure. If the removal of the feature lead to an improvement in the model fit, you continue peeling. If it decreased the model performance, you stop peeling and go back to the previous model. Due to this step-by-step procedure, it is often called backward stepwise feature selection.
+
+In classical statistical modeling, minimizing AIC is a standard way of doing model selection. It minimizes the prediction error, while punishing complex models with many features. In a simple generalized linear model, using AIC as measure of model performance, a standard backward model selection would be to fit the model with all features included, then fit models removing one feature at the time and calculate AIC for those candidates, select the one with the lowest AIC. Removing one parameter will make the model more parsimonious (less complex), but also decrease the flexibility of the model to fit the data better. AIC is then meant to balance these two opposing interest in a good way. 
+
+## Forward feature selection{-}
+If backward feature selection means starting with a full model using all covariates available, then forward selection must mean starting with no features. This is in fact the case. Instead of starting with the full model and look for the least important feature as in backward feature selection,  we start with a intercept-only model and in each iteration, we look for the single feature that will improve our model the most. This means we must run through all potential new features to be added, and select the one that improves the model performance measure the most. This is continued until no new feature candidates improve the model fit.  
+
+In the figure below, we illustrate the difference between backward and forward selection. The red color means features selected and blue are not selected for the X-es. As you see the forward feature selection takes more steps, but also each step is more computational. 
+
+```{r, echo =FALSE}
+knitr::include_graphics(path = "ppt/back-forward_feature_selection.png")
+```
+
+## Recursive feature elimination{-}
+This is a greedy optimization algorithm which aims to find the best feature subset in terms of model performance. It creates models repeatedly by taking out the best and worst performing feature and continues with the ones that are left. The procedure is repeated until there is no features left. It then ranks the features based on their order of elimination. This will be illustrated in the exercises. 
+
+## Example
+
+Let us now look at how this can be executed in R on a example. The *adult* dataset contains information on 48 842 adults and whether or not their income exceeds USD 50.000. The data is published by github user guru99-edu and downloaded from github. We will use a logistic regression model and do feature selection using backward and forward stepwise feature selection. The features are
+
+- age
+- workclass (e.g. private sector, local government, never-worked, etc.)
+- education (highest level education level completed)
+- educational.num (numeric version fo the above)
+- gender 
+- marital status
+- race
+- hours.per.week
+
+For the sake of the example the details about the features is not so important, but it will be interesting to see if we end up selecting the same features using the different approaches. 
+
+```{r}
+library(tidyverse)
+data_adult <-read.csv("https://raw.githubusercontent.com/guru99-edu/R-Programming/master/adult.csv")
+data_adult <- mutate(data_adult, 
+                     workclass = factor(workclass),
+                     education = factor(education),
+                     marital.status = factor(marital.status), 
+                     race = factor(race),
+                     gender = factor(gender),
+                     income = factor(income)) %>%
+  select(-x)
+glimpse(data_adult)
+```
+We start by fitting a full logistic regression model with all covariates included: 
+```{r}
+full_mod <- glm(income ~ ., data = data_adult, family = binomial(link = "logit"))
+summary(full_mod)
+```
+
+As you can see, there is lots of features that are *not statistically significant* by having a p-value above 5\%, although this is not a big concern for us. We are searching for the model with the best prediction performance in terms of Akaike's information criterion (AIC). We start by doing a downward feature selection with the *step* function included in the base R package *stats*. When only specifying the full model to the step function, it will perform backward stepwise feature selection by default. 
+
+```{r, cache = TRUE}
+back_mod <- stats::step(full_mod)
+```
+
+Here you can follow the steps and see all the candidate models with what value of AIC they have. Here we actually stop after just one iteration - the only feature being removed is the educational.num. The best alternative in the final iteration is to do no changes in what features to include. 
+The model we end up with can be printed by:
+
+```{r}
+summary(back_mod)
+```
+
+As you can see from the output, we kept age, workclass, education, marital.status, race, gender, hours.per.week and intercept. Let's see what the forward algorithm will end up with. 
+
+To do the forward feature seleciton, we also need the intercept only model.
+
+```{r}
+interceptOnly_mod <- glm(income ~ 1, data = data_adult, family = binomial(link = "logit"))
+forward_mod <- stats::step(interceptOnly_mod, scope=list(lower=interceptOnly_mod, upper=full_mod), direction="forward")
+```
+The model we end up with is
+```{r}
+summary(forward_mod)
+```
+
+The selected features are marital.status, education, hours.per.week, age, workclass, race, gender, and intercept - same as for the backward feature selection. 
+
+In the exercises you will also learn about recursive feature elimination and how to implement this using the *caret* package. 
+
+### Data camp {-}
+We highly recommend the data camp course [Supervised Learning in R: Classification "](https://app.datacamp.com/learn/courses/supervised-learning-in-r-classification) chapters 1-3.
+(ch 3, video on automatic feature selection).
+
 

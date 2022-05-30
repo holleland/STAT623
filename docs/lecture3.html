@@ -6,10 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title> 3 Non-linear regression | Data science with R: Applied Predictive Modelling</title>
   <meta name="description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
-  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content=" 3 Non-linear regression | Data science with R: Applied Predictive Modelling" />
   <meta property="og:type" content="book" />
+  
   
   <meta property="og:description" content="Course in applied predictive modelling made for teaching STAT623 at University of Bergen" />
   
@@ -31,6 +32,7 @@
   
 <link rel="prev" href="lecture2.html"/>
 <link rel="next" href="lecture4.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -48,9 +50,8 @@
 
 
 
-<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
-<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -266,7 +267,16 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="lecture8.html"><a href="lecture8.html#data-camp-5"><i class="fa fa-check"></i>Data camp</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection/Explainable AI</a></li>
+<li class="chapter" data-level="9" data-path="lecture9.html"><a href="lecture9.html"><i class="fa fa-check"></i><b>9</b> Feature selection</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#backward-feature-selection"><i class="fa fa-check"></i>Backward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#forward-feature-selection"><i class="fa fa-check"></i>Forward feature selection</a></li>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#recursive-feature-elimination"><i class="fa fa-check"></i>Recursive feature elimination</a></li>
+<li class="chapter" data-level="9.1" data-path="lecture9.html"><a href="lecture9.html#example-5"><i class="fa fa-check"></i><b>9.1</b> Example</a>
+<ul>
+<li class="chapter" data-level="" data-path="lecture9.html"><a href="lecture9.html#data-camp-6"><i class="fa fa-check"></i>Data camp</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -288,8 +298,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lecture3" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number"> 3</span> Non-linear regression<a href="lecture3.html#lecture3" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="lecture3" class="section level1" number="3">
+<h1><span class="header-section-number"> 3</span> Non-linear regression</h1>
 <p>As we saw in the previous lecture in the example illustrating the overfitting concept, we do not always have a linear relationship between the response and the covariates. In that example, the relationship was a periodic sine function. Other examples of non-linear relations can be polynomial-, exponential- and logistical functions. There are many non-linear regression models designed for solving different problems, but we will mainly focus on the generalized additive models (GAMs). These are quite closely related to generalized linear models (GLMs). There are a few options for R packages for GAMs, but we will focus on the <em>mgcv</em> package <span class="citation">(<a href="#ref-mgcv2017" role="doc-biblioref">Wood 2017</a>)</span>.</p>
 <div class="figure">
 <img src="STAT623-compendium_files/figure-html/examples%20of%20nonlinear%20relations-1.png" alt="Examples of relationsships between x and y." width="672" />
@@ -303,8 +313,8 @@ This is actually not so different from the principal idea behind GAMs. A GAM use
 <p>For a simple linear model, we have that the expected value of the <span class="math inline">\(i\)</span>th variable is <span class="math inline">\(\mathrm{E} Y_i = \mu_i = \beta_0+\beta_1 X_i\)</span>. For a generalized linear model, the relationship is mapped using a link function <span class="math inline">\(g\)</span>, such that <span class="math inline">\(g(\mu_i) = \beta_0+\beta_1X_i\)</span>. For a generalized additive model we take it one step further, by also mapping the dependent variable:</p>
 <p><span class="math display">\[g(\mu_i) = \beta_0 + \sum_{j=0}^k \beta_j f_j(X_i),\]</span></p>
 <p>where <span class="math inline">\(\{f_j:\, j = 1,\ldots, k\}\)</span> is a set of basis functions. The standard in the <em>mgcv</em> package is to use thin plate splines.</p>
-<div id="gam-example" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> GAM example<a href="lecture3.html#gam-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="gam-example" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> GAM example</h2>
 <p>In the video below, Sondre goes through this section’s example in a bit more detail and with more in-depth explanations of the code. You can also read the example below the video.</p>
 <div style="padding:75% 0 0 0;position:relative;">
 <iframe src="https://player.vimeo.com/video/690665563?h=a390bfda20&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title>
@@ -321,7 +331,7 @@ This is actually not so different from the principal idea behind GAMs. A GAM use
 <span id="cb39-5"><a href="lecture3.html#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span>   sin_x <span class="sc">+</span>  <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="fu">length</span>(x), <span class="at">mean =</span> <span class="dv">0</span>,</span>
 <span id="cb39-6"><a href="lecture3.html#cb39-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">sd =</span> <span class="fu">sd</span>(sin_x <span class="sc">/</span> <span class="dv">2</span>))) <span class="co"># add noise</span></span>
 <span id="cb39-7"><a href="lecture3.html#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat) <span class="co"># print first 6 observations</span></span></code></pre></div>
-<pre><code>## # A tibble: 6 × 3
+<pre><code>## # A tibble: 6 x 3
 ##       x sin_x       y
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1   0   0     -0.162 
@@ -408,7 +418,7 @@ If we multiply these basis functions with the weights for the fitted model, we g
 <span id="cb48-14"><a href="lecture3.html#cb48-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="STAT623-compendium_files/figure-html/gam4-1.png" width="672" /></p>
 <p>Normally, we would do the train-test split, but in this example we know the truth and the point of the exercise is to reproduce the underlying signal.</p>
-<p>As a last element of this example, we will see how well the model extrapolates as we try to predict the signal for values the model has not “seen”. For the training we used values of <span class="math inline">\(x\)</span> between 0 and <span class="math inline">\(2\pi\)</span>. Let’s see how it performs for values of x between <span class="math inline">\(2\pi\)</span> and <span class="math inline">\(3\pi\)</span>.</p>
+<p>As a last element of this example, we will see how well the model extrapolates as we try to predict the signal for values the model has not “seen.” For the training we used values of <span class="math inline">\(x\)</span> between 0 and <span class="math inline">\(2\pi\)</span>. Let’s see how it performs for values of x between <span class="math inline">\(2\pi\)</span> and <span class="math inline">\(3\pi\)</span>.</p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="lecture3.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting up new data:</span></span>
 <span id="cb49-2"><a href="lecture3.html#cb49-2" aria-hidden="true" tabindex="-1"></a>dat.ext <span class="ot">&lt;-</span> <span class="fu">tibble</span>( </span>
 <span id="cb49-3"><a href="lecture3.html#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">2</span><span class="sc">*</span>pi, <span class="dv">3</span><span class="sc">*</span>pi, <span class="fl">0.1</span>),</span>
@@ -446,14 +456,14 @@ If we multiply these basis functions with the weights for the fitted model, we g
 <pre><code>## Warning: Removed 32 rows containing missing values (geom_point).</code></pre>
 <p><img src="STAT623-compendium_files/figure-html/gam6-1.png" width="672" /></p>
 <p>The warning about the 32 missing values are because we added <em>y=NA</em> to the dat.ext data frame.</p>
-<div id="data-camp" class="section level3 unnumbered hasAnchor">
-<h3>Data camp<a href="lecture3.html#data-camp" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="data-camp" class="section level3 unnumbered">
+<h3>Data camp</h3>
 <p>There is a very informative and useful GAM module on data camp that we can highly recommend called <a href="https://app.datacamp.com/learn/courses/nonlinear-modeling-in-r-with-gams">Nonlinear modeling in R with GAMs</a> - especially chapter 1 and 2.</p>
 
 </div>
 </div>
 </div>
-<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-mgcv2017" class="csl-entry">
 Wood, S. N. 2017. <em>Generalized Additive Models: An Introduction with r</em>. 2nd ed. Chapman; Hall/CRC.
