@@ -87,12 +87,16 @@ summary(back_mod)
 As you can see from the output, we kept age, workclass, education, marital.status, race, gender, hours.per.week and intercept. Let's see what the forward algorithm will end up with. 
 
 To do the forward feature seleciton, we also need the intercept only model.
-
 ```{r}
 interceptOnly_mod <- glm(income ~ 1, data = data_adult, family = binomial(link = "logit"))
+```
+
+Then we are ready to do the forward feature selection. We set the upper and lower "limits" with including none or including all covariates and specify that we want to the direction to be forward. 
+```{r}
 forward_mod <- stats::step(interceptOnly_mod, scope=list(lower=interceptOnly_mod, upper=full_mod), direction="forward")
 ```
-The model we end up with is
+
+From the output, you can follow the steps and at each iteration which feature will improve the model the most compared to the others. The model we end up with is
 ```{r}
 summary(forward_mod)
 ```

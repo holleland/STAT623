@@ -314,7 +314,7 @@ where the last equality holds by the binomial theorem (see <a href="https://en.w
 <span id="cb193-8"><a href="lecture9.html#cb193-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb193-9"><a href="lecture9.html#cb193-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb193-10"><a href="lecture9.html#cb193-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 <p>If we increase <span class="math inline">\(p\)</span> to say 20, the number of potential models is <span class="math inline">\(1\,048\,576\)</span>. Therefore, we need a clever way of selecting features without having to test every combination. The rest of this lecture will be about different ways of selecting features to include in your model.</p>
 <div id="backward-feature-selection" class="section level2 unnumbered">
 <h2>Backward feature selection</h2>
@@ -431,10 +431,25 @@ where the last equality holds by the binomial theorem (see <a href="https://en.w
 ## Number of Fisher Scoring iterations: 11</code></pre>
 <p>As you can see, there is lots of features that are <em>not statistically significant</em> by having a p-value above 5%, although this is not a big concern for us. We are searching for the model with the best prediction performance in terms of Akaike’s information criterion (AIC). We start by doing a downward feature selection with the <em>step</em> function included in the base R package <em>stats</em>. When only specifying the full model to the step function, it will perform backward stepwise feature selection by default.</p>
 <div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="lecture9.html#cb198-1" aria-hidden="true" tabindex="-1"></a>back_mod <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">step</span>(full_mod)</span></code></pre></div>
-<pre><code>## Start:  AIC=35628.5
-## income ~ age + workclass + education + educational.num + marital.status + 
-##     race + gender + hours.per.week
+<pre><code>## Start:  AIC=35630.05
+## income ~ x + age + workclass + education + educational.num + 
+##     marital.status + race + gender + hours.per.week
 ## 
+## 
+## Step:  AIC=35630.05
+## income ~ x + age + workclass + education + marital.status + race + 
+##     gender + hours.per.week
+## 
+##                  Df Deviance   AIC
+## - x               1    35554 35628
+## &lt;none&gt;                 35554 35630
+## - gender          1    35562 35636
+## - race            4    35600 35668
+## - workclass       8    36001 36061
+## - age             1    36164 36238
+## - hours.per.week  1    36226 36300
+## - education      15    40585 40631
+## - marital.status  6    41219 41283
 ## 
 ## Step:  AIC=35628.5
 ## income ~ age + workclass + education + marital.status + race + 
@@ -513,8 +528,9 @@ The model we end up with can be printed by:</p>
 ## Number of Fisher Scoring iterations: 11</code></pre>
 <p>As you can see from the output, we kept age, workclass, education, marital.status, race, gender, hours.per.week and intercept. Let’s see what the forward algorithm will end up with.</p>
 <p>To do the forward feature seleciton, we also need the intercept only model.</p>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="lecture9.html#cb202-1" aria-hidden="true" tabindex="-1"></a>interceptOnly_mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(income <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> data_adult, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
-<span id="cb202-2"><a href="lecture9.html#cb202-2" aria-hidden="true" tabindex="-1"></a>forward_mod <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">step</span>(interceptOnly_mod, <span class="at">scope=</span><span class="fu">list</span>(<span class="at">lower=</span>interceptOnly_mod, <span class="at">upper=</span>full_mod), <span class="at">direction=</span><span class="st">&quot;forward&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="lecture9.html#cb202-1" aria-hidden="true" tabindex="-1"></a>interceptOnly_mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(income <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> data_adult, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span></code></pre></div>
+<p>Then we are ready to do the forward feature selection. We set the upper and lower “limits” with including none or including all covariates and specify that we want to the direction to be forward.</p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="lecture9.html#cb203-1" aria-hidden="true" tabindex="-1"></a>forward_mod <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">step</span>(interceptOnly_mod, <span class="at">scope=</span><span class="fu">list</span>(<span class="at">lower=</span>interceptOnly_mod, <span class="at">upper=</span>full_mod), <span class="at">direction=</span><span class="st">&quot;forward&quot;</span>)</span></code></pre></div>
 <pre><code>## Start:  AIC=53752.68
 ## income ~ 1
 ## 
@@ -595,8 +611,8 @@ The model we end up with can be printed by:</p>
 ## 
 ##        Df Deviance   AIC
 ## &lt;none&gt;       35554 35628</code></pre>
-<p>The model we end up with is</p>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="lecture9.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(forward_mod)</span></code></pre></div>
+<p>From the output, you can follow the steps and at each iteration which feature will improve the model the most compared to the others. The model we end up with is</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="lecture9.html#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(forward_mod)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = income ~ marital.status + education + hours.per.week + 

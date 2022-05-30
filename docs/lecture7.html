@@ -326,7 +326,7 @@ div.csl-indent {
 <span id="cb144-2"><a href="lecture7.html#cb144-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
 <span id="cb144-3"><a href="lecture7.html#cb144-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">6</span>))</span>
 <span id="cb144-4"><a href="lecture7.html#cb144-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Here it is clear that a linear split will fit perfectly from just looking at the figure. But let us use the <em>e1071</em> package and fit an svm for this problem and see the line. The different arguments in the function call below are quite self-explanatory, but we specify the formula and the data first. Then we specify that it is classification we want to do and that the kernel should be linear. This means we want the curve that divides the data set to be a straight line. The scale argument is set to false, as we do not want to scale the predictors nor response variables here. If scale is true, the algorithm will standardize both the x and y variables.</p>
 <div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="lecture7.html#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
 <span id="cb145-2"><a href="lecture7.html#cb145-2" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
@@ -362,7 +362,7 @@ div.csl-indent {
 <span id="cb147-4"><a href="lecture7.html#cb147-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
 <span id="cb147-5"><a href="lecture7.html#cb147-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> df_sv, <span class="at">color =</span> <span class="st">&quot;green&quot;</span>, <span class="at">alpha =</span> .<span class="dv">2</span>, <span class="at">size =</span> <span class="dv">4</span>) </span>
 <span id="cb147-6"><a href="lecture7.html#cb147-6" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>As you can see, the support vectors are clustered around the decision boundary. One could say that they support the decision boundary, hence the name. In general, the support vectors are data points that are closer to the hyperplane and influence the postion and orientation of the hyperplane. The idea is to use the support vectors to find the hyperplane that maximizes the margin of the classifier. By looking at the figure you can imagine drawing many straight lines that will split the blue and purple dots, but by maximizing the margin we get closer to a unique solution.</p>
 <p>Next we will add in the decision boundary and margins. It is not as straight forward as one might imagine to extract the intercept and slope from the fitted object. The reason for this is likely that the implementation is more general than a linear kernel in two dimensions. Still we can derive this information from the information in the fitted object.</p>
 <p>First we must build the weight vector, <span class="math inline">\(w\)</span>, from the coefficients and the support vectors matrix.</p>
@@ -382,13 +382,13 @@ div.csl-indent {
 <div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="lecture7.html#cb154-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
 <span id="cb154-2"><a href="lecture7.html#cb154-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> svm_slope, <span class="at">intercept =</span> svm_intercept, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
 <span id="cb154-3"><a href="lecture7.html#cb154-3" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>The margins are parallel to the decision boundary with an offset of <em>1/w[2]</em>.</p>
 <div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="lecture7.html#cb155-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
 <span id="cb155-2"><a href="lecture7.html#cb155-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> svm_slope, <span class="at">intercept =</span> svm_intercept<span class="dv">-1</span><span class="sc">/</span>w[<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>)<span class="sc">+</span></span>
 <span id="cb155-3"><a href="lecture7.html#cb155-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> svm_slope, <span class="at">intercept =</span> svm_intercept<span class="sc">+</span><span class="dv">1</span><span class="sc">/</span>w[<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) </span>
 <span id="cb155-4"><a href="lecture7.html#cb155-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Note that the decision boundary is supported by roughly the same number of support vectors on either side. In this example we do not have any instances violating the boundary, so our accuracy on the test set will be perfect (100%), but let us test it anyway.</p>
 <div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="lecture7.html#cb156-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="sc">%&gt;%</span> <span class="fu">predict</span>(df_test) <span class="sc">%&gt;%</span></span>
 <span id="cb156-2"><a href="lecture7.html#cb156-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(df_test) <span class="sc">%&gt;%</span></span>
@@ -402,7 +402,7 @@ div.csl-indent {
 <p>As we can see, there is no need to calculate the accuracy as all predictions are correct it will be 1.</p>
 <p>There is also a built-in plotting function for svm’s in the e1071 package. It highlights the support vectors by x’es and observations by o’s, and separate the decision boundary by the different colored areas. It takes the fitted object and the data set you want to predict on. Here we use the training set, but you can also use the test set.</p>
 <div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="lecture7.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>Note that here x1 is on the y-axis and x2 on the x-axis (opposite of what we did in ggplot above).</p>
 <p>Now, we will play a little bit with the hyperparameters. Remember that we had 95 support vectors in our first attempt. Now we will increase the cost hyperparameter, i.e. the cost of constraint violations.</p>
 <div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="lecture7.html#cb160-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
@@ -432,7 +432,7 @@ div.csl-indent {
 ## Levels: 
 ##  -1 1</code></pre>
 <p>As you can see from the model output, the number of support vectors has drastically reduced from 95 to 7. We can also look at the equivalent plot (code as above is not included here).
-<img src="STAT623-compendium_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<img src="STAT623-compendium_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>Here you see that the margin is much narrower. Increasing the cost like this for linear support vector machines can be useful in situations where the decision boundary is known to be linear. We will now consider a situation where the decision boundary is non-linear - in fact a circle.</p>
 </div>
 <div id="polynomial-svm" class="section level2" number="7.2">
@@ -469,7 +469,7 @@ div.csl-indent {
 <span id="cb163-21"><a href="lecture7.html#cb163-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x=</span>x1c, <span class="at">y=</span> x2c),</span>
 <span id="cb163-22"><a href="lecture7.html#cb163-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">inherit.aes=</span><span class="cn">FALSE</span>)</span>
 <span id="cb163-23"><a href="lecture7.html#cb163-23" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>Let us first try to fit a linear svm to these data. We expect it not to perform very well, but let us see how bad it will be. For a quick check we just plot the result using the plot function.</p>
 <div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="lecture7.html#cb164-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
 <span id="cb164-2"><a href="lecture7.html#cb164-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
@@ -478,7 +478,7 @@ div.csl-indent {
 <span id="cb164-5"><a href="lecture7.html#cb164-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb164-6"><a href="lecture7.html#cb164-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">1</span>)</span>
 <span id="cb164-7"><a href="lecture7.html#cb164-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>As expected, the linear svm performs bad and predicts all observations to belong to the class <span class="math inline">\(y=1\)</span>. The number of support vectors (114) is also very high, which is a sign of poor performance. We can try to increase the cost, as we did before.</p>
 <div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="lecture7.html#cb165-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
 <span id="cb165-2"><a href="lecture7.html#cb165-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train,</span>
@@ -487,7 +487,7 @@ div.csl-indent {
 <span id="cb165-5"><a href="lecture7.html#cb165-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb165-6"><a href="lecture7.html#cb165-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">100</span>)</span>
 <span id="cb165-7"><a href="lecture7.html#cb165-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <p>More or less the same result. Increasing the cost reduced the number of support vectors to 119.</p>
 <p>The solution to this problem is to use another kernel than the linear one, but before we to that, we will use the transformation trick. As is often the case, a smart transformation can often take a non-linear problem and make it linear. In this case, we know the boundary is a circle and the formula for a circle is
 <span class="math display">\[ x_1^2 + x_2^2  = r^2, \]</span>
@@ -499,7 +499,7 @@ That is the relationship between <span class="math inline">\(z_1\)</span> and <s
 <span id="cb166-2"><a href="lecture7.html#cb166-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_train2, <span class="fu">aes</span>(<span class="at">x=</span>z1,<span class="at">y=</span>z2,<span class="at">col=</span>y)) <span class="sc">+</span> </span>
 <span id="cb166-3"><a href="lecture7.html#cb166-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb166-4"><a href="lecture7.html#cb166-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">intercept =</span> radius<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>Let us fit a linear svm to the transformed data.</p>
 <div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="lecture7.html#cb167-1" aria-hidden="true" tabindex="-1"></a>svm_fit <span class="ot">&lt;-</span> <span class="fu">svm</span>(y <span class="sc">~</span> ., </span>
 <span id="cb167-2"><a href="lecture7.html#cb167-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_train2,</span>
@@ -508,7 +508,7 @@ That is the relationship between <span class="math inline">\(z_1\)</span> and <s
 <span id="cb167-5"><a href="lecture7.html#cb167-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb167-6"><a href="lecture7.html#cb167-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">100</span>)</span>
 <span id="cb167-7"><a href="lecture7.html#cb167-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train2)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p>Clearly, this is more satisfying.</p>
 <p>The next step we will test is to use the original data without transforming, but using a different kernel. Instead of squaring the data, we will use a polynomial kernel of 2nd degree. Using the polynomial kernel option, there are three hyperparameters: <em>degree</em>, <em>gamma</em> and <em>coef0</em>. The polynomial kernel is parameterized as
 <span class="math inline">\((\text{gamma*u&#39;*v}+ \text{coef0})\text{^degree}\)</span>, where <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span> are data vectors. We set the kernel argument to “polynomial” and degree to 2, and for now we use standard options for gamma and coef0.</p>
@@ -520,7 +520,7 @@ That is the relationship between <span class="math inline">\(z_1\)</span> and <s
 <span id="cb168-6"><a href="lecture7.html#cb168-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">scale =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb168-7"><a href="lecture7.html#cb168-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">cost  =</span> <span class="dv">1</span>)</span>
 <span id="cb168-8"><a href="lecture7.html#cb168-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="lecture7.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_train<span class="sc">$</span>y <span class="sc">==</span> <span class="fu">predict</span>(svm_fit, df_train)) <span class="co">#Accuracy</span></span></code></pre></div>
 <pre><code>## [1] 0.9874214</code></pre>
 <p>The accuracy is certainly very high (98.7%), but for the sake of learning, we will try to improve this further by tuning the hyperparameters instead of using the defaults. We do this by using the <em>tune.svm</em> function in <em>e1071</em>. The syntax is very similar to the svm function, but we need to feed in the x’s and y’s separately as below and also feed in a vector for each of the hyperparaemters with the values we want to consider. We use costs of 0.1,1,10 and 100, gamma values of 0.1,1 and 10 and coef0 of 0,0.1,1 and 10. The tuning can take some time, but on this example it is quite fast.</p>
@@ -551,7 +551,7 @@ That is the relationship between <span class="math inline">\(z_1\)</span> and <s
 <span id="cb173-8"><a href="lecture7.html#cb173-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">gamma =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>gamma, </span>
 <span id="cb173-9"><a href="lecture7.html#cb173-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">coef0 =</span> tuning<span class="sc">$</span>best.parameters<span class="sc">$</span>coef0)</span>
 <span id="cb173-10"><a href="lecture7.html#cb173-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(svm_fit, <span class="at">data =</span> df_train)</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 <div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="lecture7.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(df_train<span class="sc">$</span>y <span class="sc">==</span> <span class="fu">predict</span>(svm_fit, df_train)) <span class="co">#Accuracy</span></span></code></pre></div>
 <pre><code>## [1] 0.9937107</code></pre>
 <p>The tuning resulted in a slight improvement of roughly half a percent of accuracy going from 98.7% to 99.4%, but we are already very close to 100%.</p>

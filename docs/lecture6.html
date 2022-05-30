@@ -455,7 +455,7 @@ Name / Data Type / Measurement Unit / Description</p>
 <span id="cb115-6"><a href="lecture6.html#cb115-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sex <span class="sc">~</span> ., <span class="at">data =</span> df_train)</span></code></pre></div>
 <p>An interesting function to be aware of is the vip function in the vip package <span class="citation">(<a href="#ref-vipPackage" role="doc-biblioref">Greenwell and Boehmke 2020</a>)</span>, which produces a variable of importance plot.</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="lecture6.html#cb116-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">%&gt;%</span> vip<span class="sc">::</span><span class="fu">vip</span>()</span></code></pre></div>
-<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="STAT623-compendium_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>From this plot, it seems the Viscera weight is the most important variable.</p>
 <p>Let’s measure the out-of-sample performance on our test set:</p>
 <div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="lecture6.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(rf_fit, <span class="at">new_data =</span> df_test) <span class="sc">%&gt;%</span> </span>
